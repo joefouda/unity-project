@@ -1,0 +1,123 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+      <nb-card-header>
+        <span *ngIf="!isEdit; else edit">{{ 'GENERIC.ADD' | translate }}</span>
+        <ng-template #edit>{{ 'GENERIC.EDIT' | translate }}</ng-template> 
+        {{ 'PACKAGE' | translate }}
+      </nb-card-header>
+      <nb-card-body>
+        <form (ngSubmit)="save()" #form="ngForm">
+          <div style="text-align: center; min-height: 150px; margin-bottom: 5px;">
+            <input style="display: none" accept='image/*' type="file" (change)="preview($event)" #fileInput>
+            <img [src]="imgURL" height="200" (click)="fileInput.click()" *ngIf="imgURL">
+            <img src="assets/images/upload-image.png" height="100" (click)="fileInput.click()" *ngIf="!imgURL">
+            <div class="label">{{ 'PICTURE' | translate }}</div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="label">{{ 'NAME' | translate }}</label>
+                <input type="text" nbInput fullWidth
+                  [status]="submitted ? (myForm.controls.name.invalid  ? 'danger' : 'success') : 'basic'"
+                  [formControl]="myForm.controls['name']" [(ngModel)]="package.name" 
+                  placeholder="{{ 'NAME' | translate }}">
+              </div>
+
+              <ng-container *ngIf="myForm.controls.name.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="label">{{ 'NAME_AR' | translate }}</label>
+                <input type="text" nbInput fullWidth [formControl]="myForm.controls['name_ar']"
+                  [(ngModel)]="package.name_ar" 
+                  placeholder="{{ 'NAME_AR' | translate }}">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="label">{{ 'PERIOD' | translate }}</label>
+                <nb-select fullWidth
+                [formControl]="myForm.controls['period']"
+                placeholder="{{ 'PERIOD' | translate }}"
+                [status]="submitted ? (myForm.controls.period.invalid  ? 'danger' : 'success') : 'basic'" 
+                [(ngModel)]="package.period">
+                  <nb-option value="1">{{ 'MONTHLY' | translate }}</nb-option>
+                  <nb-option value="2">{{ 'EVERY_SIX_MONTH' | translate }}</nb-option>
+                  <nb-option value="3">{{ 'YEARLY' | translate }}</nb-option>
+                </nb-select>
+              </div>
+              <ng-container *ngIf="myForm.controls.period.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="label">{{ 'PRICE_PER_USER' | translate }}</label>
+                <div class="input-group" style="direction: ltr !important;">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">{{ 'SR' | translate }}</span>
+                  </div>
+                  <input type="number" nbInput style="max-width: 100%; width: 80%;" [formControl]="myForm.controls['price_per_user']"
+                  [status]="submitted ? (myForm.controls.price_per_user.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="package.price_per_user" 
+                  placeholder="{{ 'PRICE' | translate }}">
+                  <div class="input-group-preappend" >
+                    <span class="input-group-text" id="basic-addon1">/{{ 'USER' | translate }}</span>
+                  </div>
+                </div>
+              </div>
+              <ng-container *ngIf="myForm.controls.price_per_user.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="label">{{ 'MIN_NUMBER_OF_EMPLOYEES' | translate }}</label>
+                <input type="number" nbInput fullWidth [formControl]="myForm.controls['min_number_of_employees']"
+                  [status]="submitted ? (myForm.controls.min_number_of_employees.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="package.min_number_of_employees" 
+                  placeholder="{{ 'MIN_NUMBER_OF_EMPLOYEES' | translate }}">
+              </div>
+              <ng-container *ngIf="myForm.controls.min_number_of_employees.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="label">{{ 'MAX_NUMBER_OF_EMPLOYEES' | translate }}</label>
+                <input type="number" nbInput fullWidth [formControl]="myForm.controls['max_number_of_employees']"
+                  [status]="submitted ? (myForm.controls.max_number_of_employees.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="package.max_number_of_employees" 
+                  placeholder="{{ 'MAX_NUMBER_OF_EMPLOYEES' | translate }}">
+              </div>
+              <ng-container *ngIf="myForm.controls.max_number_of_employees.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+          </div>
+            <button nbButton type="submit" status="primary" size="medium">
+              {{ 'SAVE' | translate }}
+            </button>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

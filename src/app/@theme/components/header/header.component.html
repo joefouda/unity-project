@@ -1,0 +1,59 @@
+<div class="header-container">
+  <div class="logo-container">
+    <a (click)="toggleSidebar()" href="#" class="sidebar-toggle">
+      <nb-icon icon="menu-2-outline"></nb-icon>
+    </a>
+    <a class="logo" href="#" (click)="navigateHome()"><span>UniSync</span></a>
+  </div>
+  <nb-select [selected]="currentTheme" (selectedChange)="changeTheme($event)" status="primary">
+    <nb-option *ngFor="let theme of themes" [value]="theme.value"> {{ theme.name }}</nb-option>
+  </nb-select>
+</div>
+
+<div class="header-container">
+  <nb-actions size="small">
+
+    <!-- <nb-action class="control-item">
+      <nb-search type="rotate-layout"></nb-search>
+    </nb-action> -->
+
+    <nb-action class="control-item" style="padding: 0px 10px !important;">
+      <button ghost nbButton [nbContextMenu]="langItems" nbContextMenuTrigger="hover" nbContextMenuTag="my-context-menu">
+        <nb-icon icon="globe-outline"></nb-icon>
+      </button>
+    </nb-action>
+
+    <nb-action style="margin-top: 4px !important; padding: 0px 20px !important;" class="control-item" badgeDot badgeText="{{notificationsCount}}" badgeStatus="danger" icon="bell-outline" [nbPopover]="templateRef" nbPopoverPlacement="bottom" nbPopoverTrigger="click" nbContextMenuTrigger="hover" (click)="getNotifications()">
+    </nb-action>
+    <ng-template #templateRef>
+
+      <div style="padding: 20px;" *ngIf="notifications.length > 0 || messages.length > 0">
+        <div style="padding: 10px 20px; border-bottom: 1px solid #dfdddd;" *ngFor="let item of notifications" (click)="openNotifications(item.id)">
+            {{item.title}}
+        </div>
+        <div style="padding: 10px 20px; border-bottom: 1px solid #dfdddd;" *ngFor="let item of messages" (click)="openMessages(item.id)">
+         <p style="margin: 0px; cursor: pointer;"> {{ 'YOU_HAVE_A_NEW_MESSAGE' | translate }} {{item.sender.name}} </p>
+        </div>
+      </div>
+
+      <p style="padding: 40px;" *ngIf="notifications.length == 0 && messages.length == 0 && loaded">
+        {{ 'YOU_DONT_HAVE_NOTIFICATIONS' | translate }}
+      </p>
+
+      <div style="padding: 40px;" *ngIf="!loaded">
+        <div id="html-spinner"></div>
+      </div>
+    </ng-template>
+
+    <!-- <nb-action class="control-item" icon="email-outline"></nb-action> -->
+    <!-- <nb-action class="control-item" ></nb-action> -->
+    <nb-action class="user-action">
+      <nb-user [nbContextMenu]="userMenu"
+               [onlyPicture]="userPictureOnly"
+               [name]="user?.name"
+               nbContextMenuTag="my-context-menu"
+               [picture]="user?.picture">
+      </nb-user>
+    </nb-action>
+  </nb-actions>
+</div>

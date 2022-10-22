@@ -1,0 +1,97 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+      <nb-card-header>
+        <ng-container *ngIf="!isEdit; else editDiv">{{ 'GENERIC.ADD' | translate }}</ng-container>
+        <ng-template #editDiv>{{ 'GENERIC.EDIT' | translate }}</ng-template>
+        {{ 'ADMIN_USER' | translate }}
+      </nb-card-header>
+      <nb-card-body>
+        <form (ngSubmit)="save()" #form="ngForm">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="label">{{ 'NAME' | translate }}</label>
+                <input type="text" nbInput fullWidth
+                  [status]="submitted ? (myForm.controls.name.invalid  ? 'danger' : 'success') : 'basic'"
+                  [formControl]="myForm.controls['name']" [(ngModel)]="user.name" id="exampleInputEmail1"
+                  placeholder="{{ 'NAME' | translate }}">
+              </div>
+
+              <ng-container *ngIf="myForm.controls.name.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="label">{{ 'EMAIL' | translate }}</label>
+                <input type="email" nbInput fullWidth [formControl]="myForm.controls['email']"
+                  [status]="submitted ? (myForm.controls.email.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="user.email" placeholder="{{ 'EMAIL' | translate }}">
+              </div>
+              <ng-container *ngIf="myForm.controls.email.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="label">{{ 'MOBILE' | translate }}</label>
+                <div class="input-group" style="direction: ltr !important;">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">+966</span>
+                  </div>
+                  <input type="text" nbInput style="width: 80%;" [formControl]="myForm.controls['mobile']"
+                    [status]="submitted ? (myForm.controls.mobile.invalid  ? 'danger' : 'success') : 'basic'"
+                    [(ngModel)]="user.mobile" placeholder="{{ 'MOBILE' | translate }}">
+                </div>
+              </div>
+              <ng-container *ngIf="myForm.controls.mobile.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+            <div class="col-md-4" *ngIf="!isEdit">
+              <div class="form-group">
+                <label class="label">{{ 'PASSWORD' | translate }}</label>
+                <input type="password" nbInput fullWidth [formControl]="myForm.controls['password']"
+                  [status]="submitted ? (myForm.controls.password.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="user.password" placeholder="{{ 'PASSWORD' | translate }}">
+              </div>
+              <ng-container *ngIf="myForm.controls.password.errors?.length && submitted">
+                <p class="caption status-danger">
+                  {{ 'PASSWORD_LENGTH' | translate }}
+                </p>
+              </ng-container>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="label">{{ 'PREFERRED_LANG' | translate }}</label>
+                <nb-select fullWidth [formControl]="myForm.controls['preferred_lang']"
+                  [status]="submitted ? (myForm.controls.preferred_lang.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="user.preferred_lang">
+                  <nb-option value="en">{{ 'ENGLISH' | translate }}</nb-option>
+                  <nb-option value="ar">{{ 'ARABIC' | translate }}</nb-option>
+                </nb-select>
+              </div>
+              <ng-container *ngIf="myForm.controls.preferred_lang.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+          </div>
+          <button nbButton type="submit" status="primary" size="medium">
+            {{ 'SAVE' | translate }}
+          </button>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

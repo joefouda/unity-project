@@ -1,0 +1,85 @@
+<div *ngIf="!sent" >
+
+  <div class="text-center" style="margin-bottom: 40px !important;">
+    <img src="assets/images/{{logo}}" height="150">
+  </div>
+  <p class="" style="margin-bottom: 5px !important; font-size: 20px;">{{ 'HI_THERE' | translate }}</p>
+  <p class="light-text">{{ 'ENTER_INFO' | translate }}</p>
+
+
+  <form (ngSubmit)="update()" #form="ngForm" aria-labelledby="title">
+
+
+    <div class="form-control-group">
+      <label class="label" for="input-email">{{ 'COMPANY_NAME' | translate }}:</label>
+      <input nbInput fullWidth [(ngModel)]="user.company_name" name="company_name" id="input-name" fieldSize="large"
+        [formControl]="myForm.controls['company_name']"
+        [status]="submitted ? (myForm.controls.company_name.invalid  ? 'danger' : 'success') : 'basic'">
+      <ng-container *ngIf="myForm.controls.company_name.errors?.required && submitted">
+        <p class="caption status-danger">
+          {{ 'REQUIRED_FEILD' | translate }}
+        </p>
+      </ng-container>
+    </div>
+
+
+    <div class="form-control-group">
+      <label class="label" for="input-email">{{ 'NAME_GENERIC' | translate }}:</label>
+      <input nbInput fullWidth [(ngModel)]="user.name" name="name" id="input-name" fieldSize="large"
+        [formControl]="myForm.controls['name']"
+        [status]="submitted ? (myForm.controls.name.invalid  ? 'danger' : 'success') : 'basic'">
+      <ng-container *ngIf="myForm.controls.name.errors?.required && submitted">
+        <p class="caption status-danger">
+          {{ 'REQUIRED_FEILD' | translate }}
+        </p>
+      </ng-container>
+    </div>
+
+    <div class="form-control-group">
+      <label class="label">{{ 'MOBILE' | translate }}:</label>
+      <div class="input-group" style="direction: ltr !important;">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1">+966</span>
+        </div>
+        <input type="text" nbInput style="width: 100%; max-width: 80% !important;"
+          [formControl]="myForm.controls['mobile']"
+          [status]="submitted ? (myForm.controls.mobile.invalid  ? 'danger' : 'success') : 'basic'"
+          [(ngModel)]="user.mobile" placeholder="5XXXXXXXX" maxlength="9">
+      </div>
+      <ng-container *ngIf="myForm.controls.mobile.errors?.required && submitted">
+        <p class="caption status-danger">
+          {{ 'REQUIRED_FEILD' | translate }}
+        </p>
+      </ng-container>
+    </div>
+
+    <div class="form-control-group">
+      <label class="label" for="input-email">{{ 'EMAIL' | translate }}:</label>
+      <input nbInput fullWidth [(ngModel)]="user.email" name="email" id="input-email" pattern=".+@.+\..+"
+        fieldSize="large" [formControl]="myForm.controls['email']" type="email"
+        [status]="submitted ? (myForm.controls.email.invalid  ? 'danger' : 'success') : 'basic'">
+      <ng-container *ngIf="myForm.controls.email.errors?.required && submitted">
+        <p class="caption status-danger">
+          {{ 'REQUIRED_FEILD' | translate }}
+        </p>
+      </ng-container>
+    </div>
+
+    <button [nbSpinner]="loading" nbSpinnerStatus="danger" nbSpinnerSize="large" nbButton fullWidth status="primary" size="large" [disabled]="loading" [class.btn-pulse]="loading">
+      {{ 'REGISTER' | translate }}
+    </button>
+  </form>
+
+</div>
+
+<div class="success-message" *ngIf="sent">
+  <svg class="checkmark active" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" width="70">
+    <circle class="checkmark-circle" cx="26" cy="26" r="23" fill="none" />
+    <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+  </svg>
+  <div>
+    <h4>{{ 'SUCCESS' | translate }}!</h4>
+    <p>{{ 'ONE_OF_OUR' | translate:{email: user.email } }}</p>
+  </div>
+
+</div>

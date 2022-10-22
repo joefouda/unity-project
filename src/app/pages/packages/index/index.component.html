@@ -1,0 +1,102 @@
+<div>
+  <div>
+    <button nbButton outline status="primary" size="small" [routerLink]="'/pages/packages/add'">
+      <nb-icon icon="plus-outline"></nb-icon>{{ 'GENERIC.ADD' | translate }} {{ 'PACKAGE' | translate }}
+    </button>
+  </div>
+
+  <br />
+  <nb-accordion>
+    <nb-accordion-item #item>
+      <nb-accordion-item-header>
+        {{ 'SEARCH' | translate }}
+      </nb-accordion-item-header>
+      <nb-accordion-item-body>
+        <form class="form-inline">
+          <input type="text" nbInput fullWidth placeholder="{{ 'NAME' | translate }}" [(ngModel)]="query.name"
+            [ngModelOptions]="{standalone: true}">
+          <input type="text" nbInput fullWidth placeholder="{{ 'NAME_AR' | translate }}" [(ngModel)]="query.name_ar"
+            [ngModelOptions]="{standalone: true}">
+          <nb-select fullWidth placeholder="{{ 'PERIOD' | translate }}" [(ngModel)]="query.period"
+            [ngModelOptions]="{standalone: true}">
+            <nb-option value="1">{{ 'MONTHLY' | translate }}</nb-option>
+            <nb-option value="2">{{ 'EVERY_SIX_MONTH' | translate }}</nb-option>
+            <nb-option value="3">{{ 'YEARLY' | translate }}</nb-option>
+          </nb-select>
+          <button type="submit" nbButton status="primary" (click)="search()">{{ 'SEARCH' | translate }}</button>
+        </form>
+      </nb-accordion-item-body>
+    </nb-accordion-item>
+  </nb-accordion>
+  <br />
+
+  <div class="row">
+    <div class="col-md-3" *ngFor="let item of packages; let i = index">
+      <nb-card>
+        <nb-card-body>
+          <nb-badge *ngIf="item.is_active" text="{{ 'STATUS.ACTIVE' | translate }}" status="success"
+            position="top right"></nb-badge>
+          <nb-badge *ngIf="!item.is_active" text="{{ 'STATUS.DEACTIVE' | translate }}" status="danger"
+            position="top right"></nb-badge>
+
+          <div class="text-center">
+            <img (error)="onImgError($event)" src="{{imageUrl}}/packages/{{item.picture}}"  style="max-height: 200px; min-height: 180px !important;" />
+            <h4>{{item.name}} - {{item.name_ar}}</h4>
+            <p>{{item.price_per_user}} {{ 'SR' | translate }}/{{ 'USER' | translate }} - {{getPeriod(item.period)}}</p>
+            <p>{{item.min_number_of_employees}} - {{item.max_number_of_employees}} {{ 'EMPLOYEE' | translate }}</p>
+            <br />
+            <nb-actions fullWidth="true" class="text-center" size="tiny">
+              <nb-action [routerLink]="['/pages/packages/edit/', item.id]" icon="edit-outline"></nb-action>
+              <nb-action (click)="delete(i, item)" icon="trash-2-outline"></nb-action>
+              <nb-action (click)="toggle(i, item)" icon="eye-off-outline"></nb-action>
+            </nb-actions>
+          </div>
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </div>
+  <ng-container *ngIf="!loaded">
+    <div class="row loader-container">
+      <div class="col-md-3" *ngFor="let item of fakeItems">
+        <ngx-skeleton-loader [theme]="{ 'background-color': '#e8e8e8', 'border-radius': '0', height: '300px' }">
+        </ngx-skeleton-loader>
+      </div>
+    </div>
+  </ng-container>
+
+
+  <ul class="pagination" *ngIf="totalItems != null && totalItems > 0
+">
+    <li  class="page-item first-item" [class.disabled]="page == 1" [disabled]="page == 1" (click)="setPage(1)"><a class="page-link">{{ 'FIRST' |
+        translate }}</a></li>
+    <li class="page-item previous-item" [class.disabled]="page == 1" [disabled]="page == 1" (click)="setPage(page - 1)"><a class="page-link">{{
+        'PREVIOUS' | translate }}</a>
+    </li>
+    <li class="page-item number-item" *ngIf="page > 3" (click)="setPage(page - 3)"><a class="page-link">{{page - 3}}</a>
+    </li>
+    <li class="page-item number-item" *ngIf="page > 2" (click)="setPage(page - 2)"><a class="page-link">{{page - 2}}</a>
+    </li>
+    <li class="page-item number-item" *ngIf="page > 1" (click)="setPage(page - 1)"><a class="page-link">{{page - 1}}</a>
+    </li>
+    <li class="page-item number-item active"><a class="page-link">{{page}}</a></li>
+    <li class="page-item number-item" *ngIf="lastPage > page" (click)="setPage(page + 1)"><a class="page-link">{{page +
+        1}}</a></li>
+    <li class="page-item number-item" *ngIf="lastPage > page + 1" (click)="setPage(page + 2)"><a
+        class="page-link">{{page
+        + 2}}</a></li>
+    <li class="page-item number-item" *ngIf="lastPage > page + 2" (click)="setPage(page + 3)"><a
+        class="page-link">{{page
+        + 3}}</a></li>
+    <li class="page-item next-item" [class.disabled]="lastPage <= page" (click)="setPage(page + 1)"><a
+        class="page-link">{{ 'NEXT' | translate }}</a></li>
+    <div class="total-items"> {{ 'TOTAL_ITEMS' | translate }}: {{totalItems}} </div>
+  </ul>
+
+  <ng-container *ngIf="loaded && packages.length == 0">
+    <div class="text-center margin-bottom">
+      
+      <img class="no-result" src="assets/images/nothing.svg" width="50px" />
+      <p class="gray">{{ 'EMPTY_RESULT' | translate }}</p>
+    </div>
+  </ng-container>
+</div>

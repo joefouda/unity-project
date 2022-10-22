@@ -1,0 +1,122 @@
+<div>
+  <button outline status="primary" nbButton size="small" [routerLink]="'/pages/shifts/add'">
+    <nb-icon icon="plus-outline"></nb-icon>{{ 'GENERIC.ADD' | translate }} {{ 'SHIFT' | translate }}
+  </button>
+</div>
+<br/>
+<nb-accordion>
+  <nb-accordion-item #item>
+    <nb-accordion-item-header>
+      {{ 'SEARCH' | translate }}
+    </nb-accordion-item-header>
+    <nb-accordion-item-body>
+      <form class="form-inline">
+        <input type="text" nbInput fullWidth placeholder="{{ 'NAME' | translate }}" [(ngModel)]="query.name" [ngModelOptions]="{standalone: true}">
+        <nb-select fullWidth 
+        placeholder="{{ 'STATUS_TEXT' | translate }}" [(ngModel)]="query.is_active" [ngModelOptions]="{standalone: true}">
+        <nb-option value="1"> {{ 'STATUS.ACTIVE' | translate }}</nb-option>
+        <nb-option value="0"> {{ 'STATUS.DEACTIVE' | translate }}</nb-option>
+      </nb-select>
+        <button type="submit" nbButton status="primary" (click)="search()">{{ 'SEARCH' | translate }}</button>
+      </form>
+    </nb-accordion-item-body>
+  </nb-accordion-item>
+</nb-accordion>
+<br/>
+
+<div class="row">
+  <div class="col-md-4" *ngFor="let shift of shifts; let i = index">
+    <nb-card>
+      <nb-card-body>
+        <nb-badge *ngIf="shift.is_active" text="{{ 'STATUS.ACTIVE' | translate }}" status="success"
+          position="top right"></nb-badge>
+        <nb-badge *ngIf="!shift.is_active" text="{{ 'STATUS.DEACTIVE' | translate }}" status="danger"
+          position="top right"></nb-badge>
+
+        <nb-badge *ngIf="shift.company_id != null" text="{{ 'STATUS.CUSTOM' | translate }}" status="basic"
+          position="top left"></nb-badge>
+        <nb-badge *ngIf="shift.company_id == null" text="{{ 'STATUS.GENERIC' | translate }}" status="primary"
+          position="top left"></nb-badge>
+
+        <div class="text-center">
+          <h5>{{shift.name}} - {{shift.name_ar}}</h5>
+          <br />
+          <div *ngIf="shift.shift.type == '2'">
+            {{ 'NUMBER_OF_HOURS_A_WEEK' | translate }}:
+              <p>
+                {{shift.shift.number_of_hours}} 
+              </p>
+          </div>
+          <div *ngIf="shift.shift.type == '1'">
+            <div *ngIf="shift.shift.sun.from != null">
+              {{ 'SUN' | translate }}:
+              <p style="direction: ltr;">
+                {{shift.shift.sun.from}} - {{shift.shift.sun.to}}
+              </p>
+            </div>
+            <div *ngIf="shift.shift.mon.from != null">
+              {{ 'MON' | translate }}:
+              <p style="direction: ltr;">
+                {{shift.shift.mon.from}} - {{shift.shift.mon.to}}
+              </p>
+            </div>
+            <div *ngIf="shift.shift.tue.from != null">
+              {{ 'TUE' | translate }}:
+              <p style="direction: ltr;">
+                {{shift.shift.tue.from}} - {{shift.shift.tue.to}}
+              </p>
+            </div>
+            <div *ngIf="shift.shift.wed.from != null">
+              {{ 'WED' | translate }}:
+              <p style="direction: ltr;">
+                {{shift.shift.wed.from}} - {{shift.shift.wed.to}}
+              </p>
+            </div>
+
+            <div *ngIf="shift.shift.thu.from != null">
+              {{ 'THU' | translate }}:
+              <p style="direction: ltr;">
+                {{shift.shift.thu.from}} - {{shift.shift.thu.to}}
+              </p>
+            </div>
+
+            <div *ngIf="shift.shift.fri.from != null">
+              {{ 'FRI' | translate }}:
+              <p style="direction: ltr;">
+                {{shift.shift.fri.from}} - {{shift.shift.fri.to}}
+              </p>
+            </div>
+
+            <div *ngIf="shift.shift.sat.from != null">
+              {{ 'SAT' | translate }}:
+              <p style="direction: ltr;">
+                {{shift.shift.sat.from}} - {{shift.shift.sat.to}}
+              </p>
+            </div>
+          </div>
+
+          <nb-actions fullWidth="true" class="text-center" size="tiny">
+            <nb-action *ngIf="shift.company_id != null" [routerLink]="['/pages/shifts/edit/', shift.id]" icon="edit-outline"></nb-action>
+            <nb-action *ngIf="shift.company_id != null" (click)="delete(i, shift)" icon="trash-2-outline"></nb-action>
+            <nb-action *ngIf="shift.company_id != null" (click)="toggle(i, shift)" icon="eye-off-outline"></nb-action>
+          </nb-actions>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+<ng-container *ngIf="!loaded">
+  <div class="row loader-container">
+    <div class="col-md-6" *ngFor="let item of fakeItems">
+      <ngx-skeleton-loader [theme]="{ 'background-color': '#e8e8e8', 'border-radius': '0', height: '280px' }">
+      </ngx-skeleton-loader>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="loaded && shifts.length == 0">
+  <div class="text-center margin-bottom">
+    <img class="no-result" src="assets/images/nothing.svg" width="50px" />
+    <p class="gray">{{ 'EMPTY_RESULT' | translate }}</p>
+  </div>
+</ng-container>

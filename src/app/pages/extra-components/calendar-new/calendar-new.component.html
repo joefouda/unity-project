@@ -1,0 +1,150 @@
+<nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+  <nb-card-header>
+    {{ 'EVENTS' | translate }}
+    <div class="float-right" style="margin-bottom: 0px !important;">
+      <button nbButton outline status="primary" size="small" (click)="addEvent()">
+        {{ 'ADD_NEW' | translate }}
+      </button>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <div class="row">
+     
+      <div class="col-md-8">
+        <div class="row text-center calendar">
+          <div class="col-md-4">
+            <div class="btn-group">
+              <button nbButton ghost status="dark" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" 
+                (viewDateChange)="closeOpenMonthViewDay()">
+                 <nb-icon class="arrow-back-outline" icon="arrow-back-outline"></nb-icon> 
+              </button>
+              <p style="margin-top: 15px">{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</p>
+              <button nbButton ghost status="dark" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" 
+                (viewDateChange)="closeOpenMonthViewDay()">
+                <nb-icon class="arrow-forward-outline" icon="arrow-forward-outline"></nb-icon>
+              </button>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <h3></h3>
+          </div>
+          <div class="col-md-4">
+            <div class="btn-group">
+              <div class="btn btn-dark" (click)="setView(CalendarView.Month)" [class.active]="view === CalendarView.Month">
+                {{ 'MONTH' | translate }}
+              </div>
+              <div class="btn btn-dark" (click)="setView(CalendarView.Week)" [class.active]="view === CalendarView.Week">
+                {{ 'WEEK' | translate }}
+              </div>
+              <div class="btn btn-dark" (click)="setView(CalendarView.Day)" [class.active]="view === CalendarView.Day">
+                {{ 'DAY' | translate }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div [ngSwitch]="view">
+          <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="events"
+            [refresh]="refresh" [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)"
+            (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+          </mwl-calendar-month-view>
+          <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+            (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+          </mwl-calendar-week-view>
+          <mwl-calendar-day-view *ngSwitchCase="CalendarView.Day" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+            (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+          </mwl-calendar-day-view>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <ng-container *ngIf="!loading && events.length == 0">
+          <div class="text-center margin-bottom">
+            <img class="no-result" src="assets/images/nothing.svg" width="50px" />
+            <p class="gray">{{ 'EMPTY_RESULT' | translate }}</p>
+          </div>
+        </ng-container>
+        <div class="row" *ngFor="let eventx of events; let i = index">
+          <ng-container *ngIf="!eventx.holdiay">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="label">{{ 'TITLE' | translate }}:</label>
+                <input type="text" nbInput fullWidth [(ngModel)]="eventx.title" placeholder="{{ 'TITLE' | translate }}">
+              </div>
+            </div>
+            <div class="col-md-10">
+              <div class="form-group">
+                <label class="label">{{ 'USERS' | translate }}</label>
+                <ng-select appendTo="body" [multiple]="true" class="input-full-width size-medium status-basic shape-rectangle"
+                  [(ngModel)]="eventx.user_ids" nbInput fullWidth>
+                  <ng-option *ngFor="let user of users" [value]="user.id">{{user.name}}</ng-option>
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label class="label">{{ 'COLOR' | translate }}:</label>
+                <input type="color" class="form-control" [(ngModel)]="eventx.color.primary"
+                  placeholder="{{ 'COLOR' | translate }}">
+              </div>
+            </div>
+    
+            <div class="col-md-5">
+              <div class="form-group">
+                <label class="label">{{ 'STARTS_AT' | translate }}:</label>
+                <input type="text" class="form-control" mwlFlatpickr [(ngModel)]="eventx.start"
+                  (ngModelChange)="refresh.next()" [altInput]="true" [convertModelValue]="true" [enableTime]="true"
+                  dateFormat="Y-m-dTH:i" altFormat="F j, Y H:i" placeholder="{{ 'STARTS_AT' | translate }}">
+              </div>
+            </div>
+    
+            <div class="col-md-5">
+              <div class="form-group">
+                <label class="label">{{ 'ENDS_AT' | translate }}:</label>
+                <input type="text" class="form-control" mwlFlatpickr [(ngModel)]="eventx.end"
+                  (ngModelChange)="refresh.next()" [altInput]="true" [convertModelValue]="true" [enableTime]="true"
+                  dateFormat="Y-m-dTH:i" altFormat="F j, Y H:i" placeholder="{{ 'ENDS_AT' | translate }}">
+              </div>
+            </div>
+    
+          <ng-container *ngIf="eventx.id != null && eventx.user_id == myId">
+            <div class="col-md-1"  style="margin-top: 30px;">
+              <button class="btn btn-danger" (click)="deleteEvent(eventx, i)" >
+                D
+              </button>
+            </div>
+            <div class="col-md-1"  style="margin-top: 30px;">
+              <button class="btn btn-primary" (click)="save(eventx, i)" style="margin-left: 2px; margin-right: 2px;">
+              U
+              </button>
+            </div>
+            </ng-container>
+    
+            <div class="col-md-2" *ngIf="eventx.id == null" style="margin-top: 30px;">
+              <button class="btn btn-primary" (click)="save(eventx, i)">
+                {{ 'SAVE' | translate }}
+              </button>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>
+<ng-template #modalContent let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">{{ 'EVENT_TITLE' | translate }}</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div>
+      {{ 'EVENT' | translate }}:
+      <pre>{{ modalData?.event.title }}</pre>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">
+      {{ 'OK' | translate }}
+    </button>
+  </div>
+</ng-template>

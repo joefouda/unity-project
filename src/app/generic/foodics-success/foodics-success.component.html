@@ -1,0 +1,94 @@
+<div class="generic" style="width: 100% !important;" [class.opacityBg]='connecting || importing || showSuccess || error'>
+  <div class="row" style="margin: 50px;" *ngIf="gotData">
+    <div class="col-lg-6">
+      <h2>
+        {{ 'USERS' | translate }}
+      </h2>
+      <p>{{ 'K_USERS' | translate }}</p>
+      <ngx-datatable style="width: 90%" class="material striped" [rows]="users" [columnMode]="ColumnMode.force"
+        [selected]="selected" [selectionType]="'checkbox'" [selectAllRowsOnPage]="true" (select)='onSelect($event)'
+        [columns]="columns" [virtualization]="false" [scrollbarH]="false" [headerHeight]="50" [footerHeight]="50"
+        [rowHeight]="auto" [externalPaging]="true" [count]="page.totalElements" [limit]="page.size"
+        (page)="getResult($event)">
+      </ngx-datatable>
+      <br />
+      <br />
+    </div>
+
+    <div class="col-lg-6">
+      <h2>
+        {{ 'BRANCHES' | translate }}
+      </h2>
+      <p>{{ 'K_BRANCHES' | translate }}</p>
+      <ngx-datatable style="width: 90%" class="material striped" [rows]="branches" [columnMode]="ColumnMode.force"
+        [selected]="selectedBranches" [selectionType]="'checkbox'" [selectAllRowsOnPage]="true"
+        (select)='onSelect($event)' [columns]="columnsBranches" [virtualization]="false" [scrollbarH]="false"
+        [headerHeight]="50" [footerHeight]="50" rowHeight="auto" [externalPaging]="true" [count]="page2.totalElements"
+        [limit]="page2.size" (page)="getResult($event)">
+      </ngx-datatable>
+      <br />
+      <br />
+    </div>
+  </div>
+
+  <div class="row justify-content-center" style="margin: 50px;" *ngIf="selectedBranches.length > 0 || selected.length > 0">
+    <br />
+    <br />
+      <button style="width: 300px;" type="button" class="btn btn-dark" (click)="importToFoodics()">{{ 'IMPORT' |
+        translate }}</button>
+    <br />
+    <br />
+  </div>
+</div>
+<footer class="footer">
+  <p style="text-align: center;"> {{ 'CREATED_BY' | translate }} <b><a href="https://unisync.app/"
+        target="_blank">UniSync</a></b>
+        2022 </p>
+</footer>
+
+
+<div class="centeredDiv" *ngIf="connecting">
+  <div class="loadingio-spinner-dual-ball-unisync-animation-div">
+    <div class="unisync-animation">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+  <p>{{ 'CONNECTING' | translate }}...</p>
+</div>
+
+
+
+<div class="centeredDiv" *ngIf="importing">
+  <div class="loadingio-spinner-dual-ball-unisync-animation-div">
+    <div class="unisync-animation">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+  <p>{{ 'IMPORTING' | translate }}...</p>
+</div>
+
+
+
+<div class="centeredDiv" *ngIf="error">
+  <img src="assets/images/error.png" width="50px" style="margin-bottom: 20px !important;">
+  <p>{{ 'TOAST_MESSAGES.ERROR_INFO' | translate }}</p>
+  <a href="mailto:hello@unisync.app">hello@unisync.app</a>
+</div>
+
+
+<div class="centeredDiv" *ngIf="showSuccess">
+  <div class="success-message">
+    <svg class="checkmark active" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" width="70">
+      <circle class="checkmark-circle" cx="26" cy="26" r="23" fill="none" />
+      <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+    </svg>
+    <div>
+      <h4>{{ 'SUCCESS' | translate }}!</h4>
+      <p>{{ 'REDIRECTING' | translate }}...</p>
+    </div>
+  </div>
+</div>

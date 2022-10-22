@@ -1,0 +1,183 @@
+<div class="row">
+  <div class="col-md-8">
+    <h2>{{ 'MENU_ITEMS.USERS' | translate }}</h2>
+  </div>
+  <div class="col-md-4 " style="padding: 0px !important;">
+    <button class="float-right" nbButton outline status="primary" size="small" [routerLink]="'/pages/users/add'">
+      <nb-icon icon="plus-outline"></nb-icon>{{ 'GENERIC.ADD' | translate }} {{ 'USER' | translate }}
+    </button>
+    <button [nbSpinner]="exporting" nbSpinnerSize="small" class="float-right" nbButton outline status="dark"
+      size="small" (click)="export()">
+      {{ 'EXPORT' | translate }}
+    </button>
+  </div>
+</div>
+
+<!-- <div class="row" *ngIf="!employee">
+    <div class="col-md-3">
+      <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+        <nb-card-header>{{ 'TOTAL_AVAILABLE_LEAVES' | translate }}</nb-card-header>
+        <nb-card-body>
+          <h3>{{stats.pending}} <small>{{ 'DAYS' | translate }}</small></h3>
+        </nb-card-body>
+      </nb-card>
+    </div>
+    <div class="col-md-3">
+      <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+        <nb-card-header>{{ 'CURRENTLY_ON_LEAVE' | translate }}</nb-card-header>
+        <nb-card-body>
+          <h3>{{stats.currently}} <small>{{ 'EMPLOYEE' | translate }}</small></h3>
+        </nb-card-body>
+      </nb-card>
+    </div>
+    <div class="col-md-3">
+      <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+        <nb-card-header>{{ 'NEW_LEAVES' | translate }}</nb-card-header>
+        <nb-card-body>
+          <h3>{{stats.pending}}</h3>
+        </nb-card-body>
+      </nb-card>
+    </div>
+    <div class="col-md-3">
+      <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+        <nb-card-header>{{ 'REJECTED_LEAVES' | translate }}</nb-card-header>
+        <nb-card-body>
+          <h3>{{stats.rejected}}</h3>
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </div> -->
+
+
+
+<br />
+<nb-accordion>
+  <nb-accordion-item #item>
+    <nb-accordion-item-header>
+      {{ 'SEARCH' | translate }}
+    </nb-accordion-item-header>
+    <nb-accordion-item-body>
+      <form class="form-inline">
+        <input type="text" nbInput fullWidth placeholder="{{ 'NAME' | translate }}" [(ngModel)]="query.name"
+          [ngModelOptions]="{standalone: true}">
+        <input type="text" nbInput fullWidth placeholder="{{ 'MOBILE' | translate }}" [(ngModel)]="query.mobile"
+          [ngModelOptions]="{standalone: true}">
+        <nb-select fullWidth placeholder="{{ 'STATUS_TEXT' | translate }}" [(ngModel)]="query.is_active"
+          [ngModelOptions]="{standalone: true}">
+          <nb-option value="1"> {{ 'STATUS.ACTIVE' | translate }}</nb-option>
+          <nb-option value="0"> {{ 'STATUS.DEACTIVE' | translate }}</nb-option>
+        </nb-select>
+        <button type="submit" nbButton status="primary" (click)="search()">{{ 'SEARCH' | translate }}</button>
+      </form>
+    </nb-accordion-item-body>
+  </nb-accordion-item>
+</nb-accordion>
+<br />
+
+<ngx-datatable class="material striped" [virtualization]="false" [loadingIndicator]="loadingIndicator" [rows]="data"
+  [columnMode]="ColumnMode.force" [scrollbarH]="true" [headerHeight]="50" [footerHeight]="50" rowHeight="auto"
+  [externalPaging]="true" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+  (page)="getResult($event)">
+
+  <ngx-datatable-column name="#" [width]="10">
+    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
+      {{(rowIndex+1) + (page.pageNumber * page.size) }}
+    </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column name="{{ 'NAME' | translate }}" prop="name"></ngx-datatable-column>
+  <ngx-datatable-column name="{{ 'EMAIL' | translate }}" prop="email" [width]="100"></ngx-datatable-column>
+  <ngx-datatable-column name="{{ 'MOBILE' | translate }}" prop="mobile">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <span> {{value}}</span>
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column name="{{ 'ROLE' | translate }}" prop="role_id" [width]="100">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <div *ngIf="value == 1">{{ 'ADMIN' | translate }}</div>
+      <div *ngIf="value == 2">{{ 'MANAGER' | translate }}</div>
+      <div *ngIf="value == 3">{{ 'EMPLOYEE' | translate }}</div>
+      <div *ngIf="value == 4">{{ 'DEPARTMENT_MANAGER' | translate }}</div>
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column name="{{ 'COMPANY' | translate }}" prop="company" [width]="150">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <span *ngIf="value != null"> {{value.name}}</span>
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column name="{{ 'CREATED_AT' | translate }}" prop="created_at" [width]="200">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <span>{{value | amDateFormat:'dddd - MMMM Do YYYY'}}</span>
+    </ng-template>
+  </ngx-datatable-column>
+
+
+  <ngx-datatable-column name="{{ 'STATUS_TEXT' | translate }}" prop="is_active">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <ng-container *ngIf="!value">
+        <div class="span-status span-status-red">
+          <span>{{ 'STATUS.DEACTIVE' | translate }}</span>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="value">
+        <div class="span-status span-status-green">
+          <span>{{ 'STATUS.ACTIVE' | translate }}</span>
+        </div>
+      </ng-container>
+    </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column name="{{ 'ACTIONS' | translate }}" sortable="false" prop="id">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <button nbButton ghost size="small" status="primary" *ngIf="!row.is_active" (click)="activate(row)">
+        <nb-icon icon="checkmark-circle-outline"></nb-icon>
+      </button>
+      <button nbButton ghost size="small" status="danger" *ngIf="row.is_active" (click)="deactivate(row)">
+        <nb-icon icon="close-circle-outline"></nb-icon>
+      </button>
+      <button nbButton ghost size="small" status="primary" [routerLink]="['/pages/users/edit/', value]">
+        <nb-icon icon="edit-2-outline"></nb-icon>
+      </button>
+      <button *ngIf="row.role_id != 2" nbButton ghost size="small" status="danger" (click)="cancel(row)">
+        <nb-icon icon="trash-outline"></nb-icon>
+      </button>
+
+    </ng-template>
+  </ngx-datatable-column>
+</ngx-datatable>
+
+
+<table class="table" #myTableElementId id="myTableElementId" *ngIf="exported" style="display: none;">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">{{ 'NAME' | translate }}</th>
+      <th scope="col">{{ 'EMAIL' | translate }}</th>
+      <th scope="col">{{ 'MOBILE' | translate }}</th>
+      <th scope="col">{{ 'ROLE' | translate }}</th>
+      <th scope="col">{{ 'COMPANY' | translate }}</th>
+      <th scope="col">{{ 'CREATED_AT' | translate }}</th>
+      <th scope="col">{{ 'STATUS_TEXT' | translate }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of allData; let i = index">
+      <th scope="row">{{i + 1}}</th>
+      <td>{{item.name}}</td>
+      <td>{{item.email}}</td>
+      <td>{{item.mobile}}</td>
+      <td>
+        <div *ngIf="item.role_id == 1">{{ 'ADMIN' | translate }}</div>
+        <div *ngIf="item.role_id == 2">{{ 'MANAGER' | translate }}</div>
+        <div *ngIf="item.role_id == 3">{{ 'EMPLOYEE' | translate }}</div>
+      </td>
+      <td> <span *ngIf="item.company != null">{{item.company.name}} </span></td>
+      <td>{{item.created_at}}</td>
+      <td>
+        <div *ngIf="item.is_active">{{ 'ACTIVE' | translate }}</div>
+        <div *ngIf="!item.is_active">{{ 'INACTIVE' | translate }}</div>
+      </td>
+    </tr>
+  </tbody>
+</table>

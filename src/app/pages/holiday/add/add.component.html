@@ -1,0 +1,120 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+      <nb-card-header>
+        <ng-container *ngIf="!isEdit; else editDiv">{{ 'GENERIC.ADD' | translate }}</ng-container>
+        <ng-template #editDiv>{{ 'GENERIC.EDIT' | translate }}</ng-template>
+        {{ 'holiday' | translate }}
+      </nb-card-header>
+      <nb-card-body>
+        <form (ngSubmit)="save()" #form="ngForm">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'NAME' | translate }}*</label>
+                <input type="text" nbInput fullWidth
+                  [status]="submitted ? (myForm.controls.name.invalid  ? 'danger' : 'success') : 'basic'"
+                  [formControl]="myForm.controls['name']" [(ngModel)]="holiday.name"
+                  placeholder="{{ 'NAME' | translate }}">
+              </div>
+
+              <ng-container *ngIf="myForm.controls.name.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="label">{{ 'NAME_AR' | translate }}</label>
+                <input type="text" nbInput fullWidth [formControl]="myForm.controls['name_ar']"
+                  [(ngModel)]="holiday.name_ar" placeholder="{{ 'NAME_AR' | translate }}">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'CALENDAR_TYPE' | translate }}</label>
+                <nb-select fullWidth [formControl]="myForm.controls['type']"
+                  [status]="submitted ? (myForm.controls.type.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="holiday.type" placeholder="{{ 'CALENDAR_TYPE' | translate }}">
+                  <nb-option value="1">{{ 'GEORGIAN' | translate }}</nb-option>
+                  <nb-option value="2">{{ 'HIJRI_UM' | translate }}</nb-option>
+                </nb-select>
+              </div>
+              <ng-container *ngIf="myForm.controls.type.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+
+            <div class="col-md-6" *ngIf="holiday.type == '1'">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'HOLIDAY_DATE' | translate }}</label>
+                <input nbInput fullWidth [formControl]="myForm.controls['date']"
+                  [status]="submitted ? (myForm.controls.date.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="date" placeholder="{{ 'HOLIDAY_DATE' | translate }}" [nbDatepicker]="dobPicker">
+                <nb-rangepicker #dobPicker></nb-rangepicker>
+              </div>
+            </div>
+
+            <div class="col-md-6" *ngIf="holiday.type == '2'">
+              <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="1" [dayTemplate]="t" outsideDays="hidden">
+              </ngb-datepicker>
+
+              <ng-template #t let-date let-focused="focused">
+                <span class="custom-day"
+                      [class.focused]="focused"
+                      [class.range]="isRange(date)"
+                      [class.faded]="isHovered(date) || isInside(date)"
+                      (mouseenter)="hoveredDate = date"
+                      (mouseleave)="hoveredDate = null">
+                  {{ date.day }}
+                </span>
+              </ng-template>
+              <!-- <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1" class="label">{{ 'HOLIDAY_DATE_FROM' | translate }}</label>
+                    <ngb-datepicker class="rtl" #dp [(ngModel)]="hijri_date_from" [firstDayOfWeek]="7">
+                    </ngb-datepicker>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1" class="label">{{ 'HOLIDAY_DATE_TO' | translate }}</label>
+                    <ngb-datepicker class="rtl" #dp [(ngModel)]="hijri_date_to" [firstDayOfWeek]="7">
+                    </ngb-datepicker>
+                  </div>
+                </div>
+              </div> -->
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <div class="form-group">
+                <nb-toggle labelPosition="end" [(checked)]="holiday.is_active" [(ngModel)]="holiday.is_active" [ngModelOptions]="{standalone: true}">{{
+                  'ACTIVE' | translate }}</nb-toggle>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <nb-toggle labelPosition="end" [(checked)]="holiday.is_yearly_repeated" [(ngModel)]="holiday.is_yearly_repeated"
+                  [ngModelOptions]="{standalone: true}">{{
+                  'IS_YEARLY_REPEATED' | translate }}</nb-toggle>
+              </div>
+            </div>
+          </div>
+          <button nbButton type="submit" status="primary" size="medium">
+            {{ 'SAVE' | translate }}
+          </button>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

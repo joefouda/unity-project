@@ -1,0 +1,126 @@
+<div>
+  <button outline status="primary" nbButton size="small"
+  [routerLink]="'/pages/companies/add'">
+  <nb-icon icon="plus-outline"></nb-icon>{{ 'GENERIC.ADD' | translate }} {{ 'COMPANY' | translate }}
+</button>
+<button [nbSpinner]="exporting" nbSpinnerSize="small" class="float-right" nbButton outline status="dark" size="small"
+(click)="export()">
+  {{ 'EXPORT' | translate }} 
+</button>
+</div>
+<br/>
+<nb-accordion>
+  <nb-accordion-item #item>
+    <nb-accordion-item-header>
+      {{ 'SEARCH' | translate }}
+    </nb-accordion-item-header>
+    <nb-accordion-item-body>
+      <form class="form-inline">
+        <input type="text" nbInput fullWidth placeholder="{{ 'NAME' | translate }}" [(ngModel)]="query.name" [ngModelOptions]="{standalone: true}">
+        <input type="email" nbInput fullWidth placeholder="{{ 'EMAIL' | translate }}" [(ngModel)]="query.email" [ngModelOptions]="{standalone: true}">
+        <input type="text" nbInput fullWidth placeholder="{{ 'MOBILE' | translate }}" [(ngModel)]="query.mobile" [ngModelOptions]="{standalone: true}">
+        <button type="submit" nbButton status="primary" (click)="search()">{{ 'SEARCH' | translate }}</button>
+        <button nbButton status="light" (click)="reset()">{{ 'RESET' | translate }}</button>
+
+      </form>
+    </nb-accordion-item-body>
+  </nb-accordion-item>
+</nb-accordion>
+<br/>
+
+<div class="row">
+  <div class="col-md-3" *ngFor="let company of companies; let i = index">
+    <nb-card>
+      <nb-card-body>
+        <nb-badge *ngIf="company.is_active" text="{{ 'STATUS.ACTIVE' | translate }}" status="success"
+          position="top right"></nb-badge>
+        <nb-badge *ngIf="!company.is_active" text="{{ 'STATUS.DEACTIVE' | translate }}" status="danger"
+          position="top right"></nb-badge>
+
+        <div class="text-center">
+          <img (error)="onImgError($event)" src="{{imageUrl}}/companies/{{company.picture}}"
+          style="max-height: 200px; min-height: 150px !important;" />
+          <h4>{{company.name}}</h4>
+          <ng-container *ngIf="company.manager != null">
+            <p> {{company.manager.name}} </p>
+            <p> {{company.manager.email}} </p>
+            <p> {{company.manager.mobile}} </p>
+          </ng-container>
+          <br />
+          <nb-actions fullWidth="true" class="text-center" size="tiny">
+            <nb-action [routerLink]="['/pages/companies/edit/', company.id]" icon="edit-outline"></nb-action>
+            <nb-action (click)="delete(i, company)" icon="trash-2-outline"></nb-action>
+            <nb-action (click)="toggle(i, company)" icon="eye-off-outline"></nb-action>
+            <nb-action (click)="sendEmail(i, company)" icon="email-outline"></nb-action>
+
+          </nb-actions>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+<ng-container *ngIf="!loaded">
+  <div class="row loader-container">
+    <div class="col-md-3" *ngFor="let item of fakeItems">
+      <ngx-skeleton-loader [theme]="{ 'background-color': '#f3f3f3', 'border-radius': '0', height: '280px' }">
+      </ngx-skeleton-loader>
+    </div>
+  </div>
+</ng-container>
+
+<ul class="pagination" *ngIf="totalItems != null && totalItems > 0">
+  <li  class="page-item first-item" [class.disabled]="page == 1" [disabled]="page == 1" (click)="setPage(1)"><a class="page-link">{{ 'FIRST' |
+      translate }}</a></li>
+  <li class="page-item previous-item" [class.disabled]="page == 1" [disabled]="page == 1" (click)="setPage(page - 1)"><a class="page-link">{{
+      'PREVIOUS' | translate }}</a>
+  </li>
+  <li class="page-item number-item" *ngIf="page > 3" (click)="setPage(page - 3)"><a class="page-link">{{page - 3}}</a>
+  </li>
+  <li class="page-item number-item" *ngIf="page > 2" (click)="setPage(page - 2)"><a class="page-link">{{page - 2}}</a>
+  </li>
+  <li class="page-item number-item" *ngIf="page > 1" (click)="setPage(page - 1)"><a class="page-link">{{page - 1}}</a>
+  </li>
+  <li class="page-item number-item active"><a class="page-link">{{page}}</a></li>
+  <li class="page-item number-item" *ngIf="lastPage > page" (click)="setPage(page + 1)"><a class="page-link">{{page +
+      1}}</a></li>
+  <li class="page-item number-item" *ngIf="lastPage > page + 1" (click)="setPage(page + 2)"><a class="page-link">{{page
+      + 2}}</a></li>
+  <li class="page-item number-item" *ngIf="lastPage > page + 2" (click)="setPage(page + 3)"><a class="page-link">{{page
+      + 3}}</a></li>
+  <li class="page-item next-item" [class.disabled]="lastPage <= page" (click)="setPage(page + 1)"><a
+      class="page-link">{{ 'NEXT' | translate }}</a></li>
+      <div class="total-items"> {{ 'TOTAL_ITEMS' | translate }}: {{totalItems}} </div>
+</ul>
+
+<ng-container *ngIf="loaded && companies.length == 0">
+  <div class="text-center margin-bottom">
+    <img class="no-result" src="assets/images/nothing.svg" width="50px" />
+    <p class="gray">{{ 'EMPTY_RESULT' | translate }}</p>
+  </div>
+</ng-container>
+
+
+<table class="table" #myTableElementId id="myTableElementId" *ngIf="exported" style="display: none;">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">{{ 'COMPANY_NAME' | translate }} </th>
+      <th scope="col">{{ 'COMPANY_NAME_AR' | translate }} </th>
+      <th scope="col">{{ 'MANAGER_NAME' | translate }}</th>
+      <th scope="col">{{ 'MANAGER_EMAIL' | translate }}</th>
+      <th scope="col">{{ 'MANAGER_MOBILE' | translate }}</th>
+      <th scope="col">{{ 'CREATED_AT' | translate }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of allData; let i = index">
+      <th scope="row">{{i + 1}}</th>
+      <td>{{item.name}}</td>
+      <td>{{item.name_ar}}</td>
+      <td>{{item.manager.name}}</td>
+      <td>{{item.manager.email}}</td>
+      <td>{{item.manager.mobile}}</td>
+      <td>{{item.created_at}}</td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,460 @@
+<nb-card class="col-md-12 col-lg-12 col-xxxl-12" [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+
+  <nb-card-header>
+    <ng-container *ngIf="!isEdit; else editDiv">{{ 'GENERIC.ADD' | translate }}</ng-container>
+    <ng-template #editDiv>{{ 'GENERIC.EDIT' | translate }}</ng-template>
+    {{ 'EMPLOYEE' | translate }}
+  </nb-card-header>
+
+  <nb-card-body>
+    <form (ngSubmit)="save()" #form="ngForm">
+      <nb-stepper #stepper orientation="horizontal" linear="false" disableStepNavigation>
+        <nb-step [label]="labelOne">
+          <ng-template #labelOne>{{ 'PERSONAL_INFO' | translate }}</ng-template>
+          <div style="text-align: center; min-height: 150px; margin-bottom: 5px;">
+            <input style="display: none" accept='image/*' type="file" (change)="preview($event)" #fileInput>
+            <img [src]="imgURL" height="200" (click)="fileInput.click()" *ngIf="imgURL">
+            <img src="assets/images/male-picture.png" height="100" (click)="fileInput.click()" *ngIf="!imgURL">
+            <div for="exampleInputEmail1" class="label">{{ 'PROFILE_PICTURE' | translate }}</div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'FULLNAME' | translate }}*</label>
+                <input type="text" nbInput fullWidth
+                  [status]="submitted ? (myForm.controls.name.invalid  ? 'danger' : 'success') : 'basic'"
+                  [formControl]="myForm.controls['name']" [(ngModel)]="employee.name"
+                  placeholder="{{ 'FULLNAME' | translate }}">
+              </div>
+
+              <ng-container *ngIf="myForm.controls.name.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="label">{{ 'FULLNAME_AR' | translate }}</label>
+                <input type="text" nbInput fullWidth [formControl]="myForm.controls['name_ar']"
+                  [(ngModel)]="employee.name_ar" placeholder="{{ 'FULLNAME_AR' | translate }}">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'ID' | translate }}*</label>
+                <input type="number" nbInput fullWidth [formControl]="myForm.controls['identifier']"
+                  [status]="submitted ? (myForm.controls.identifier.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="employee.identifier" placeholder="{{ 'ID' | translate }}">
+              </div>
+              <ng-container *ngIf="myForm.controls.identifier.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="label">{{ 'EMAIL' | translate }}*</label>
+                <input type="email" nbInput fullWidth [formControl]="myForm.controls['email']"
+                  [status]="submitted ? (myForm.controls.email.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="employee.email" placeholder="{{ 'EMAIL' | translate }}">
+              </div>
+              <ng-container *ngIf="myForm.controls.email.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="label">{{ 'MOBILE' | translate }}*</label>
+                <div class="input-group" style="direction: ltr !important;">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">+966</span>
+                  </div>
+                  <input type="text" nbInput style="width: 70%;" [formControl]="myForm.controls['mobile']"
+                    [status]="submitted ? (myForm.controls.mobile.invalid  ? 'danger' : 'success') : 'basic'"
+                    [(ngModel)]="employee.mobile" placeholder="{{ 'MOBILE' | translate }}">
+                </div>
+              </div>
+              <ng-container *ngIf="myForm.controls.mobile.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+          </div>
+          <!-- important document photos -->
+          <!-- national id photo -->
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="label">National ID Photo</label>
+                <div class="input-group" style="direction: ltr !important;">
+                  <input type="file" nbInput style="width: 70%;" [formControl]="myForm.controls['nationalIdPhoto']"
+                    id="nationalIdPhoto"
+                    [status]="submitted ? (myForm.controls.nationalIdPhoto.invalid  ? 'danger' : 'success') : 'basic'"
+                    placeholder="National ID file"
+                    (change)="onFileChange('nationalIdPhoto',$event)">
+                </div>
+              </div>
+            </div>
+
+            <!-- iqama photo -->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="label">Iqama Photo</label>
+                <div class="input-group" style="direction: ltr !important;">
+                  <input type="file" nbInput style="width: 70%;" [formControl]="myForm.controls['iqamaPhoto']"
+                    id="iqamaPhoto"
+                    [status]="submitted ? (myForm.controls.iqamaPhoto.invalid  ? 'danger' : 'success') : 'basic'"
+                    placeholder="Iqama file"
+                    (change)="onFileChange('iqamaPhoto',$event)">
+                </div>
+              </div>
+            </div>
+
+            <!-- contract photo -->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="label">Contract Photo</label>
+                <div class="input-group" style="direction: ltr !important;">
+                  <input type="file" nbInput style="width: 70%;" [formControl]="myForm.controls['contractPhoto']"
+                    id="contractPhoto"
+                    [status]="submitted ? (myForm.controls.contractPhoto.invalid  ? 'danger' : 'success') : 'basic'"
+                    placeholder="Contract file"
+                    (change)="onFileChange('contractPhoto',$event)">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- important document's photos -->
+
+          <!-- important documents Expire date -->
+          <!-- national id expire date -->
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="label">National ID Expire Date</label>
+                <div class="input-group" style="direction: ltr !important;">
+                  <input type="date" nbInput style="width: 70%;" [formControl]="myForm.controls['nationalIdExDate']"
+                    id="nationalIdExDate"
+                    [status]="submitted ? (myForm.controls.nationalIdExDate.invalid  ? 'danger' : 'success') : 'basic'"
+                    placeholder="National ID Expire Date"
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- iqama expire date -->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="label">Iqama Expire Date</label>
+                <div class="input-group" style="direction: ltr !important;">
+                  <input type="date" nbInput style="width: 70%;" [formControl]="myForm.controls['iqamaExDate']"
+                    id="iqamaExDate"
+                    [status]="submitted ? (myForm.controls.iqamaExDate.invalid  ? 'danger' : 'success') : 'basic'"
+                    placeholder="Iqama Photo">
+                </div>
+              </div>
+            </div>
+
+            <!-- contract expire date -->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="label">Contract Expire Date</label>
+                <div class="input-group" style="direction: ltr !important;">
+                  <input type="date" nbInput style="width: 70%;" [formControl]="myForm.controls['contractExDate']"
+                    id="contractExDate"
+                    [status]="submitted ? (myForm.controls.contractExDate.invalid  ? 'danger' : 'success') : 'basic'"
+                    placeholder="Contract Expire Date"
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- important document's Expire date -->
+
+          <button nbButton status="primary" size="medium" (click)="nextOne()">{{ 'NEXT' | translate }}</button>
+        </nb-step>
+        <nb-step [label]="labelTwo">
+          <ng-template #labelTwo>{{ 'EXTRA_INFO' | translate }}</ng-template>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'DEPARTMENT' | translate }}*</label>
+                <nb-select fullWidth [formControl]="myForm.controls['department_id']"
+                  [status]="submitted ? (myForm.controls.department_id.invalid  ? 'danger' : 'success') : 'basic'"
+                  placeholder="{{ 'DEPARTMENT' | translate }}" [(ngModel)]="employee.department_id">
+                  <nb-option *ngFor="let item of departments" value="{{item.id}}">{{item.name}} - {{item.name_ar}}
+                  </nb-option>
+                </nb-select>
+              </div>
+              <ng-container *ngIf="myForm.controls.department_id.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'POSITION' | translate }}*</label>
+                <nb-select fullWidth [formControl]="myForm.controls['position']"
+                  [status]="submitted ? (myForm.controls.position.invalid  ? 'danger' : 'success') : 'basic'"
+                  placeholder="{{ 'POSITION' | translate }}" [(ngModel)]="employee.position">
+                  <nb-option *ngFor="let item of positions" value="{{item.id}}">{{item.name}} - {{item.name_ar}}
+                  </nb-option>
+                </nb-select>
+              </div>
+              <ng-container *ngIf="myForm.controls.position.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'WORK_SHIFT' | translate }}*</label>
+                <nb-select fullWidth [formControl]="myForm.controls['work_shift']"
+                  [status]="submitted ? (myForm.controls.work_shift.invalid  ? 'danger' : 'success') : 'basic'"
+                  placeholder="{{ 'WORK_SHIFT' | translate }}" [(ngModel)]="employee.work_shift">
+                  <nb-option *ngFor="let item of shifts" value="{{item.id}}">{{item.name}} - {{item.name_ar}}
+                  </nb-option>
+                </nb-select>
+              </div>
+              <ng-container *ngIf="myForm.controls.work_shift.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'EMPLOYEE_ID' | translate }}*</label>
+                <input type="number" nbInput fullWidth [formControl]="myForm.controls['employee_id']"
+                  [status]="submitted ? (myForm.controls.employee_id.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="employee.employee_id" placeholder="{{ 'EMPLOYEE_ID' | translate }}">
+              </div>
+              <ng-container *ngIf="myForm.controls.employee_id.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'DATE_OF_BIRTH' | translate }}</label>
+                <input nbInput fullWidth [formControl]="myForm.controls['date_of_birth']" autocomplete="off"
+                  [status]="submitted ? (myForm.controls.date_of_birth.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="employee.date_of_birth" placeholder="{{ 'DATE_OF_BIRTH' | translate }}"
+                  [nbDatepicker]="dobPicker" name="dob">
+                <nb-datepicker #dobPicker></nb-datepicker>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'JOINED_DATE' | translate }}</label>
+                <input nbInput fullWidth [formControl]="myForm.controls['joined_at']" autocomplete="off"
+                  [status]="submitted ? (myForm.controls.joined_at.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="employee.joined_at" placeholder="{{ 'JOINED_DATE' | translate }}"
+                  [nbDatepicker]="joindedPicker" name="joined_at">
+                <nb-datepicker #joindedPicker></nb-datepicker>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'GENDER' | translate }}</label>
+                <nb-select fullWidth [formControl]="myForm.controls['gender']"
+                  [status]="submitted ? (myForm.controls.gender.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="employee.gender" placeholder="{{ 'GENDER' | translate }}">
+                  <nb-option value="1">{{ 'MALE' | translate }}</nb-option>
+                  <nb-option value="2">{{ 'FEMALE' | translate }}</nb-option>
+                </nb-select>
+              </div>
+              <ng-container *ngIf="myForm.controls.gender.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'PREFERRED_LANG' | translate }}</label>
+                <nb-select fullWidth [formControl]="myForm.controls['preferred_lang']"
+                  [status]="submitted ? (myForm.controls.preferred_lang.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="employee.preferred_lang" placeholder="{{ 'PREFERRED_LANG' | translate }}">
+                  <nb-option value="en">{{ 'ENGLISH' | translate }}</nb-option>
+                  <nb-option value="ar">{{ 'ARABIC' | translate }}</nb-option>
+                </nb-select>
+              </div>
+              <ng-container *ngIf="myForm.controls.preferred_lang.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+          </div>
+
+          <button nbButton nbStepperPrevious>{{ 'PREVIOUS' | translate }}</button>
+          <button nbButton status="primary" size="medium" (click)="nextTwo()" style="margin: 0px 10px !important;">{{
+            'NEXT' | translate }}</button>
+        </nb-step>
+        <nb-step label="{{ 'SALARY_WISE' | translate }}">
+          <div class="row">
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'BASIC_SALARY' | translate }}</label>
+                <div class="input-group" style="direction: ltr !important;">
+
+                  <input type="number" nbInput fullWidth style="width: 70% !important;"
+                    [formControl]="myForm.controls['basic_salary']"
+                    [status]="submitted ? (myForm.controls.basic_salary.invalid  ? 'danger' : 'success') : 'basic'"
+                    [(ngModel)]="employee.basic_salary" placeholder="{{ 'BASIC_SALARY' | translate }}">
+
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="basic-addon1">{{ 'SR' | translate }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'allowances' | translate }}</label>
+                <nb-select multiple fullWidth [formControl]="myForm.controls['allowances']"
+                  [status]="submitted ? (myForm.controls.allowances.invalid  ? 'danger' : 'success') : 'basic'"
+                  placeholder="{{ 'allowances' | translate }}" [(ngModel)]="employee.allowances"
+                  [selected]="employee.allowances">
+                  <nb-option *ngFor="let item of allowances" value="{{item.id}}">{{item.name}} - {{item.name_ar}}
+                  </nb-option>
+                </nb-select>
+              </div>
+              <ng-container *ngIf="myForm.controls.allowances.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'CONTACT_DURATION' | translate }}*</label>
+                <div class="input-group" style="direction: ltr !important;">
+                  <input type="number" nbInput fullWidth style="width: 50% !important;"
+                    [formControl]="myForm.controls['contract_duration_period']"
+                    [status]="submitted ? (myForm.controls.contract_duration_period.invalid  ? 'danger' : 'success') : 'basic'"
+                    [(ngModel)]="employee.contract_duration" placeholder="{{ 'CONTACT_DURATION' | translate }}">
+
+                  <div class="input-group-append">
+                    <nb-select fullWidth [(selected)]="employee.contract_duration_type"
+                      [formControl]="myForm.controls['contract_duration_type']"
+                      [status]="submitted ? (myForm.controls.contract_duration_type.invalid  ? 'danger' : 'success') : 'basic'"
+                      [(ngModel)]="employee.contract_duration_type" name="contract_duration_type">
+                      <nb-option value="YEARLY">{{ 'YEARLY' | translate }}</nb-option>
+                      <nb-option value="MONTHLY">{{ 'MONTHLY' | translate }}</nb-option>
+                    </nb-select>
+                  </div>
+                </div>
+              </div>
+              <ng-container *ngIf="myForm.controls.contract_duration_period.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'YEARLY_VACATION_BALANCE' | translate }}</label>
+                <input type="number" nbInput fullWidth [formControl]="myForm.controls['yearly_total']"
+                  [status]="submitted ? (myForm.controls.yearly_total.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="employee.yearly_total" maxlength="2" [max]="companyProfile.yearly_vacation_balance"
+                  placeholder="{{ 'YEARLY_VACATION_BALANCE' | translate }}">
+              </div>
+              <ng-container *ngIf="myForm.controls.yearly_total.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'CURRENT_VACATION_BALANCE' | translate }}</label>
+                <input type="number" nbInput fullWidth [formControl]="myForm.controls['current']"
+                  [status]="submitted ? (myForm.controls.current.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="employee.current" maxlength="2" [max]="employee.yearly_total"
+                  placeholder="{{ 'CURRENT_VACATION_BALANCE' | translate }}">
+              </div>
+              <ng-container *ngIf="myForm.controls.current.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'URGENT_VACATION_BALANCE' | translate }}</label>
+                <input type="number" nbInput fullWidth [formControl]="myForm.controls['urgent']"
+                  [status]="submitted ? (myForm.controls.urgent.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="employee.urgent" maxlength="2" [max]="companyProfile.urgent_vacation_balance"
+                  placeholder="{{ 'URGENT_VACATION_BALANCE' | translate }}">
+              </div>
+              <ng-container *ngIf="myForm.controls.urgent.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'URGENT_CURRENT_VACATION_BALANCE' | translate
+                  }}</label>
+                <input type="number" nbInput fullWidth [formControl]="myForm.controls['urgent_total']"
+                  [status]="submitted ? (myForm.controls.urgent_total.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="employee.urgent_total" maxlength="2" [max]="employee.urgent"
+                  placeholder="{{ 'URGENT_CURRENT_VACATION_BALANCE' | translate }}">
+              </div>
+              <ng-container *ngIf="myForm.controls.urgent_total.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+          </div>
+
+
+          <button nbButton nbStepperPrevious>{{ 'PREVIOUS' | translate }}</button>
+
+          <button nbButton type="submit" status="primary" size="medium" style="margin: 0px 10px !important;">
+            {{ 'SAVE' | translate }}
+          </button>
+        </nb-step>
+      </nb-stepper>
+    </form>
+  </nb-card-body>
+</nb-card>

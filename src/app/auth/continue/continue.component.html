@@ -1,0 +1,62 @@
+
+<div class="text-center" style="margin-bottom: 40px !important;">
+  <img src="assets/images/{{logo}}" height="150">
+</div>
+<p class="" style="margin: 0px !important;">{{ 'HI' | translate }}, {{user.name}}</p>
+<p class="">{{ 'COMPLETE_REGISTRATION' | translate }}</p>
+
+
+<form (ngSubmit)="update()" #form="ngForm" aria-labelledby="title">
+
+  <div class="form-control-group">
+    <label class="label" for="input-email">{{ 'LOGIN_PAGE.EMAIL' | translate }}:</label>
+    <input nbInput
+           fullWidth
+           [(ngModel)]="user.email"
+           name="email"
+           id="input-email"
+           pattern=".+@.+\..+"
+           fieldSize="large"
+           disabled="true"
+           >
+  </div>
+
+  <div class="form-control-group">
+    <input nbInput
+           fullWidth
+           [(ngModel)]="user.password"
+           name="password"
+           type="password"
+           id="input-password"
+           placeholder="{{ 'LOGIN_PAGE.PASSWORD' | translate }}"
+           fieldSize="large"
+           [formControl]="myForm.controls['password']"
+           [status]="submitted ? (myForm.controls.password.invalid  ? 'danger' : 'success') : 'basic'"
+           [attr.aria-invalid]="myForm.controls.password.invalid && myForm.controls.password.touched ? true : null">
+    <ng-container *ngIf="myForm.controls.password.invalid && myForm.controls.password.touched ">
+      <p class="caption status-danger" *ngIf="myForm.controls.password.errors?.required">
+        {{ 'LOGIN_PAGE.PASSWORD_REQUIRED' | translate }}
+
+      </p>
+      <p class="caption status-danger" *ngIf="myForm.controls.password.errors?.minlength || myForm.controls.password.errors?.maxlength">
+        Password should contain
+        from 8
+        to 20
+        characters
+      </p>
+    </ng-container>
+  </div>
+
+  <button nbButton
+          fullWidth
+          status="primary"
+          size="large"
+          [disabled]="loading"
+          [class.btn-pulse]="loading">
+          {{ 'COMPLETE' | translate }}
+  </button>
+</form>
+
+<!-- <section class="another-action" aria-label="Register">
+  Don't have an account? <a class="text-link" routerLink="../register">Register</a>
+</section> -->

@@ -1,0 +1,264 @@
+<ng-continaer *ngIf="role == 1">
+
+  <div class="row">
+    <div class="col-md-3">
+      <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+        <nb-card-header>{{ 'COMPANIES' | translate }}</nb-card-header>
+        <nb-card-body>
+          <h3>{{stats.companies}} <small>{{ 'COMPANY' | translate }}</small></h3>
+        </nb-card-body>
+      </nb-card>
+    </div>
+    <div class="col-md-3">
+      <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+        <nb-card-header>{{ 'EMPLOYEES' | translate }}</nb-card-header>
+        <nb-card-body>
+          <h3>{{stats.employees}} <small>{{ 'EMPLOYEE' | translate }}</small></h3>
+        </nb-card-body>
+      </nb-card>
+    </div>
+    <div class="col-md-3">
+      <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+        <nb-card-header>{{ 'MONEY_MADE' | translate }}</nb-card-header>
+        <nb-card-body>
+          <h3>{{stats.moneyMade | number}} <small>{{ 'SR' | translate }}</small></h3>
+        </nb-card-body>
+      </nb-card>
+    </div>
+    <div class="col-md-3">
+      <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+        <nb-card-header>{{ 'LOGGED_IN_TODAY' | translate }}</nb-card-header>
+        <nb-card-body>
+          <h3>{{stats.loggedInToday}} <small>{{ 'EMPLOYEE' | translate }}</small></h3>
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </div>
+</ng-continaer>
+<ng-continaer *ngIf="role == 2">
+  <div class="row">
+    <div class="col-md-3">
+      <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+        <nb-card-header>{{ 'EMPLOYEES' | translate }}</nb-card-header>
+        <nb-card-body>
+          <h3>{{stats.employees}} <small>{{ 'EMPLOYEE' | translate }}</small></h3>
+        </nb-card-body>
+      </nb-card>
+    </div>
+    <div class="col-md-3">
+      <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+        <nb-card-header>{{ 'DEPARTMENTS' | translate }}</nb-card-header>
+        <nb-card-body>
+          <h3>{{stats.departments}} <small>{{ 'DEPARTMENT' | translate }}</small></h3>
+        </nb-card-body>
+      </nb-card>
+    </div>
+    <div class="col-md-3">
+      <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+        <nb-card-header>{{ 'SALARYS' | translate }}</nb-card-header>
+        <nb-card-body>
+          <h3>{{stats.salaries | number}} <small>{{ 'SR' | translate }}</small></h3>
+        </nb-card-body>
+      </nb-card>
+    </div>
+    <div class="col-md-3">
+      <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+        <nb-card-header>{{ 'ON_DUTY_NOW' | translate }}</nb-card-header>
+        <nb-card-body>
+          <h3>{{stats.on_duty_now}} <small>{{ 'EMPLOYEE' | translate }}</small></h3>
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+        <nb-card-header>{{ 'REMEAINING_EMPLOYYES' | translate }}</nb-card-header>
+        <nb-card-body>
+          <div class="single-chart">
+            <svg viewBox="0 0 36 36" class="circular-chart orange">
+              <path class="circle-bg" d="M18 2.0845
+                  a 15.9155 15.9155 0 0 1 0 31.831
+                  a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <path class="circle" attr.stroke-dasharray="{{stats.employees_remaining_perc}}, 100" d="M18 2.0845
+                  a 15.9155 15.9155 0 0 1 0 31.831
+                  a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <text x="18" y="20.35" class="percentage">{{stats.employees_remaining_perc}}%</text>
+            </svg>
+          </div>
+          <h3>{{stats.employees_remaining}} <small>{{ 'EMPLOYEE_REMEAINING' | translate }}</small></h3>
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <button nbButton hero shape="rectangle" status="primary"  (click)="linkFoodics()">
+        <span  *ngIf="!gotFoodics">{{ 'CONNECT_TO_FOODICS' | translate }}</span>
+        <span  *ngIf="gotFoodics">{{ 'RESYNC_WITH_FOODICS' | translate }}</span>
+        </button>
+        <br>
+        <br>
+    </div>
+  </div>
+  <div class="centeredDiv" *ngIf="connecting">
+    <div class="loadingio-spinner-dual-ball-unisync-animation-div">
+      <div class="unisync-animation">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+    <p>{{ 'CONNECTING' | translate }}...</p>
+
+  </div>
+
+
+</ng-continaer>
+<ng-continaer *ngIf="role == 3 || role == 4">
+  <div class="row">
+    <div class="col-md-12" style="max-height: 500px; margin-bottom: 20px !important;">
+      <zxing-scanner *ngIf="scannerEnabled" #scanner (scanSuccess)="scanSuccessHandler($event)">
+      </zxing-scanner>
+    </div>
+    <br />
+  </div>
+  <ng-container *ngIf="!scannerEnabled">
+
+    <div class="row">
+      <div class="col-md-12 col-lg-3 col-xxxl-3">
+        <nb-card class="statusCard" (click)="logIn()" [nbSpinner]="loadingAttendance" nbSpinnerStatus="primary"
+          nbSpinnerSize="giant">
+          <div class="icon-container">
+            <div class="icon status-{{ inCard.type }}">
+              <i [ngClass]="inCard.iconClass"></i>
+            </div>
+          </div>
+          <div class="details">
+            <div class="title h5">{{ inCard.title }}</div>
+            <div class="status paragraph-2" *ngIf="todaysOn != null" style="direction: ltr;">{{todaysOn |
+              amDateFormat:'h:mm a'}}</div>
+          </div>
+        </nb-card>
+      </div>
+      <div class="col-md-12 col-lg-3 col-xxxl-3">
+        <nb-card class="statusCard" (click)="logout()" [nbSpinner]="loadingAttendance" nbSpinnerStatus="primary"
+          nbSpinnerSize="giant">
+          <div class="icon-container">
+            <div class="icon status-{{ outCard.type }}">
+              <i [ngClass]="outCard.iconClass"></i>
+            </div>
+          </div>
+          <div class="details">
+            <div class="title h5">{{ outCard.title }}</div>
+            <div class="status paragraph-2" *ngIf="todaysOff != null" style="direction: ltr;">{{todaysOff |
+              amDateFormat:'h:mm a'}}</div>
+          </div>
+        </nb-card>
+      </div>
+      <div class="col-md-12 col-lg-3 col-xxxl-3">
+        <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+          <nb-card-header>{{ 'TOTAL_SALARY' | translate }}</nb-card-header>
+          <nb-card-body>
+            <h3>{{stats.total_salary}} <small>{{ 'SR' | translate }}</small></h3>
+          </nb-card-body>
+        </nb-card>
+      </div>
+      <div class="col-md-12 col-lg-3 col-xxxl-3">
+        <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+          <nb-card-header>{{ 'TOTAL_DELAYS' | translate }}</nb-card-header>
+          <nb-card-body>
+            <h3>
+              {{stats.total_delays.hours}} <small>{{ 'HOURS' | translate }}</small>
+              {{stats.total_delays.minutes}} <small>{{ 'MINUTES' | translate }}</small>
+              <!-- {{stats.total_delays.secs}} <small>{{ 'SECS' | translate }}</small> -->
+            </h3>
+          </nb-card-body>
+        </nb-card>
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-md-12 col-lg-6 col-xxxl-6">
+        <nb-card class="list-card" [nbSpinner]="loadingattendance" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+          <nb-card-header>{{ 'attendances' | translate }}</nb-card-header>
+          <nb-list>
+            <nb-list-item *ngFor="let item of attendances; let i = index">
+              <span style="width: 50% !important;">{{item.in | amDateFormat:'dddd - MMMM Do YYYY'}} </span> &nbsp;
+              <div style="width: 50% !important;  display: flex;">
+                <div style="width: 50% !important; display: flex;">
+                  <div class="greenDay"></div> {{item.in | amDateFormat:'h:mm a'}}
+                </div>
+                <div style="width: 50% !important; display: flex;">
+                  <div class="redDay"></div> {{item.out | amDateFormat:'h:mm a'}}
+                </div>
+              </div>
+            </nb-list-item>
+          </nb-list>
+        </nb-card>
+      </div>
+      <div class="col-md-3">
+
+        <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+          <nb-card-header>{{ 'YEARLY_LEAVES_REMEAINING' | translate }}</nb-card-header>
+          <nb-card-body>
+            <div class="single-chart">
+              <svg viewBox="0 0 36 36" class="circular-chart blue">
+                <path class="circle-bg" d="M18 2.0845
+                  a 15.9155 15.9155 0 0 1 0 31.831
+                  a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <path class="circle" attr.stroke-dasharray="{{stats.yearly_leaves_remaining_perc}}, 100" d="M18 2.0845
+                  a 15.9155 15.9155 0 0 1 0 31.831
+                  a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <text x="18" y="20.35" class="percentage">{{stats.yearly_leaves_remaining_perc}}%</text>
+              </svg>
+            </div>
+
+            <h3>{{stats.yearly_leaves_remaining}} <small>{{ 'DAYS' | translate }}</small></h3>
+          </nb-card-body>
+        </nb-card>
+      </div>
+      <div class="col-md-3">
+        <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+          <nb-card-header>{{ 'URGENT_LEAVES_REMEAINING' | translate }}</nb-card-header>
+          <nb-card-body>
+            <div class="single-chart">
+              <svg viewBox="0 0 36 36" class="circular-chart orange">
+                <path class="circle-bg" d="M18 2.0845
+                  a 15.9155 15.9155 0 0 1 0 31.831
+                  a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <path class="circle" attr.stroke-dasharray="{{stats.urgent_leaves_remaining_perc}}, 100" d="M18 2.0845
+                  a 15.9155 15.9155 0 0 1 0 31.831
+                  a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <text x="18" y="20.35" class="percentage">{{stats.urgent_leaves_remaining_perc}}%</text>
+              </svg>
+            </div>
+            <h3>{{stats.urgent_leaves_remaining}} <small>{{ 'DAYS' | translate }}</small></h3>
+          </nb-card-body>
+        </nb-card>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="role == 4">
+      <div class="col-md-3">
+        <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+          <nb-card-header>{{ 'EMPLOYEES' | translate }}</nb-card-header>
+          <nb-card-body>
+            <h3>{{stats.employees}} <small>{{ 'EMPLOYEE' | translate }}</small></h3>
+          </nb-card-body>
+        </nb-card>
+      </div>
+      <div class="col-md-3">
+        <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+          <nb-card-header>{{ 'ON_DUTY_NOW' | translate }}</nb-card-header>
+          <nb-card-body>
+            <h3>{{stats.on_duty_now}} <small>{{ 'EMPLOYEE' | translate }}</small></h3>
+          </nb-card-body>
+        </nb-card>
+      </div>
+    </div>
+  </ng-container>
+
+</ng-continaer>

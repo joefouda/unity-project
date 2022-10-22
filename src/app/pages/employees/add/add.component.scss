@@ -1,0 +1,13 @@
+:host ::ng-deep nb-stepper .step-content button {
+    text-align: center;
+  
+    button {
+      cursor: pointer;
+      margin: 0.5rem;
+    }
+  }
+
+  :host ::ng-deep nb-stepper .header{
+      padding: 0px 40px !important;
+  }
+  

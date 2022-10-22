@@ -1,0 +1,68 @@
+<div class="row">
+  <div class="col-md-8">
+    <h2>{{ 'MENU_ITEMS.CHAT' | translate }}</h2>
+  </div>
+  <div class="col-md-4 " style="padding: 0px !important;">
+    <button class="float-right" nbButton outline status="primary" size="small" (click)="newConv()">
+      <nb-icon icon="plus-outline"></nb-icon>{{ 'START_NEW_CONV' | translate }}
+    </button>
+  </div>
+</div>
+
+
+
+
+<div class="row">
+  <div class="chat-container col-lg-6 col-xxxl-6">
+    <nb-card size="small">
+      <nb-list>
+        <nb-list-item>
+          <nb-user #dummy name="{{ 'GROUP' | translate }}" title="{{ 'COMPANY_GROUP' | translate }}"
+            (click)="openSession(this.companyGroup, dummy.title , null)">
+          </nb-user>
+        </nb-list-item>
+        <nb-list-item *ngFor="let session of sessions" [class.selected]="sessionId == session.id">
+          <ng-container *ngIf="session.sender_id != myId; else meSender">
+            <nb-user [name]="session.sender.name" [title]="session.sender.email"
+              (click)="openSession(session, session.sender.name, session.sender.id)">
+            </nb-user>
+          </ng-container>
+          <ng-template #meSender>
+            <nb-user [name]="session.receiver.name" [title]="session.receiver.email"
+              (click)="openSession(session, session.receiver.name, session.receiver.id)">
+            </nb-user>
+          </ng-template>
+        </nb-list-item>
+      </nb-list>
+    </nb-card>
+  </div>
+  <div class="chat-container col-lg-6 col-xxxl-6" *ngIf="chat">
+    <nb-chat title="{{chat.name}}" size="large" status="primary" style="width: 100% !important;">
+      <nb-chat-message *ngFor="let msg of messages" [type]="msg.type" [message]="msg.message" [reply]="msg.reply"
+        [sender]="msg.sender.name" [date]="msg.created_at" [files]="msg.message" [quote]="msg.quote"
+        [latitude]="msg.latitude" [longitude]="msg.longitude" [avatar]="msg.sender.picture">
+      </nb-chat-message>
+      <nb-chat-form (send)="sendMessage($event)" (input)="onTypingChange($event.target.value)" [dropFiles]="true">
+      </nb-chat-form>
+    </nb-chat>
+    <br />
+    <input style="display: none" type="file" (change)="preview($event)" #fileInput>
+    <img [src]="imgURL" height="200" (click)="fileInput.click()" *ngIf="imgURL">
+    <button outline status="primary" nbButton *ngIf="!imgURL" size="small" (click)="fileInput.click()">
+      <nb-icon icon="plus-outline"></nb-icon>{{ 'ATTACHMENT' | translate }}
+    </button>
+    <br />
+    <button outline status="primary" style="margin-top: 20px;" *ngIf="imgURL" nbButton size="small" (click)="upload()">
+      <nb-icon icon="upload-outline"></nb-icon>{{ 'SEND' | translate }}
+    </button>
+    <p *ngIf="isTyping" style="
+        position: relative;
+        top: -17%;
+        left: 25px;
+        font-size: 15px;
+        color: #7c7c7c
+    ">
+      {{typingName}} {{ 'IS_TYPING' | translate }}
+    </p>
+  </div>
+</div>

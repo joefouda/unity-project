@@ -1,0 +1,68 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+      <nb-card-header>
+        <ng-container *ngIf="!isEdit; else editDiv">{{ 'GENERIC.ADD' | translate }}</ng-container>
+        <ng-template #editDiv>{{ 'GENERIC.EDIT' | translate }}</ng-template>
+        {{ 'DEPARTMENT' | translate }}
+      </nb-card-header>
+      <nb-card-body>
+        <form (ngSubmit)="save()" #form="ngForm">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'NAME' | translate }}*</label>
+                <input type="text" nbInput fullWidth
+                  [status]="submitted ? (myForm.controls.name.invalid  ? 'danger' : 'success') : 'basic'"
+                  [formControl]="myForm.controls['name']" [(ngModel)]="department.name"
+                  placeholder="{{ 'NAME' | translate }}">
+              </div>
+
+              <ng-container *ngIf="myForm.controls.name.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="label">{{ 'NAME_AR' | translate }}</label>
+                <input type="text" nbInput fullWidth [formControl]="myForm.controls['name_ar']"
+                  [(ngModel)]="department.name_ar" placeholder="{{ 'NAME_AR' | translate }}">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="label">{{ 'MANAGER' | translate }}</label>
+
+                <ng-select appendTo="body" class="input-full-width size-medium status-basic shape-rectangle" [(ngModel)]="department.manager_id" nbInput fullWidth [formControl]="myForm.controls['manager_id']" >
+                  <ng-option *ngFor="let employee of employees" [value]="employee.id">{{employee.full_name}}</ng-option>
+               </ng-select>
+
+                
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="label">{{ 'PARENT_DEPARTMENT' | translate }}</label>
+
+                <ng-select appendTo="body" class="input-full-width size-medium status-basic shape-rectangle" [(ngModel)]="department.parent_department_id" nbInput fullWidth [formControl]="myForm.controls['parent_department_id']" >
+                  <ng-option *ngFor="let department of departments" [value]="department.id">{{department.name}} | {{department.name_ar}}</ng-option>
+               </ng-select>
+
+                
+              </div>
+            </div>
+          </div>
+          <button nbButton type="submit" status="primary" size="medium">
+            {{ 'SAVE' | translate }}
+          </button>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

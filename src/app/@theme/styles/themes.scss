@@ -1,0 +1,82 @@
+// @nebular theming framework
+@import '~@nebular/theme/styles/theming';
+// @nebular out of the box themes
+@import '~@nebular/theme/styles/themes';
+
+@font-face {
+  font-family: 'dinnextltw23';
+  src: url('../../../assets/fonts/DINNextLTArabic-Regular-3.ttf') format('truetype'),
+       url('../../../assets/fonts/DINNextLTArabic-Regular-3.woff') format('woff'),
+       url('../../../assets/fonts/DINNextLTArabic-Regular-3.svg') format('svg'),
+       url('../../../assets/fonts/DINNextLTArabic-Regular-3.otf') format('otf');
+
+}
+$nb-enable-css-custom-properties: true; // <-- enable css custom properties
+
+
+$nb-themes: nb-register-theme((
+  layout-padding-top: 2.25rem,
+  menu-item-icon-margin: 0 0.5rem 0 0,
+  // color-primary-100: #C5D6E1,
+  // color-primary-200: #9FBBCE,
+  // color-primary-300: #79A0BA,
+  // color-primary-400: #5C8BAB,
+  // color-primary-500: #0e73df,
+  // color-primary-600: #396F94,
+  // color-primary-700: #31648A,
+  // color-primary-800: #295A80,
+  // color-primary-900: #1B476E,
+  // menu-item-active-text-color: #0e73df,
+  // menu-item-hover-text-color: #3387e1,
+  // color-primary: #09919f,
+  button-filled-primary-background-color: #046283,
+  sidebar-padding: 0px,
+  // text-primary-color: #01365a,
+  // button-filled-primary-background-color: #01365a,
+  button-filled-primary-border-color: #034977,
+  button-filled-primary-active-background-color: #046283,
+  button-filled-primary-hover-background-color: #06739b,
+  button-filled-primary-hover-border-color: #06739b,
+  button-filled-primary-active-border-color: #046283,
+  // menu-item-icon-hover-color: #0093a1,
+  // menu-item-hover-text-color: #0093a1,
+  card-height-tiny: 13.5rem,
+  card-height-small: 21.1875rem,
+  card-height-medium: 28.875rem,
+  card-height-large: 36.5625rem,
+  card-height-giant: 44.25rem,
+  card-margin-bottom: 1.875rem,
+  card-header-with-select-padding-top: 0.5rem,
+  card-header-with-select-padding-bottom: 0.5rem,
+
+  select-min-width: 6rem,
+
+  font-family-primary: unquote('dinnextltw23'),
+  font-family-secondary: font-family-primary,
+
+  slide-out-background: #f7f9fc,
+  slide-out-shadow-color: 0 4px 14px 0 #8f9bb3,
+  slide-out-shadow-color-rtl: 0 4px 14px 0 #8f9bb3,
+), default, default);
+
+$nb-themes: nb-register-theme((
+  layout-padding-top: 2.25rem,
+  button-filled-primary-background-color: #046283,
+  menu-item-icon-margin: 0 0.5rem 0 0,
+
+  card-height-tiny: 13.5rem,
+  card-height-small: 21.1875rem,
+  card-height-medium: 28.875rem,
+  card-height-large: 36.5625rem,
+  card-height-giant: 44.25rem,
+  card-margin-bottom: 1.875rem,
+  card-header-with-select-padding-top: 0.5rem,
+  card-header-with-select-padding-bottom: 0.5rem,
+  font-family-primary: unquote('dinnextltw23'),
+  font-family-secondary: font-family-primary,
+  select-min-width: 6rem,
+
+  slide-out-background: linear-gradient(270deg, #222b45 0%, #151a30 100%),
+  slide-out-shadow-color: 0 4px 14px 0 #8f9bb3,
+  slide-out-shadow-color-rtl: 0 4px 14px 0 #8f9bb3,
+), dark, dark);

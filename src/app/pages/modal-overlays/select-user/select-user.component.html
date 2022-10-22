@@ -1,0 +1,21 @@
+<nb-card style="min-width: 500px;">
+  <nb-card-header>{{ 'SELECT_USER' | translate }}</nb-card-header>
+  <nb-card-body>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="label">{{ 'SELECT_USER' | translate }}</label>
+
+          <ng-select appendTo="body" class="input-full-width size-medium status-basic shape-rectangle" [(ngModel)]="user" nbInput fullWidth style="margin-bottom: 40px !important;">
+            <ng-option *ngFor="let user of users" [value]="user.id">{{user.name}}</ng-option>
+         </ng-select>
+          
+        </div>
+      </div>
+    </div>
+  </nb-card-body>
+  <nb-card-footer>
+    <button nbButton status="primary" (click)="yes()">{{ 'DIALOG.CONFIRM' | translate }}</button>
+    <button class="cancel" nbButton status="danger" (click)="cancel()">{{ 'DIALOG.CANCEL' | translate }}</button>
+  </nb-card-footer>
+</nb-card>

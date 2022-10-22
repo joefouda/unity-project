@@ -1,0 +1,16 @@
+@import '../../../@theme/styles/themes';
+
+@include nb-install-component() {
+  nb-card {
+    transform: translate3d(0, 0, 0);
+  }
+  p{
+    margin: 0px !important;
+  }
+
+  .dep nb-icon{
+    font-size: 15px;
+    color: #888888;
+    margin-right: 10px;
+  }
+}
