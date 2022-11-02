@@ -79,7 +79,7 @@
                 </ng-select>
               </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-2" *ngIf="eventx.id != null && eventx.user_id == myId">
               <div class="form-group">
                 <label class="label">{{ 'COLOR' | translate }}:</label>
                 <input type="color" class="form-control" [(ngModel)]="eventx.color.primary"

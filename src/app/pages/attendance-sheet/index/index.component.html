@@ -245,7 +245,6 @@
       <th scope="col">{{ 'DATE' | translate }}</th>
       <th scope="col">{{ 'IN' | translate }} </th>
       <th scope="col">{{ 'OUT' | translate }}</th>
-      <th scope="col">{{ 'STATUS_TEXT' | translate }}</th>
     </tr>
   </thead>
   <tbody>
@@ -258,17 +257,6 @@
       <td>{{item.in | amDateFormat:'dddd - MMMM Do YYYY'}}</td>
       <td>{{item.in | amDateFormat:'h:mm:ss a'}}</td>
       <td> <span *ngIf="item.out != null"> {{item.out | amDateFormat:'h:mm:ss a'}} </span></td>
-      <td>
-        <ng-container *ngIf="item.status == 1">
-          {{ 'PENDING' | translate }}
-        </ng-container>
-        <ng-container *ngIf="item.status == 2">
-          {{ 'ACCEPTED' | translate }}
-        </ng-container>
-        <ng-container *ngIf="item.status == 3">
-          {{ 'REJECTED' | translate }}
-        </ng-container>
-      </td>
     </tr>
   </tbody>
 </table>

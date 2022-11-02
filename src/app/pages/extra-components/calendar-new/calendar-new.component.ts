@@ -118,7 +118,7 @@ export class CalendarNewComponent implements OnInit {
         data.forEach(element => {
           let event = {
             id: element.id,
-            user_ids: element.users_ids,
+            user_ids: element.users_ids.map(userid=> userid === this.myId? element.user_id:userid),
             title: element.title,
             holdiay: false,
             user_id: element.user_id,
@@ -253,8 +253,6 @@ export class CalendarNewComponent implements OnInit {
     this.api.protectedPost('events', event, this.token).subscribe((data: any) => {
       event.id = data.id;
       this.events[index] = event;
-      console.log(index);
-      console.log(this.events[index]);
       this.cdr.detectChanges();
     })
   }

@@ -418,12 +418,12 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="exampleInputEmail1" class="label">{{ 'URGENT_VACATION_BALANCE' | translate }}</label>
-                <input type="number" nbInput fullWidth [formControl]="myForm.controls['urgent']"
-                  [status]="submitted ? (myForm.controls.urgent.invalid  ? 'danger' : 'success') : 'basic'"
-                  [(ngModel)]="employee.urgent" maxlength="2" [max]="companyProfile.urgent_vacation_balance"
+                <input type="number" nbInput fullWidth [formControl]="myForm.controls['urgent_total']"
+                  [status]="submitted ? (myForm.controls.urgent_total.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="employee.urgent_total" maxlength="2" [max]="employee.urgent_total"
                   placeholder="{{ 'URGENT_VACATION_BALANCE' | translate }}">
               </div>
-              <ng-container *ngIf="myForm.controls.urgent.errors?.required && submitted">
+              <ng-container *ngIf="myForm.controls.urgent_total.errors?.required && submitted">
                 <p class="caption status-danger">
                   {{ 'REQUIRED_FEILD' | translate }}
                 </p>
@@ -432,14 +432,13 @@
 
             <div class="col-md-3">
               <div class="form-group">
-                <label for="exampleInputEmail1" class="label">{{ 'URGENT_CURRENT_VACATION_BALANCE' | translate
-                  }}</label>
-                <input type="number" nbInput fullWidth [formControl]="myForm.controls['urgent_total']"
-                  [status]="submitted ? (myForm.controls.urgent_total.invalid  ? 'danger' : 'success') : 'basic'"
-                  [(ngModel)]="employee.urgent_total" maxlength="2" [max]="employee.urgent"
+                <label for="exampleInputEmail1" class="label">{{ 'URGENT_CURRENT_VACATION_BALANCE' | translate }}</label>
+                <input type="number" nbInput fullWidth [formControl]="myForm.controls['urgent']"
+                  [status]="submitted ? (myForm.controls.urgent.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="employee.urgent" maxlength="2" [max]="employee.urgent"
                   placeholder="{{ 'URGENT_CURRENT_VACATION_BALANCE' | translate }}">
               </div>
-              <ng-container *ngIf="myForm.controls.urgent_total.errors?.required && submitted">
+              <ng-container *ngIf="myForm.controls.urgent.errors?.required && submitted">
                 <p class="caption status-danger">
                   {{ 'REQUIRED_FEILD' | translate }}
                 </p>

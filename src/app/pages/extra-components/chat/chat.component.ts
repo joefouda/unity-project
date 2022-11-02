@@ -48,6 +48,7 @@ export class ChatComponent implements OnInit {
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
     this.user = JSON.parse(localStorage.getItem('user'));
+    console.log(this.user)
     if (this.user != null) {
       this.myId = this.user.id;
     }
@@ -72,16 +73,15 @@ export class ChatComponent implements OnInit {
     this.chat.receiver_id = receiver_id;
     this.api.protectedGet("messages/" + chat.id, this.token).subscribe((data: any) => {
       this.messages = data;
+      console.log(this.messages)
       this.initIoConnection();
       this.messages.forEach(element => {
         if (element.message_type != 'TEXT') {
-          element.type = 'file';
-          element.files = {
-            url: element.message,
-            type: element.message_type,
-            icon: 'file-text-outline',
-          };
+          element.message = ''
+          element.message_type = 'file';
+          element.files[0].icon = 'file-text-outline'
         }
+        element.sender.picture = element.sender.picture?'https://api.unisync.app/storage/employees/'+element.sender.picture : element.sender.picture
         element.reply = element.sender_id === this.myId;
       });
     })
@@ -122,7 +122,7 @@ export class ChatComponent implements OnInit {
     this.file = files[0];
 
     if (this.mimeType.match(/image\/*/) == null) {
-      this.imgURL = 'assets/imgs/file.png';
+      this.imgURL = '../../../../assets/images/file.png';
     } else {
       var reader = new FileReader();
       reader.readAsDataURL(files[0]);
@@ -132,58 +132,53 @@ export class ChatComponent implements OnInit {
     }
   }
   
-  upload() {
-    const uploadData = new FormData();
-    uploadData.append('file', this.file, this.file.name);
-    this.api.protectedPost('upload-file', uploadData, this.token).subscribe((data : any) => {
-      this.messageType = "file";
-      this.sendMessage({message: data.link})
-    }, err => {
-    })
-  }
+  // upload() {
+  //   const uploadData = new FormData();
+  //   uploadData.append('file', this.file, this.file.name);
+  //   this.api.protectedPost('upload-file', uploadData, this.token).subscribe((data : any) => {
+  //     this.messageType = "file";
+  //     this.sendMessage({message: data.link})
+  //   }, err => {
+  //   })
+  // }
 
   sendMessage(event: any) {
-    let files = [];
-    if (this.messageType == 'file') {
-      files = [{
-        url: event.message,
-        type: this.mimeType,
-        icon: 'nb-compose',
-      }]
+    const fullMessage = new FormData();
+    fullMessage.append('message_session_id', this.chat.id);
+    fullMessage.append('receiver_id', this.chat.receiver_id);
+
+    if(this.file){
+      fullMessage.append('message_type', 'FILE');
+      fullMessage.append('file', this.file);
+      fullMessage.append('file_type', this.file.type)
+    } else {
+      fullMessage.append('message_type', 'TEXT');
+      fullMessage.append('message', event.message);
     }
-    this.api.protectedPost("messages", { message: event.message, message_session_id: this.chat.id, receiver_id: this.chat.receiver_id, message_type: this.messageType }, this.token).subscribe((data: any) => {
-    })
-    this.messages.push({
-      message: event.message,
-      date: new Date(),
-      reply: true,
-      type: files.length ? 'file' : 'text',
-      files: files,
-      sender: {
-        name: this.user.name,
-        picture: 'https://i.gifer.com/no.gif',
-      },
-    });
-    this.messageType = "TEXT";
 
-    this.echo.private('session.' + this.sessionId)
-      .listen('.message', (data) => {
-        if (data.senderId == this.chat.receiver_id) {
-          this.messages.push({
-            message: data.message,
-            date: new Date(),
-            reply: false,
-            type: files.length ? 'file' : 'text',
-            files: files,
-            sender: {
-              name: data.user.name,
-              picture: 'https://i.gifer.com/no.gif',
-            },
-          });
-        }
+
+    this.api.protectedPost("messages", fullMessage, this.token).subscribe((data: any) => {
+      this.messages.push({
+        message: data.message.message.includes('https://api.unisync.app')?'':data.message.message,
+        created_at: new Date(),
+        reply: true,
+        message_type:data.message.message.includes('https://api.unisync.app')?'file':'text',
+        files: [
+          {
+            url:data.message.message,
+            type:this.file.type,
+            icon: 'file-text-outline'
+          }
+        ],
+        sender: {
+          name: this.user.name,
+          picture: this.user.picture ?'https://api.unisync.app/storage/employees/'+this.user.picture : this.user.picture,
+        },
       });
+      this.imgURL = ''
+    })
   }
-
+  
   initIoConnection() {
     this.echo = new Echo({
       broadcaster: 'pusher',
@@ -207,21 +202,26 @@ export class ChatComponent implements OnInit {
       .listen('MessageSent', (data) => {
         if (data.user.id == this.chat.receiver_id) {
           this.messages.push({
-            message: data.message.message,
-            date: new Date(),
+            message: data.message.message.includes('https://api.unisync.app')?'':data.message.message,
+            created_at: new Date(),
             reply: false,
-            type: 'text',
-            files: [],
+            message_type: data.message.message.includes('https://api.unisync.app')?'file':'text',
+            files: [
+              {
+                url:data.message.message,
+                type:data.message.file_type,
+                icon: 'file-text-outline'
+              }
+            ],
             sender: {
               name: data.user.name,
-              picture: data.user.picture ? IMAGE_URL + data.user.picture : 'assets/avatar.png',
+              picture: data.user.picture ?'https://api.unisync.app/storage/employees/'+data.user.picture : data.user.picture,
             },
           });
         }
       }).listenForWhisper('typing', (e) => {
         this.isTyping = true;
         this.typingName = e.name;
-        console.log(e);
         setTimeout(function () {
           this.isTyping = false
         }, 2000);

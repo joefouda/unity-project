@@ -38,9 +38,8 @@
   </div>
   <div class="chat-container col-lg-6 col-xxxl-6" *ngIf="chat">
     <nb-chat title="{{chat.name}}" size="large" status="primary" style="width: 100% !important;">
-      <nb-chat-message *ngFor="let msg of messages" [type]="msg.type" [message]="msg.message" [reply]="msg.reply"
-        [sender]="msg.sender.name" [date]="msg.created_at" [files]="msg.message" [quote]="msg.quote"
-        [latitude]="msg.latitude" [longitude]="msg.longitude" [avatar]="msg.sender.picture">
+      <nb-chat-message *ngFor="let msg of messages" [type]="msg.message_type" [message]="msg.message" [reply]="msg.reply"
+        [sender]="msg.sender.name" [date]="msg.created_at" [files]="msg.files" [avatar]="msg.sender.picture">
       </nb-chat-message>
       <nb-chat-form (send)="sendMessage($event)" (input)="onTypingChange($event.target.value)" [dropFiles]="true">
       </nb-chat-form>
@@ -52,7 +51,7 @@
       <nb-icon icon="plus-outline"></nb-icon>{{ 'ATTACHMENT' | translate }}
     </button>
     <br />
-    <button outline status="primary" style="margin-top: 20px;" *ngIf="imgURL" nbButton size="small" (click)="upload()">
+    <button outline status="primary" style="margin-top: 20px;" *ngIf="imgURL" nbButton size="small" (click)="sendMessage($event)">
       <nb-icon icon="upload-outline"></nb-icon>{{ 'SEND' | translate }}
     </button>
     <p *ngIf="isTyping" style="
