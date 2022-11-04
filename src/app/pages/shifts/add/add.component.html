@@ -1,0 +1,234 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+      <nb-card-header>
+        <div *ngIf="!isEdit">{{ 'GENERIC.ADD' | translate }}  {{ 'SHIFT' | translate }}</div>
+        <div *ngIf="isEdit">{{ 'GENERIC.EDIT' | translate }}  {{ 'SHIFT' | translate }}</div>
+      </nb-card-header>
+      <nb-card-body>
+        <form (ngSubmit)="save()" #form="ngForm">
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'NAME' | translate }}</label>
+                <input type="text" nbInput fullWidth
+                  [status]="submitted ? (myForm.controls.name.invalid  ? 'danger' : 'success') : 'basic'"
+                  [formControl]="myForm.controls['name']" [(ngModel)]="shift.name" id="exampleInputEmail1"
+                  placeholder="{{ 'NAME' | translate }}">
+              </div>
+
+              <ng-container *ngIf="myForm.controls.name.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="label">{{ 'NAME_AR' | translate }}</label>
+                <input type="text" nbInput fullWidth [formControl]="myForm.controls['name_ar']"
+                  [(ngModel)]="shift.name_ar"
+                  placeholder="{{ 'NAME_AR' | translate }}">
+              </div>
+            </div>
+
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'TYPE' | translate }}</label>
+                <nb-select fullWidth
+                [formControl]="myForm.controls['type']"
+                placeholder="{{ 'TYPE' | translate }}"
+                [status]="submitted ? (myForm.controls.type.invalid  ? 'danger' : 'success') : 'basic'" 
+                [(ngModel)]="shift.type">
+                  <nb-option value="1">{{ 'REGULAR' | translate }}</nb-option>
+                  <nb-option value="2">{{ 'HOUR_BASED' | translate }}</nb-option>
+                </nb-select>
+              </div>
+              <ng-container *ngIf="myForm.controls.type.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+          </div>
+          <br />
+          <div class="row" *ngIf="shift.type == '2'">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'NUMBER_OF_HOURS_A_WEEK' | translate }}</label>
+                <input type="number" nbInput fullWidth
+                  [status]="submitted ? (myForm.controls.number_of_hours.invalid  ? 'danger' : 'success') : 'basic'"
+                  [formControl]="myForm.controls['number_of_hours']" [(ngModel)]="shift.number_of_hours"
+                  placeholder="{{ 'NUMBER_OF_HOURS_A_WEEK' | translate }}">
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="shift.type == '1'">
+            <div class="row">
+              <div class="col-sm-2 dayLabel">
+                <label class="label"></label>
+                <h2>{{ 'SUN' | translate }}</h2>
+              </div>
+              <div class="col-sm-5">
+                <div class="form-group">
+                  <label class="label">{{ 'FROM' | translate }}</label>
+                  <input [ngxTimepicker]="sunFromPicker" name="sunFrom" format="24" [value]="'08:00 AM'"  nbInput fullWidth [(ngModel)]="shift.shift.sun.from" placeholder="{{ 'TO' | translate }}">
+                  <ngx-material-timepicker #sunFromPicker ></ngx-material-timepicker>
+                </div>
+              </div>
+              <div class="col-sm-5">
+                <div class="form-group">
+                  <label class="label">{{ 'TO' | translate }}</label>
+                  <input [ngxTimepicker]="sunToPicker" name="sunTo" [value]="'04:00 PM'" nbInput fullWidth [(ngModel)]="shift.shift.sun.to" placeholder="{{ 'TO' | translate }}">
+                  <ngx-material-timepicker #sunToPicker format="12" defaultTime="4:00 PM"></ngx-material-timepicker>
+                </div>
+              </div>
+            </div>
+            <br />
+  
+  
+            <div class="row">
+              <div class="col-sm-2 dayLabel">
+                <label class="label"></label>
+                <h2>{{ 'MON' | translate }}</h2>
+              </div>
+              <div class="col-sm-5">
+                <div class="form-group">
+                  <label class="label">{{ 'FROM' | translate }}</label>
+                  <input [ngxTimepicker]="monFromPicker" name="sunFrom" [value]="'08:00 AM'" nbInput fullWidth [(ngModel)]="shift.shift.mon.from" placeholder="{{ 'FROM' | translate }}">
+                  <ngx-material-timepicker #monFromPicker format="12"  defaultTime="8:00 AM"></ngx-material-timepicker>
+                </div>
+              </div>
+              <div class="col-sm-5">
+                <div class="form-group">
+                  <label class="label">{{ 'TO' | translate }}</label>
+                  <input [ngxTimepicker]="monToPicker" name="sunTo" [value]="'04:00 PM'" nbInput fullWidth [(ngModel)]="shift.shift.mon.to" placeholder="{{ 'TO' | translate }}">
+                  <ngx-material-timepicker #monToPicker format="12" defaultTime="4:00 PM"></ngx-material-timepicker>
+                </div>
+              </div>
+            </div>
+            <br />
+  
+            <div class="row">
+              <div class="col-sm-2 dayLabel">
+                <label class="label"></label>
+                <h2>{{ 'TUE' | translate }}</h2>
+              </div>
+              <div class="col-sm-5">
+                <div class="form-group">
+                  <label class="label">{{ 'FROM' | translate }}</label>
+                  <input [ngxTimepicker]="tueFromPicker" name="sunFrom" [value]="'08:00 AM'" nbInput fullWidth [(ngModel)]="shift.shift.tue.from" placeholder="{{ 'FROM' | translate }}">
+                  <ngx-material-timepicker #tueFromPicker format="12"  defaultTime="8:00 AM"></ngx-material-timepicker>
+                </div>
+              </div>
+              <div class="col-sm-5">
+                <div class="form-group">
+                  <label class="label">{{ 'TO' | translate }}</label>
+                  <input [ngxTimepicker]="tueToPicker" name="sunTo" [value]="'04:00 PM'" nbInput fullWidth [(ngModel)]="shift.shift.tue.to" placeholder="{{ 'TO' | translate }}">
+                  <ngx-material-timepicker #tueToPicker format="12" defaultTime="4:00 PM"></ngx-material-timepicker>
+                </div>
+              </div>
+            </div>
+            <br />
+  
+            <div class="row">
+              <div class="col-sm-2 dayLabel">
+                <label class="label"></label>
+                <h2>{{ 'WED' | translate }}</h2>
+              </div>
+              <div class="col-sm-5">
+                <div class="form-group">
+                  <label class="label">{{ 'FROM' | translate }}</label>
+                  <input [ngxTimepicker]="wedFromPicker" name="wedFrom" [value]="'08:00 AM'" nbInput fullWidth [(ngModel)]="shift.shift.wed.from" placeholder="{{ 'FROM' | translate }}">
+                  <ngx-material-timepicker #wedFromPicker format="12"  defaultTime="8:00 AM"></ngx-material-timepicker>
+                </div>
+              </div>
+              <div class="col-sm-5">
+                <div class="form-group">
+                  <label class="label">{{ 'TO' | translate }}</label>
+                  <input [ngxTimepicker]="wedToPicker" name="wedTo" [value]="'04:00 PM'" nbInput fullWidth [(ngModel)]="shift.shift.wed.to" placeholder="{{ 'TO' | translate }}">
+                  <ngx-material-timepicker #wedToPicker format="12" defaultTime="4:00 PM"></ngx-material-timepicker>
+                </div>
+              </div>
+            </div>
+            <br />
+  
+            <div class="row">
+              <div class="col-sm-2 dayLabel">
+                <label class="label"></label>
+                <h2>{{ 'THU' | translate }}</h2>
+              </div>
+              <div class="col-sm-5">
+                <div class="form-group">
+                  <label class="label">{{ 'FROM' | translate }}</label>
+                  <input [ngxTimepicker]="thuFromPicker" name="thuFrom" [value]="'08:00 AM'" nbInput fullWidth [(ngModel)]="shift.shift.thu.from" placeholder="{{ 'FROM' | translate }}">
+                  <ngx-material-timepicker #thuFromPicker format="12"  defaultTime="8:00 AM"></ngx-material-timepicker>
+                </div>
+              </div>
+              <div class="col-sm-5">
+                <div class="form-group">
+                  <label class="label">{{ 'TO' | translate }}</label>
+                  <input [ngxTimepicker]="thuToPicker" name="thuTo" [value]="'04:00 PM'" nbInput fullWidth [(ngModel)]="shift.shift.thu.to" placeholder="{{ 'TO' | translate }}">
+                  <ngx-material-timepicker #thuToPicker format="12" defaultTime="4:00 PM"></ngx-material-timepicker>
+                </div>
+              </div>
+            </div>
+            <br />
+  
+            <div class="row">
+              <div class="col-sm-2 dayLabel">
+                <label class="label"></label>
+                <h2>{{ 'FRI' | translate }}</h2>
+              </div>
+              <div class="col-sm-5">
+                <div class="form-group">
+                  <label class="label">{{ 'FROM' | translate }}</label>
+                  <input [ngxTimepicker]="friFromPicker" name="friFrom" nbInput fullWidth [(ngModel)]="shift.shift.fri.from" placeholder="{{ 'FROM' | translate }}">
+                  <ngx-material-timepicker #friFromPicker format="12"  defaultTime="8:00 AM"></ngx-material-timepicker>
+                </div>
+              </div>
+              <div class="col-sm-5">
+                <div class="form-group">
+                  <label class="label">{{ 'TO' | translate }}</label>
+                  <input [ngxTimepicker]="friToPicker" name="friTo"  nbInput fullWidth [(ngModel)]="shift.shift.fri.to" placeholder="{{ 'TO' | translate }}">
+                  <ngx-material-timepicker #friToPicker format="12" defaultTime="4:00 PM"></ngx-material-timepicker>
+                </div>
+              </div>
+            </div>
+            <br />
+   
+            <div class="row">
+              <div class="col-sm-2 dayLabel">
+                <label class="label"></label>
+                <h2>{{ 'SAT' | translate }}</h2>
+              </div>
+              <div class="col-sm-5">
+                <div class="form-group">
+                  <label class="label">{{ 'FROM' | translate }}</label>
+                  <input [ngxTimepicker]="satFromPicker" name="satFrom" nbInput fullWidth [(ngModel)]="shift.shift.sat.from" placeholder="{{ 'FROM' | translate }}">
+                  <ngx-material-timepicker #satFromPicker format="12"  defaultTime="8:00 AM"></ngx-material-timepicker>
+                </div>
+              </div>
+              <div class="col-sm-5">
+                <div class="form-group">
+                  <label class="label">{{ 'TO' | translate }}</label>
+                  <input [ngxTimepicker]="satToPicker" name="satTo"  nbInput fullWidth [(ngModel)]="shift.shift.sat.to" placeholder="{{ 'TO' | translate }}">
+                  <ngx-material-timepicker #satToPicker format="12" defaultTime="4:00 PM"></ngx-material-timepicker>
+                </div>
+              </div>
+            </div>
+            <br />
+          </div>
+         
+         
+          <button nbButton type="submit" status="primary" size="medium">
+            {{ 'SAVE' | translate }}
+          </button>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

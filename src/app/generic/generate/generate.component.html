@@ -1,0 +1,17 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="text-center">
+
+      <img (error)="onImgError($event)" src="{{imageUrl}}/companies/{{company.picture}}" style="max-height: 200px;" />
+      <h1> {{company.name}} - {{company.name_ar}} </h1>
+      <h3 *ngIf="department != null"> {{department.name}} - {{department.name_ar}} </h3>
+      
+      <br />
+      <div *ngIf="qrdata != null">
+        <qrcode [qrdata]="qrdata" [width]="256" [errorCorrectionLevel]="'M'" [allowEmptyString]="true"></qrcode>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p style="text-align: center;"> Created with ♥ by <b><a href="https://unisync.app/" target="_blank">UniSync</a></b> 2022 </p>

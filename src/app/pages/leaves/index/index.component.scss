@@ -1,0 +1,24 @@
+@import '../../../@theme/styles/themes';
+
+@include nb-install-component() {
+  nb-card {
+    transform: translate3d(0, 0, 0);
+  }
+  .span-status {
+    min-width:10vw
+  }
+
+
+  .class1{
+    color: #1bc5bd;
+    background-color: #c9f7f5;
+  }
+  .class2{
+    color: #1bc5bd;
+    background-color: #c9f7f5;
+  }
+  .class3{
+    color: #6b1818;
+    background-color: #edacac;
+  }
+}

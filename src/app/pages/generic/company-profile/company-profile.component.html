@@ -1,0 +1,235 @@
+<div class="row">
+  <div class="col-md-8">
+    <h2>
+      {{ 'MENU_ITEMS.COMPANY_SETTINGS' | translate }}
+      
+    </h2>
+  </div>
+  <div class="col-md-4 " style="padding: 0px !important;">
+    <button class="float-right" nbButton outline status="dark" size="small" (click)="export()">
+      {{ 'EXPORT' | translate }}
+    </button>
+  </div>
+</div>
+
+<br />
+<nb-accordion>
+  <nb-accordion-item #item>
+    <nb-accordion-item-header>
+      {{ 'MENU_ITEMS.SUBSCRIPTION_HISTORY' | translate }}
+    </nb-accordion-item-header>
+    <nb-accordion-item-body>
+        <div class="row">
+          <div class="col-md-10">
+        <input nbInput fullWidth class="input-full-width size-medium status-basic shape-rectangle" autocomplete="off"
+          [(ngModel)]="range" name="range" placeholder="{{ 'DATE' | translate }}" [nbDatepicker]="rangeDate"
+          name="rangeDate">
+          </div>
+          <div class="col-md-2">
+        <nb-rangepicker #rangeDate></nb-rangepicker>
+        <button type="submit" nbButton status="primary" (click)="search()">{{ 'SEARCH' | translate }}</button>
+          </div>
+        </div>
+      <br/>
+
+      <ngx-datatable class="material striped" [virtualization]="false" [loadingIndicator]="loadingIndicator" [rows]="data" 
+  [columnMode]="ColumnMode.force" [scrollbarH]="true" [headerHeight]="50" [footerHeight]="50"
+  rowHeight="auto" [externalPaging]="true" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+  (page)="getResult($event)">
+
+  <ngx-datatable-column name="#" [width]="10">
+    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
+      {{(rowIndex+1) + (page.pageNumber * page.size) }}
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column name="{{ 'PACKAGE' | translate }}" prop="package" [width]="150">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <span *ngIf="value != null"> {{value.name}}</span>
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column name="{{ 'STARTING_DATE' | translate }}" prop="starts_in" [width]="200">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <span>{{value | amDateFormat:'dddd - MMMM Do YYYY'}}</span>
+    </ng-template>
+  </ngx-datatable-column>
+  
+  <ngx-datatable-column name="{{ 'ENDING_DATE' | translate }}" prop="ended_in" [width]="200">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <span>{{value | amDateFormat:'dddd - MMMM Do YYYY'}}</span>
+    </ng-template>
+  </ngx-datatable-column>
+  
+
+  <ngx-datatable-column name="{{ 'CREATED_AT' | translate }}" prop="created_at" [width]="200">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <span>{{value | amDateFormat:'dddd - MMMM Do YYYY'}}</span>
+    </ng-template>
+  </ngx-datatable-column>
+</ngx-datatable>
+    </nb-accordion-item-body>
+  </nb-accordion-item>
+</nb-accordion>
+<br />
+<nb-accordion>
+  <nb-accordion-item #item>
+    <nb-accordion-item-header>
+      {{ 'MENU_ITEMS.COMPANY_SETTINGS' | translate }}
+    </nb-accordion-item-header>
+    <nb-accordion-item-body>
+      <form (ngSubmit)="save()" #form="ngForm">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="label">{{ 'YEARLY_VACATION_BALANCE' | translate }}</label>
+              <input name="yearly_vacation_balance" type="number" nbInput fullWidth [(ngModel)]="companyprofile.yearly_vacation_balance"
+                placeholder="{{ 'YEARLY_VACATION_BALANCE' | translate }}">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="label">{{ 'URGENT_VACATION_BALANCE' | translate }}</label>
+              <input name="urgent_vacation_balance" type="number" nbInput fullWidth [(ngModel)]="companyprofile.urgent_vacation_balance"
+                placeholder="{{ 'URGENT_VACATION_BALANCE' | translate }}">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="label">{{ 'INCLUDES_WEEKENDS' | translate }}</label>
+              <nb-select name="includes_weekends" fullWidth [(ngModel)]="companyprofile.includes_weekends"  placeholder="{{ 'INCLUDES_WEEKENDS' | translate }}">
+                <nb-option value="1">{{ 'YES' | translate }}</nb-option>
+                <nb-option value="0">{{ 'NO' | translate }}</nb-option>
+              </nb-select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="label">{{ 'VACATION_TO_NEXT_YEAR' | translate }}</label>
+              <input name="vacation_to_next_year" type="number" nbInput fullWidth [(ngModel)]="companyprofile.vacation_to_next_year"
+                placeholder="{{ 'VACATION_TO_NEXT_YEAR' | translate }}">
+            </div>
+          </div>
+        </div>
+        <button nbButton type="submit" status="primary" size="medium">
+          {{ 'UPDATE' | translate }}
+        </button>
+      </form>
+    </nb-accordion-item-body>
+  </nb-accordion-item>
+</nb-accordion>
+<br />
+<nb-accordion>
+  <nb-accordion-item #item>
+    <nb-accordion-item-header>
+      {{ 'MENU_ITEMS.PAYROLL_SETTINGS' | translate }}
+      <span>{{ 'CHANGES_MADE_TAKES_TIME' | translate }}</span>
+    </nb-accordion-item-header>
+    <nb-accordion-item-body>
+      <form (ngSubmit)="save()" #form="ngForm">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="label">{{ 'allow_in_delay' | translate }}</label>
+              <input [nbTimepicker]="timepicker" name="allow_in_delay"  nbInput fullWidth [(ngModel)]="payroll.allow_in_delay"
+              placeholder="{{ 'allow_in_delay' | translate }}">
+              <nb-timepicker #timepicker singleColumn (onSelectTime)="showAllowIn($event)"
+              [step]="10"></nb-timepicker>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="label">{{ 'allow_out_delay' | translate }}</label>
+              <input [nbTimepicker]="timepicker2" name="allow_out_delay"  nbInput fullWidth [(ngModel)]="payroll.allow_out_delay"
+                placeholder="{{ 'allow_out_delay' | translate }}">
+              <nb-timepicker #timepicker2 singleColumn (onSelectTime)="showAllowOut($event)"
+              [step]="10"></nb-timepicker>
+
+            </div>
+          </div>
+          
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="label">{{ 'allow_total_month_delay' | translate }}</label>
+              <input [nbTimepicker]="timepicker3" name="allow_total_month_delay" nbInput fullWidth [(ngModel)]="payroll.allow_total_month_delay"
+                placeholder="{{ 'allow_total_month_delay' | translate }}">
+              <nb-timepicker #timepicker3 singleColumn (onSelectTime)="showTotalMonthDelay($event)"
+              [step]="10"></nb-timepicker>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="label">{{ 'max_hours_for_absent' | translate }}</label>
+              <input name="max_hours_for_absent" type="number" nbInput fullWidth [(ngModel)]="companyprofile.max_hours_for_absent"
+                placeholder="{{ 'max_hours_for_absent' | translate }}">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="label">{{ 'payslip_generation_date' | translate }}</label>
+              <input name="payslip_generation_date" type="number" nbInput fullWidth [(ngModel)]="companyprofile.payslip_generation_date"
+                placeholder="{{ 'payslip_generation_date' | translate }}">
+            </div>
+          </div>
+        </div>
+        <button nbButton type="submit" status="primary" size="medium">
+          {{ 'UPDATE' | translate }}
+        </button>
+      </form>
+    </nb-accordion-item-body>
+  </nb-accordion-item>
+</nb-accordion>
+<br/>
+<nb-accordion>
+  <nb-accordion-item #item>
+    <nb-accordion-item-header>
+      {{ 'DIRECTOR_INFO' | translate }}
+    </nb-accordion-item-header>
+    <nb-accordion-item-body>
+      <form (ngSubmit)="save()" #form="ngForm">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="label">{{ 'NAME' | translate }}</label>
+              <input name="name" type="text" nbInput fullWidth [(ngModel)]="companyprofile.director.name"
+                placeholder="{{ 'NAME' | translate }}">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="label">{{ 'NAME_AR' | translate }}</label>
+              <input name="name_ar" type="text" nbInput fullWidth [(ngModel)]="companyprofile.director.name_ar"
+                placeholder="{{ 'NAME_AR' | translate }}">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="label">{{ 'EMAIL' | translate }}</label>
+              <input name="email" type="text" nbInput fullWidth [(ngModel)]="companyprofile.director.email"
+                placeholder="{{ 'EMAIL' | translate }}">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label
+                class="label">{{ 'MOBILE' | translate }}</label>
+              <div class="input-group" style="direction: ltr !important;">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1">+966</span>
+                </div>
+                <input type="text" name="mobile" nbInput style="width: 100%;" 
+                  [(ngModel)]="companyprofile.director.mobile"
+                  placeholder="{{ 'MOBILE' | translate }}">
+              </div>
+            </div>
+          </div>
+        </div>
+        <button nbButton type="submit" status="primary" size="medium">
+          {{ 'UPDATE' | translate }}
+        </button>
+      </form>
+    </nb-accordion-item-body>
+  </nb-accordion-item>
+</nb-accordion>

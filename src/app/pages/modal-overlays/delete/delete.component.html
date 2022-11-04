@@ -1,0 +1,10 @@
+<nb-card>
+  <nb-card-header>{{title}}</nb-card-header>
+  <nb-card-body>
+    {{content}}
+  </nb-card-body>
+  <nb-card-footer>
+    <button nbButton status="primary" (click)="yes()">{{ 'DIALOG.CONFIRM' | translate }}</button>
+    <button class="cancel" nbButton status="danger" (click)="cancel()">{{ 'DIALOG.CANCEL' | translate }}</button>
+  </nb-card-footer>
+</nb-card>

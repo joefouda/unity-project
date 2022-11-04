@@ -1,0 +1,10 @@
+@import '../../../@theme/styles/themes';
+
+@include nb-install-component() {
+  nb-card {
+    transform: translate3d(0, 0, 0);
+  }
+  .ngx-datatable .datatable-body .datatable-scroll{
+    width: 100% !important;
+  }
+}

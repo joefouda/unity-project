@@ -1,0 +1,262 @@
+<!-- <nb-card>
+  <nb-card-header>
+    {{ 'MENU_ITEMS.LEAVES' | translate }}
+  </nb-card-header> -->
+
+<!-- <nb-card-body> -->
+
+<div class="row">
+  <div class="col-md-8">
+    <h2>{{ 'MENU_ITEMS.ATTENDANCE_HISTORY' | translate }}</h2>
+  </div>
+  <div class="col-md-4 " style="padding: 0px !important;">
+    <button class="float-right" nbButton outline status="primary" *ngIf="!employee" size="small" (click)="generate()">
+      <nb-icon icon="plus-outline"></nb-icon>{{ 'GENERATE_ATTENDENCE_QR' | translate }}
+    </button>
+    <button class="float-right" nbButton outline status="primary" *ngIf="roleId == 3" size="small"
+      [routerLink]="'/pages/attendance-sheet/add'">
+      <nb-icon icon="plus-outline"></nb-icon>{{ 'GENERIC.ADD' | translate }} {{ 'ATTENDANCE_REQUEST' | translate }}
+    </button>
+
+    <button [nbSpinner]="exporting" nbSpinnerSize="small" class="float-right" nbButton outline status="dark"
+      size="small" (click)="export()">
+      {{ 'EXPORT' | translate }}
+    </button>
+  </div>
+</div>
+
+<br />
+<nb-accordion>
+  <nb-accordion-item #item>
+    <nb-accordion-item-header>
+      {{ 'SEARCH' | translate }}
+    </nb-accordion-item-header>
+    <nb-accordion-item-body>
+      <div class="row">
+        <div class="col-md-6" *ngIf="!employee" >
+        <ng-select appendTo="body" nbInput fullWidth [multiple]="true" name="employeeIds" (search)="searchE($event)"
+          [loading]="peopleLoading" placeholder="{{ 'EMPLOYEE_NAME' | translate }}" typeToSearchText="Please enter 2 or more characters" [(ngModel)]="employeeIds">
+          <ng-option *ngFor="let employee of employees" [value]="employee.id">{{employee.full_name}}</ng-option>
+        </ng-select>
+        </div>
+        <div class="col-md-4">
+        <input nbInput fullWidth autocomplete="off" [(ngModel)]="range" name="range"
+          placeholder="{{ 'DATE' | translate }}" [nbDatepicker]="rangeDate" name="rangeDate">
+        <nb-rangepicker #rangeDate></nb-rangepicker>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" nbButton status="primary" (click)="search()">{{ 'SEARCH' | translate }}</button>
+      </div>
+      </div>
+    </nb-accordion-item-body>
+  </nb-accordion-item>
+</nb-accordion>
+<br />
+
+<div class="row">
+  <div class="col-md-8">
+    <div class=" text-center calendar">
+        <div class="btn-group">
+          <button nbButton ghost status="dark" mwlCalendarPreviousView [view]="viewCalender" [(viewDate)]="viewDate" 
+            (viewDateChange)="closeOpenMonthViewDay()">
+             <nb-icon class="arrow-back-outline" icon="arrow-back-outline"></nb-icon> 
+          </button>
+          <p style="margin-top: 15px">{{ viewDate | calendarDate:(viewCalender + 'ViewTitle'):'en' }}</p>
+          <button nbButton ghost status="dark" mwlCalendarNextView [view]="viewCalender" [(viewDate)]="viewDate" 
+            (viewDateChange)="closeOpenMonthViewDay()">
+            <nb-icon class="arrow-forward-outline" icon="arrow-forward-outline"></nb-icon>
+          </button>
+        </div>
+    </div>
+<div [ngSwitch]="viewCalender">
+  <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="events"
+    [refresh]="refresh" [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)"
+    (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+  </mwl-calendar-month-view>
+  <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+    (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+  </mwl-calendar-week-view>
+  <mwl-calendar-day-view *ngSwitchCase="CalendarView.Day" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+    (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+  </mwl-calendar-day-view>
+</div>
+  </div>
+
+  <div class="col-md-4">
+    <ngx-datatable  class="material striped" [loadingIndicator]="loadingIndicator"
+  [rows]="data" [columnMode]="ColumnMode.force" [virtualization]="false" [scrollbarH]="true" [headerHeight]="50"
+  [footerHeight]="50" rowHeight="auto" [externalPaging]="true" [count]="page.totalElements" [offset]="page.pageNumber"
+  [limit]="page.size" (page)="getResult($event)">
+
+  <ngx-datatable-column name="#" [width]="50">
+    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
+      {{(rowIndex+1) + (page.pageNumber * page.size) }}
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column *ngIf="!employee" name="{{ 'NAME' | translate }}" prop="employee">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <span>{{value.full_name}}</span>
+    </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column name="{{ 'DATE' | translate }}" prop="in">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <span>{{value | amDateFormat:'dddd - MMMM Do YYYY'}}</span>
+    </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column name="{{ 'IN' | translate }}" prop="in">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <span>{{value | amDateFormat:'h:mm a'}}</span>
+      <button *ngIf="row.in != null" nbButton ghost size="small" status="primary" (click)="viewIn(row)">
+        <nb-icon icon="map-outline"></nb-icon>
+      </button>
+    </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column name="{{ 'OUT' | translate }}" prop="out">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <span>{{value | amDateFormat:'h:mm a'}}</span>
+      <button *ngIf="row.out != null" nbButton ghost size="small" status="primary" (click)="viewOut(row)">
+        <nb-icon icon="map-outline"></nb-icon>
+      </button>
+    </ng-template>
+  </ngx-datatable-column>
+</ngx-datatable>
+  </div>
+</div>
+
+
+
+<br />
+<nb-accordion>
+  <nb-accordion-item #item>
+    <nb-accordion-item-header (click)="loadRequests()">
+      {{ 'ATTENDANCE_REQUESTS' | translate }}
+    </nb-accordion-item-header>
+    <nb-accordion-item-body>
+
+      <ngx-datatable class="material striped" [virtualization]="false" [loadingIndicator]="loadingIndicatorTwo"
+        [rows]="data2" [columnMode]="ColumnMode.force" [scrollbarH]="true" [headerHeight]="50" [footerHeight]="50"
+        rowHeight="auto" [externalPaging]="true" [count]="page2.totalElements" [offset]="page2.pageNumber"
+        [limit]="page2.size" (page)="loadChangeRequest($event)">
+
+        <ngx-datatable-column name="#" [width]="20">
+          <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
+            {{(rowIndex+1) + (page2.pageNumber * page2.size) }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column *ngIf="!employee" name="{{ 'NAME' | translate }}" prop="employee">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <span>{{value.full_name}}</span>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="{{ 'DATE' | translate }}" prop="in">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <span>{{value | amDateFormat:'dddd - MMMM Do YYYY'}}</span>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="{{ 'IN' | translate }}" prop="in">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <span>{{value | amDateFormat:'h:mm a'}}</span>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="{{ 'OUT' | translate }}" prop="out">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <span>{{value | amDateFormat:'h:mm a'}}</span>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="{{ 'STATUS_TEXT' | translate }}" prop="status">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <ng-container *ngIf="value == 1">
+              <div class="span-status span-status-yellow">
+                <span>{{ 'PENDING' | translate }}</span>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="value == 2">
+              <div class="span-status span-status-green">
+                <span>{{ 'ACCEPTED' | translate }}</span>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="value == 3">
+              <div class="span-status span-status-red">
+                <span>{{ 'REJECTED' | translate }}</span>
+              </div>
+            </ng-container>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column *ngIf="roleId != 3" name="{{ 'ACTIONS' | translate }}" sortable="false" prop="id">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <ng-container *ngIf="row.status == 1">
+              <button nbButton ghost size="small" status="primary" (click)="accept(row)">
+                <nb-icon icon="checkmark-circle-outline"></nb-icon>
+              </button>
+              <button nbButton ghost size="small" status="danger" (click)="reject(row)">
+                <nb-icon icon="close-circle-outline"></nb-icon>
+              </button>
+            </ng-container>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column *ngIf="employee" name="{{ 'ACTIONS' | translate }}" sortable="false" prop="id">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <ng-container *ngIf="row.status == 1">
+              <button nbButton ghost size="small" status="danger" (click)="cancel(row)">
+                <nb-icon icon="trash-outline"></nb-icon>
+              </button>
+            </ng-container>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+    </nb-accordion-item-body>
+  </nb-accordion-item>
+</nb-accordion>
+<br />
+
+<div class="gmap" #gmap></div>
+
+
+<ng-template #modalContent let-close="close">
+  <input type="text" style="display:none" />
+  <div class="modal-header">
+    <h5 class="modal-title">{{ 'ATTENDANCE_DETAILS' | translate }}</h5>
+    <button type="button" class="close" (click)="close()">
+      <span>&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p> {{ 'IP' | translate }}: {{ip}}</p>
+    <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom">
+      <agm-marker [latitude]="latitude" [longitude]="longitude" [markerDraggable]="true"></agm-marker>
+    </agm-map>
+  </div>
+  <div class="modal-footer">
+    <button  nbButton status="primary" (click)="close()">
+      {{ 'OK' | translate }}
+    </button>
+  </div>
+</ng-template>
+
+
+<table class="table" #myTableElementId id="myTableElementId" style="display: none;">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">{{ 'NAME' | translate }} </th>
+      <th scope="col">{{ 'DATE' | translate }}</th>
+      <th scope="col">{{ 'IN' | translate }} </th>
+      <th scope="col">{{ 'OUT' | translate }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of allData; let i = index">
+      <th scope="row">{{i + 1}}</th>
+      <td>
+         <span *ngIf="item.employee">{{item.employee.full_name}}</span>
+         <span *ngIf="!item.employee">{{LoggedInUserInfo.name}}</span>
+      </td>
+      <td>{{item.in | amDateFormat:'dddd - MMMM Do YYYY'}}</td>
+      <td>{{item.in | amDateFormat:'h:mm:ss a'}}</td>
+      <td> <span *ngIf="item.out != null"> {{item.out | amDateFormat:'h:mm:ss a'}} </span></td>
+    </tr>
+  </tbody>
+</table>

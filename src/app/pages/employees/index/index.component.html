@@ -1,0 +1,199 @@
+<div class="row">
+  <div class="col-md-3">
+    <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+      <nb-card-header>{{ 'EMPLOYEES' | translate }}</nb-card-header>
+      <nb-card-body>
+        <h3>{{stats.total}}</h3>
+      </nb-card-body>
+    </nb-card>
+  </div>
+  <div class="col-md-3">
+    <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+      <nb-card-header>{{ 'MALE' | translate }}</nb-card-header>
+      <nb-card-body>
+        <h3>{{stats.males}}</h3>
+      </nb-card-body>
+    </nb-card>
+  </div>
+  <div class="col-md-3">
+    <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+      <nb-card-header>{{ 'FEMALE' | translate }}</nb-card-header>
+      <nb-card-body>
+        <h3>{{stats.females}}</h3>
+      </nb-card-body>
+    </nb-card>
+  </div>
+  <div class="col-md-3">
+    <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+      <nb-card-header>{{ 'AVERAGE_AGE' | translate }}</nb-card-header>
+      <nb-card-body>
+        <h3>{{stats.avgAge}}</h3>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+<div>
+  <div>
+    <button nbButton outline status="primary" size="small" [routerLink]="'/pages/employees/add'">
+      <nb-icon icon="plus-outline"></nb-icon>{{ 'GENERIC.ADD' | translate }} {{ 'EMPLOYEE' | translate }}
+    </button>
+    <button [nbSpinner]="exporting" nbSpinnerSize="small" class="float-right" nbButton outline status="dark"
+      size="small" (click)="export()">
+      {{ 'EXPORT' | translate }}
+    </button>
+    <button nbButton hero size="small" shape="rectangle" status="primary" class="float-right" (click)="linkFoodics()">{{ 'SYNC_WITH_FOODICS' |
+      translate }}</button>
+  </div>
+  <br />
+  <nb-accordion>
+    <nb-accordion-item #item>
+      <nb-accordion-item-header>
+        {{ 'SEARCH' | translate }}
+      </nb-accordion-item-header>
+      <nb-accordion-item-body>
+        <form class="form-inline">
+          <input type="text" nbInput fullWidth placeholder="{{ 'NAME' | translate }}" [(ngModel)]="query.name"
+            [ngModelOptions]="{standalone: true}">
+          <input type="text" nbInput fullWidth placeholder="{{ 'MOBILE' | translate }}" [(ngModel)]="query.mobile"
+            [ngModelOptions]="{standalone: true}">
+          <nb-select fullWidth placeholder="{{ 'STATUS_TEXT' | translate }}" [(ngModel)]="query.is_active"
+            [ngModelOptions]="{standalone: true}">
+            <nb-option value="1"> {{ 'STATUS.ACTIVE' | translate }}</nb-option>
+            <nb-option value="0"> {{ 'STATUS.DEACTIVE' | translate }}</nb-option>
+          </nb-select>
+          <button type="submit" nbButton status="primary" (click)="search()">{{ 'SEARCH' | translate }}</button>
+        </form>
+      </nb-accordion-item-body>
+    </nb-accordion-item>
+  </nb-accordion>
+  <br />
+  <div class="row">
+    <div class="col-md-3" *ngFor="let item of employees; let i = index">
+      <nb-card>
+        <nb-card-body style="padding: 0px; padding-bottom: 10px !important;">
+          <nb-badge *ngIf="item.user.is_active" text="{{ 'STATUS.ACTIVE' | translate }}" status="success"
+            position="top right"></nb-badge>
+          <nb-badge *ngIf="!item.user.is_active" text="{{ 'STATUS.DEACTIVE' | translate }}" status="danger"
+            position="top right"></nb-badge>
+
+          <div class="text-center">
+            <img (error)="onImgError($event, item.gender)" src="{{imageUrl}}/employees/{{item.picture}}"
+              style="max-height: 210px; max-width: 100%;" />
+            <h4 style="margin-top: 15px">{{item.full_name}} <br> {{item.full_name_ar}}</h4>
+            <p>{{item.user.email}}</p>
+
+            <br />
+            <nb-actions fullWidth="true" class="text-center" size="tiny">
+              <nb-action [routerLink]="['/pages/employees/edit/', item.id]" icon="edit-outline"></nb-action>
+              <nb-action (click)="delete(index, item)" icon="trash-2-outline"></nb-action>
+              <nb-action (click)="toggle(index, item)" icon="eye-off-outline"></nb-action>
+            </nb-actions>
+          </div>
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </div>
+  <ng-container *ngIf="!loaded">
+    <div class="row">
+      <div class="col-md-3" *ngFor="let item of fakeItems">
+        <ngx-skeleton-loader [theme]="{ 'background-color': '#e8e8e8', 'border-radius': '0', height: '300px' }">
+        </ngx-skeleton-loader>
+      </div>
+    </div>
+  </ng-container>
+
+  <ul class="pagination" *ngIf="totalItems != null && totalItems > 0
+">
+    <ng-container *ngIf="totalItems > perPage">
+      <li  class="page-item first-item" [class.disabled]="page == 1" [disabled]="page == 1" (click)="setPage(1)"><a class="page-link">{{ 'FIRST'
+          |
+          translate }}</a></li>
+      <li class="page-item previous-item" [class.disabled]="page == 1" [disabled]="page == 1" (click)="setPage(page - 1)"><a
+          class="page-link">{{
+          'PREVIOUS' | translate }}</a>
+      </li>
+      <li class="page-item number-item" *ngIf="page > 3" (click)="setPage(page - 3)"><a class="page-link">{{page -
+          3}}</a>
+      </li>
+      <li class="page-item number-item" *ngIf="page > 2" (click)="setPage(page - 2)"><a class="page-link">{{page -
+          2}}</a>
+      </li>
+      <li class="page-item number-item" *ngIf="page > 1" (click)="setPage(page - 1)"><a class="page-link">{{page -
+          1}}</a>
+      </li>
+      <li class="page-item number-item active"><a class="page-link">{{page}}</a></li>
+      <li class="page-item number-item" *ngIf="lastPage > page" (click)="setPage(page + 1)"><a class="page-link">{{page
+          +
+          1}}</a></li>
+      <li class="page-item number-item" *ngIf="lastPage > page + 1" (click)="setPage(page + 2)"><a
+          class="page-link">{{page
+          + 2}}</a></li>
+      <li class="page-item number-item" *ngIf="lastPage > page + 2" (click)="setPage(page + 3)"><a
+          class="page-link">{{page
+          + 3}}</a></li>
+      <li class="page-item next-item" [class.disabled]="lastPage <= page" (click)="setPage(page + 1)"><a
+          class="page-link">{{ 'NEXT' | translate }}</a></li>
+    </ng-container>
+    <div class="total-items"> {{ 'TOTAL_ITEMS' | translate }}: {{totalItems}} </div>
+
+  </ul>
+
+  <ng-container *ngIf="loaded && employees.length == 0">
+    <div class="text-center margin-bottom">
+      <img class="no-result" src="assets/images/nothing.svg" width="50px" />
+      <p class="gray">{{ 'EMPTY_RESULT' | translate }}</p>
+    </div>
+  </ng-container>
+</div>
+
+<table class="table" #myTableElementId id="myTableElementId" *ngIf="exported" style="display: none;">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">{{ 'FULLNAME' | translate }}</th>
+      <th scope="col">{{ 'FULLNAME_AR' | translate }}</th>
+      <th scope="col">{{ 'ID' | translate }}</th>
+      <th scope="col">{{ 'EMPLOYEE_ID' | translate }}</th>
+      <th scope="col">{{ 'EMAIL' | translate }}</th>
+      <th scope="col">{{ 'MOBILE' | translate }}</th>
+      <th scope="col">{{ 'DEPARTMENT' | translate }}</th>
+      <th scope="col">{{ 'POSITION' | translate }}</th>
+      <th scope="col">{{ 'WORK_SHIFT' | translate }}</th>
+      <th scope="col">{{ 'DATE_OF_BIRTH' | translate }}</th>
+      <th scope="col">{{ 'JOINED_DATE' | translate }}</th>
+      <th scope="col">{{ 'GENDER' | translate }}</th>
+      <th scope="col">{{ 'BASIC_SALARY' | translate }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of allEmployees; let i = index">
+      <th scope="row">{{i + 1}}</th>
+      <td>{{item.full_name}}</td>
+      <td>{{item.full_name_ar}}</td>
+      <td>{{item.identifier}}</td>
+      <td>{{item.employee_id}}</td>
+      <td>{{item.user.email}}</td>
+      <td>{{item.user.mobile}}</td>
+      <td> <span *ngIf="item.department != null">{{item.department.name}} </span></td>
+      <td> <span *ngIf="item.position != null">{{item.position.name}} </span></td>
+      <td> <span *ngIf="item.shift != null">{{item.shift.name}} </span></td>
+      <td>{{item.date_of_birth}}</td>
+      <td>{{item.joined_at}}</td>
+      <td> <span *ngIf="item.gender == 1">{{ 'MALE' | translate }} </span>
+        <span *ngIf="item.gender == 2">{{ 'FEMALE' | translate }} </span>
+      </td>
+      <td>{{item.basic_salary}}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="centeredDiv" *ngIf="connecting">
+  <div class="loadingio-spinner-dual-ball-unisync-animation-div">
+    <div class="unisync-animation">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+  <p>{{ 'CONNECTING' | translate }}...</p>
+</div>

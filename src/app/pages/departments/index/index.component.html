@@ -1,0 +1,150 @@
+<div>
+  <div>
+    <button nbButton outline status="primary" size="small" [routerLink]="'/pages/departments/add'">
+      <nb-icon icon="plus-outline"></nb-icon>{{ 'GENERIC.ADD' | translate }} {{ 'DEPARTMENT' | translate }}
+    </button>
+    <button [nbSpinner]="exporting" nbSpinnerSize="small" class="float-right" nbButton outline status="dark"
+      size="small" (click)="export()">
+      {{ 'EXPORT' | translate }}
+    </button>
+  </div>
+  <br />
+  <nb-accordion>
+    <nb-accordion-item #item>
+      <nb-accordion-item-header>
+        {{ 'SEARCH' | translate }}
+      </nb-accordion-item-header>
+      <nb-accordion-item-body>
+        <form class="form-inline">
+          <input type="text" nbInput fullWidth placeholder="{{ 'NAME' | translate }}" [(ngModel)]="query.name"
+            [ngModelOptions]="{standalone: true}">
+          <button type="submit" nbButton status="primary" (click)="search()">{{ 'SEARCH' | translate }}</button>
+          <button nbButton status="light" (click)="reset()">{{ 'RESET' | translate }}</button>
+        </form>
+      </nb-accordion-item-body>
+    </nb-accordion-item>
+  </nb-accordion>
+  <br />
+  <div class="row">
+    <div class="col-md-3" *ngFor="let item of departments; let i = index">
+      <nb-card>
+        <nb-card-body>
+          <div class="dep">
+            <h2 class="text-center">{{item.name}} - {{item.name_ar}}</h2>
+            <p *ngIf="item.manager != null"><nb-icon icon="person-outline"></nb-icon> {{item.manager.full_name}}</p>
+            <p *ngIf="item.parent != null"><nb-icon icon="link-2-outline"></nb-icon> {{item.parent.name}} {{ 'HIERARCHY_PAGE.DEPARTMENT' | translate }}</p>
+            <p *ngIf="item.employees_count != null"><nb-icon icon="hash-outline"></nb-icon> {{item.employees_count}} {{ 'EMPLOYEE' | translate }} </p>
+            <br />
+            <nb-actions fullWidth="true" class="text-center" size="tiny" *ngIf="item.company_id != null">
+              <nb-action [routerLink]="['/pages/departments/edit/', item.id]" icon="edit-outline"></nb-action>
+              <nb-action (click)="delete(i, item)" icon="trash-2-outline"></nb-action>
+              <nb-action (click)="viewEmployees(i, item)" icon="list-outline"></nb-action>
+
+            </nb-actions>
+          </div>
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </div>
+  <ng-container *ngIf="!loaded">
+    <div class="row loader-container">
+      <div class="col-md-3" *ngFor="let item of fakeItems">
+        <ngx-skeleton-loader [theme]="{ 'background-color': '#e8e8e8', 'border-radius': '0', height: '120px' }">
+        </ngx-skeleton-loader>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="loaded && departments.length == 0">
+    <div class="text-center margin-bottom">
+      <img class="no-result" src="assets/images/nothing.svg" width="50px" />
+      <p class="gray">{{ 'EMPTY_RESULT' | translate }}</p>
+    </div>
+  </ng-container>
+
+  <ul class="pagination" *ngIf="totalItems != null">
+    <ng-container *ngIf="totalItems > perPage">
+      <li class="page-item first-item" [class.disabled]="page == 1" [disabled]="page == 1" (click)="setPage(1)"><a
+          class="page-link">{{ 'FIRST'
+          |
+          translate }}</a></li>
+      <li class="page-item previous-item" [class.disabled]="page == 1" [disabled]="page == 1"
+        (click)="setPage(page - 1)"><a class="page-link">{{
+          'PREVIOUS' | translate }}</a>
+      </li>
+      <li class="page-item number-item" *ngIf="page > 3" (click)="setPage(page - 3)"><a class="page-link">{{page -
+          3}}</a>
+      </li>
+      <li class="page-item number-item" *ngIf="page > 2" (click)="setPage(page - 2)"><a class="page-link">{{page -
+          2}}</a>
+      </li>
+      <li class="page-item number-item" *ngIf="page > 1" (click)="setPage(page - 1)"><a class="page-link">{{page -
+          1}}</a>
+      </li>
+      <li class="page-item number-item active"><a class="page-link">{{page}}</a></li>
+      <li class="page-item number-item" *ngIf="lastPage > page" (click)="setPage(page + 1)"><a class="page-link">{{page
+          +
+          1}}</a></li>
+      <li class="page-item number-item" *ngIf="lastPage > page + 1" (click)="setPage(page + 2)"><a
+          class="page-link">{{page
+          + 2}}</a></li>
+      <li class="page-item number-item" *ngIf="lastPage > page + 2" (click)="setPage(page + 3)"><a
+          class="page-link">{{page
+          + 3}}</a></li>
+      <li class="page-item next-item" [class.disabled]="lastPage <= page" (click)="setPage(page + 1)"><a
+          class="page-link">{{ 'NEXT' | translate }}</a></li>
+    </ng-container>
+    <div class="total-items"> {{ 'TOTAL_ITEMS' | translate }}: {{totalItems}} </div>
+  </ul>
+</div>
+
+<table class="table" #myTableElementId id="myTableElementId" *ngIf="exported" style="display: none;">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">{{ 'NAME' | translate }}</th>
+      <th scope="col">{{ 'NAME_AR' | translate }}</th>
+      <th scope="col">{{ 'MANAGER' | translate }}</th>
+      <th scope="col">{{ 'EMPLOYEE_COUNT' | translate }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of allData; let i = index">
+      <th scope="row">{{i + 1}}</th>
+      <td>{{item.name}}</td>
+      <td>{{item.name_ar}}</td>
+      <td>{{item.manager.full_name}}</td>
+      <td>{{item.employees_count}}</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<ng-template #modalContent let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">{{ 'EMPLOYEES' | translate }}</h5>
+    <button type="button" class="close" (click)="close()">
+      <span>&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <nb-card [nbSpinner]="loadingEmployees" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+      <nb-list-item *ngFor="let employee of employees">
+        <nb-user [name]="employee.full_name" [title]="employee.user_minimal.email">
+        </nb-user>
+      </nb-list-item>
+    </nb-card>
+
+    <ng-container *ngIf="!loadingEmployees && employees.length == 0">
+      <div class="text-center margin-bottom">
+        <img class="no-result" src="assets/images/nothing.svg" width="50px" />
+        <p class="gray">{{ 'EMPTY_RESULT' | translate }}</p>
+      </div>
+    </ng-container>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">
+      {{ 'OK' | translate }}
+    </button>
+  </div>
+</ng-template>

@@ -1,0 +1,50 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+      <nb-card-header>
+        {{ 'GENERIC.ADD' | translate }}
+        {{ 'ATTENDANCE_REQUEST' | translate }}
+      </nb-card-header>
+      <nb-card-body>
+        <form (ngSubmit)="save()" #form="ngForm">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'DATE' | translate }}</label>
+                <input nbInput fullWidth [formControl]="myForm.controls['date']" autocomplete="off"
+                  [status]="submitted ? (myForm.controls.date.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="attendance.date" placeholder="{{ 'DATE' | translate }}"
+                  [nbDatepicker]="dobPicker" name="dob">
+                <nb-datepicker #dobPicker [max]="max"></nb-datepicker>
+              </div>
+              <ng-container *ngIf="myForm.controls.date.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="inPicker" class="label">{{ 'IN' | translate }}</label>
+                  <input [ngxTimepicker]="inPicker" format="24" name="inPicker" nbInput fullWidth [(ngModel)]="attendance.in" placeholder="{{ 'IN' | translate }}">
+                  <ngx-material-timepicker #inPicker defaultTime="8:00"></ngx-material-timepicker>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="outPicker" class="label">{{ 'OUT' | translate }}</label>
+                  <input [ngxTimepicker]="outPicker" format="24" name="outPicker" nbInput fullWidth [(ngModel)]="attendance.out" placeholder="{{ 'OUT' | translate }}">
+                  <ngx-material-timepicker #outPicker defaultTime="12:00"></ngx-material-timepicker>
+                </div>
+              </div>
+          </div>
+          <button nbButton type="submit" status="primary" size="medium">
+            {{ 'SAVE' | translate }}
+          </button>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

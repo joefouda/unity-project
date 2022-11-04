@@ -1,0 +1,73 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+      <nb-card-header>
+        <ng-container *ngIf="!isEdit; else editDiv">{{ 'GENERIC.ADD' | translate }}</ng-container>
+        <ng-template #editDiv>{{ 'GENERIC.EDIT' | translate }}</ng-template>
+        {{ 'ALLOWENCE' | translate }}
+      </nb-card-header>
+      <nb-card-body>
+        <form (ngSubmit)="save()" #form="ngForm">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'NAME' | translate }}*</label>
+                <input type="text" nbInput fullWidth
+                  [status]="submitted ? (myForm.controls.name.invalid  ? 'danger' : 'success') : 'basic'"
+                  [formControl]="myForm.controls['name']" [(ngModel)]="allowence.name"
+                  placeholder="{{ 'NAME' | translate }}">
+              </div>
+
+              <ng-container *ngIf="myForm.controls.name.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="label">{{ 'NAME_AR' | translate }}</label>
+                <input type="text" nbInput fullWidth [formControl]="myForm.controls['name_ar']"
+                  [(ngModel)]="allowence.name_ar" placeholder="{{ 'NAME_AR' | translate }}">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'PERCENTAGE' | translate }}</label>
+                <div class="input-group" style="direction: ltr !important;">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">{{ '%' | translate }}</span>
+                  </div>
+                  <input type="number" nbInput maxlength="100" fullWidth style="width: 93% !important;" [formControl]="myForm.controls['percentage']"
+                  [status]="submitted ? (myForm.controls.percentage.invalid  ? 'danger' : 'success') : 'basic'"
+                    [(ngModel)]="allowence.percentage" placeholder="{{ 'PERCENTAGE' | translate }}">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'FIXED_AMOUNT' | translate }}</label>
+                <div class="input-group" style="direction: ltr !important;">
+                
+                  <input type="number" nbInput fullWidth style="width: 92% !important;" [formControl]="myForm.controls['fixed_amount']"
+                  [status]="submitted ? (myForm.controls.fixed_amount.invalid  ? 'danger' : 'success') : 'basic'"
+                    [(ngModel)]="allowence.fixed_amount" placeholder="{{ 'FIXED_AMOUNT' | translate }}">
+
+                    <div class="input-group-append">
+                      <span class="input-group-text" id="basic-addon1">{{ 'SR' | translate }}</span>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button nbButton type="submit" status="primary" size="medium">
+            {{ 'SAVE' | translate }}
+          </button>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

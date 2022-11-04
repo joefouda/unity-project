@@ -1,0 +1,153 @@
+<div class="row">
+  <div class="col-md-8">
+    <h2>{{ 'MENU_ITEMS.BILLING' | translate }}</h2>
+  </div>
+  <div class="col-md-4 " style="padding: 0px !important;">
+    <button class="float-right" nbButton outline status="dark" size="small" (click)="export()">
+      {{ 'EXPORT' | translate }}
+    </button>
+  </div>
+</div>
+
+<br />
+<nb-accordion>
+  <nb-accordion-item #item>
+    <nb-accordion-item-header>
+      {{ 'SEARCH' | translate }}
+    </nb-accordion-item-header>
+    <nb-accordion-item-body>
+      <form class="form-inline">
+        <input nbInput fullWidth class="input-full-width size-medium status-basic shape-rectangle" autocomplete="off"
+          [(ngModel)]="range" name="range" placeholder="{{ 'DATE' | translate }}" [nbDatepicker]="rangeDate"
+          name="rangeDate">
+        <nb-rangepicker #rangeDate></nb-rangepicker>
+        <button type="submit" nbButton status="primary" (click)="search()">{{ 'SEARCH' | translate }}</button>
+      </form>
+    </nb-accordion-item-body>
+  </nb-accordion-item>
+</nb-accordion>
+<br />
+
+<ngx-datatable class="material striped" [virtualization]="false" [loadingIndicator]="loadingIndicator" [rows]="data" 
+  [columnMode]="ColumnMode.force" [scrollbarH]="true" [headerHeight]="50" [footerHeight]="50"
+  rowHeight="auto" [externalPaging]="true" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+  (page)="getResult($event)">
+
+  <ngx-datatable-column name="#" [width]="10">
+    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
+      {{(rowIndex+1) + (page.pageNumber * page.size) }}
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column *ngIf="admin" name="{{ 'NAME' | translate }}" prop="company">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <span>{{value.name}}</span>
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column name="{{ 'PERIOD' | translate }}" prop="package" [width]="150">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <span>{{row.start_date | amDateFormat:'YYYY-MM-DD'}} - {{row.end_date | amDateFormat:'YYYY-MM-DD'}}</span>
+    </ng-template>
+  </ngx-datatable-column>
+  
+
+  <ngx-datatable-column name="{{ 'AMOUNT' | translate }}" prop="amount" [width]="200">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <span>{{value}} SR</span>
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column name="{{ 'STATUS_TEXT' | translate }}" prop="is_paid">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <ng-container *ngIf="!value">
+        <div class="span-status span-status-red">
+          <span>{{ 'STATUS.NOT_PAID' | translate }}</span>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="value">
+        <div class="span-status span-status-green">
+          <span>{{ 'STATUS.PAID' | translate }}</span>
+        </div>
+      </ng-container>
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column name="{{ 'ACTIONS' | translate }}" sortable="false" prop="id">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <button nbButton ghost size="small" status="primary" (click)="pay(dialog, row)" *ngIf="!row.is_paid && !admin">
+        {{ 'PAY' | translate }}
+      </button>
+    </ng-template>
+  </ngx-datatable-column> 
+</ngx-datatable>
+
+
+
+<table class="table" #myTableElementId id="myTableElementId" *ngIf="exported" style="display: none;">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">{{ 'COMPANY' | translate }}</th>
+      <th scope="col">{{ 'PACKAGE' | translate }}</th>
+      <th scope="col">{{ 'STARTING_DATE' | translate }}</th>
+      <th scope="col">{{ 'ENDING_DATE' | translate }}</th>
+      <th scope="col">{{ 'CREATED_AT' | translate }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of allData; let i = index">
+      <th scope="row">{{i + 1}}</th>
+      <td> <span *ngIf="item.company != null">{{item.company.name}} </span></td>
+      <td> <span *ngIf="item.package != null">{{item.package.name}} </span></td>
+      <td>{{item.starts_in}}</td>
+      <td>{{item.ended_in}}</td>
+      <td>{{item.created_at}}</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<ng-template #dialog let-data let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header>{{ 'PAY_BILL' | translate }} </nb-card-header>
+    <nb-card-body>
+      <p>{{ 'PAY_DETAIL' | translate }}</p>
+      <br/>
+      <div class="price">
+        <div class="row">
+          <div class="col-md-6"></div>
+          <div class="col-md-3 stickLeft" >
+            <label>{{ 'USAGE' | translate }}</label>
+          </div>
+          <div class="col-md-3 stickRight" >
+            <label>{{bill.amount}} {{ 'SR' | translate }}</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6"></div>
+          <div class="col-md-3 stickLeft" >
+            <label>{{ 'VAT' | translate }} - 15%</label>
+          </div>
+          <div class="col-md-3 stickRight" >
+            <label>{{bill.vat}} {{ 'SR' | translate }}</label>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6"></div>
+          <div class="col-md-3 stickLeft" style="border-bottom: 0px !important">
+            <label>{{ 'TOTAL' | translate }}</label>
+          </div>
+          <div class="col-md-3 stickRight" style="border-bottom: 0px !important">
+            <label>{{bill.total}} {{ 'SR' | translate }}</label>
+          </div>
+        </div>
+      </div>
+    </nb-card-body>
+    <nb-card-footer>
+      <button nbButton status="primary" (click)="payNow()">{{ 'PAY' | translate }}</button>
+      <button nbButton class="cancel" status="danger" style="margin: 0px 10px" (click)="ref.close()">{{ 'CANCEL' | translate }}</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>

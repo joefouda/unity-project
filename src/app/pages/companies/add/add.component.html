@@ -1,0 +1,155 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+      <nb-card-header>
+        <ng-container *ngIf="!isEdit; else editDiv">{{ 'GENERIC.ADD' | translate }}</ng-container>
+        <ng-template #editDiv>{{ 'GENERIC.EDIT' | translate }}</ng-template>
+        {{ 'COMPANY' | translate }}
+      </nb-card-header>
+      <nb-card-body>
+        <form (ngSubmit)="save()" #form="ngForm">
+          <div style="text-align: center; min-height: 150px; margin-bottom: 5px;">
+            <input style="display: none" accept='image/*' type="file" (change)="preview($event)" #fileInput>
+            <img [src]="imgURL" height="200" (click)="fileInput.click()" *ngIf="imgURL">
+            <img src="assets/images/upload-image.png" height="100" (click)="fileInput.click()" *ngIf="!imgURL">
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="label">{{ 'NAME' | translate }}</label>
+                <input type="text" nbInput fullWidth
+                  [status]="submitted ? (myForm.controls.name.invalid  ? 'danger' : 'success') : 'basic'"
+                  [formControl]="myForm.controls['name']" [(ngModel)]="company.name" id="exampleInputEmail1"
+                  placeholder="{{ 'NAME' | translate }}">
+              </div>
+
+              <ng-container *ngIf="myForm.controls.name.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="label">{{ 'NAME_AR' | translate }}</label>
+                <input type="text" nbInput fullWidth [formControl]="myForm.controls['name_ar']"
+                  [(ngModel)]="company.name_ar"
+                  placeholder="{{ 'NAME_AR' | translate }}">
+              </div>
+            </div>
+          </div>
+          <br />
+          <h3>{{ 'COMPANY_INFO' | translate }}</h3>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="label">{{ 'NAME' | translate }}</label>
+                <input type="text" nbInput fullWidth [formControl]="myForm.controls['manager_name']"
+                  [status]="submitted ? (myForm.controls.manager_name.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="company.manager.name" id="exampleInputEmail1"
+                  placeholder="{{ 'NAME' | translate }}">
+              </div>
+              <ng-container *ngIf="myForm.controls.manager_name.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label
+                  class="label">{{ 'MOBILE' | translate }}</label>
+                <div class="input-group" style="direction: ltr !important;">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">+966</span>
+                  </div>
+                  <input type="text" nbInput style="width: 100%;" [formControl]="myForm.controls['manager_mobile']"
+                    [status]="submitted ? (myForm.controls.manager_mobile.invalid  ? 'danger' : 'success') : 'basic'"
+                    [(ngModel)]="company.manager.mobile"
+                    placeholder="{{ 'MOBILE' | translate }}">
+                </div>
+              </div>
+              <ng-container *ngIf="myForm.controls.manager_mobile.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="label">{{ 'EMAIL' | translate }}</label>
+                <input type="email" nbInput fullWidth [formControl]="myForm.controls['manager_email']"
+                  [status]="submitted ? (myForm.controls.manager_email.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="company.manager.email"
+                  placeholder="{{ 'EMAIL' | translate }}">
+              </div>
+              <ng-container *ngIf="myForm.controls.manager_email.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="label">{{ 'PREFERRED_LANG' | translate }}</label>
+                <nb-select fullWidth [formControl]="myForm.controls['manager_lang']"
+                  [status]="submitted ? (myForm.controls.manager_lang.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="company.manager.preferred_lang">
+                  <nb-option value="en">{{ 'ENGLISH' | translate }}</nb-option>
+                  <nb-option value="ar">{{ 'ARABIC' | translate }}</nb-option>
+                </nb-select>
+              </div>
+              <ng-container *ngIf="myForm.controls.manager_lang.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+
+            
+          </div>
+
+          <br />
+          <h3>{{ 'SUBSCRIPTION_INFO' | translate }}</h3>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="label">{{ 'PACKAGE' | translate }}</label>
+                <nb-select fullWidth [formControl]="myForm.controls['subscription_package_id']"
+                  placeholder="{{ 'PACKAGE' | translate }}"
+                  [status]="submitted ? (myForm.controls.subscription_package_id.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="company.subscription_package_id">
+                  <nb-option *ngFor="let package of packages" [value]="package.id"> {{ package.name }} - {{ getPeriod(package.period) }}</nb-option>
+                </nb-select>
+              </div>
+              <ng-container *ngIf="myForm.controls.subscription_package_id.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="label">{{ 'STARTING_DATE' | translate }}</label>
+                <input nbInput fullWidth [formControl]="myForm.controls['starting_date']" autocomplete="off"
+                  [status]="submitted ? (myForm.controls.starting_date.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="company.starting_date" placeholder="{{ 'STARTING_DATE' | translate }}"
+                  [nbDatepicker]="dobPicker" name="dob">
+                <nb-datepicker #dobPicker></nb-datepicker>
+              </div>
+            </div>
+
+
+          </div>
+          <button nbButton type="submit" status="primary" size="medium">
+            {{ 'SAVE' | translate }}
+          </button>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

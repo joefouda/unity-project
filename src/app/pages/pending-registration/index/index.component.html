@@ -1,0 +1,114 @@
+<!-- <nb-card>
+  <nb-card-header>
+    {{ 'MENU_ITEMS.LEAVES' | translate }}
+  </nb-card-header> -->
+
+<!-- <nb-card-body> -->
+
+<div class="row">
+  <div class="col-md-12">
+    <h2>{{ 'MENU_ITEMS.PENDING_REGISTRATION' | translate }}</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+      <nb-card-header>{{ 'TOTAL_REG_REQUEST' | translate }}</nb-card-header>
+      <nb-card-body>
+        <h3>{{stats.total}} <small>{{ 'COMPANY' | translate }}</small></h3>
+      </nb-card-body>
+    </nb-card>
+  </div>
+  <div class="col-md-3">
+    <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+      <nb-card-header>{{ 'PENDING_REG_REQUEST' | translate }}</nb-card-header>
+      <nb-card-body>
+        <h3>{{stats.pending}} <small>{{ 'COMPANY' | translate }}</small></h3>
+      </nb-card-body>
+    </nb-card>
+  </div>
+  <div class="col-md-3">
+    <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+      <nb-card-header>{{ 'ACCEPTED_REG_REQUEST' | translate }}</nb-card-header>
+      <nb-card-body>
+        <h3>{{stats.accepted}} <small>{{ 'COMPANY' | translate }}</small></h3>
+      </nb-card-body>
+    </nb-card>
+  </div>
+  <div class="col-md-3">
+    <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+      <nb-card-header>{{ 'REJECTED_REG_REQUEST' | translate }}</nb-card-header>
+      <nb-card-body>
+        <h3>{{stats.rejected}} <small>{{ 'COMPANY' | translate }}</small></h3>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+
+
+<nb-accordion>
+  <nb-accordion-item #item>
+    <nb-accordion-item-header>
+      {{ 'SEARCH' | translate }}
+    </nb-accordion-item-header>
+    <nb-accordion-item-body>
+      <form class="form-inline">
+        <input type="text" nbInput fullWidth placeholder="{{ 'TYPE_YOUR_THING' | translate }}"
+          (keyup)="updateFilter($event)">
+        <button type="submit" nbButton status="primary">{{ 'SEARCH' | translate }}</button>
+      </form>
+    </nb-accordion-item-body>
+  </nb-accordion-item>
+</nb-accordion>
+
+<br />
+
+<ngx-datatable class="material striped" [virtualization]="false"[loadingIndicator]="loadingIndicator" [rows]="data" 
+  [columnMode]="ColumnMode.force" [scrollbarH]="scrollBarHorizontal" [headerHeight]="50" [footerHeight]="50" rowHeight="auto" [externalPaging]="true"
+  [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size" (page)="getResult($event)">
+
+  <ngx-datatable-column name="#" [width]="10">
+    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
+      {{(rowIndex+1) + (page.pageNumber * page.size) }}
+    </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column name="{{ 'NAME' | translate }}" prop="name" [width]="250"></ngx-datatable-column>
+  <ngx-datatable-column name="{{ 'EMAIL' | translate }}" prop="email" [width]="250"></ngx-datatable-column>
+  <ngx-datatable-column name="{{ 'MOBILE' | translate }}" prop="mobile" [width]="200"></ngx-datatable-column>
+  <ngx-datatable-column name="{{ 'CREATED_AT' | translate }}" prop="created_at" [width]="150">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <span>{{value | amDateFormat:'dddd - MMMM Do YYYY'}}</span>
+    </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column name="{{ 'STATUS_TEXT' | translate }}" prop="is_registered">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <div *ngIf="row.is_registered === null; else notPending;">{{ 'PENDING' | translate }}</div>
+      <ng-template #notPending>
+        <div *ngIf="!value">{{ 'REJECTED' | translate }}</div>
+        <div *ngIf="value">{{ 'ACCEPTED' | translate }}</div>
+      </ng-template>
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column name="{{ 'ACTIONS' | translate }}" sortable="false" prop="id">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <div *ngIf="row.is_registered === null">
+        <button nbButton ghost size="small" status="primary" (click)="accept(value)">
+          <nb-icon icon="checkmark-circle-2-outline"></nb-icon>
+        </button>
+        <button nbButton ghost size="small" status="danger" (click)="cancel(row)">
+          <nb-icon icon="close-circle-outline"></nb-icon>
+        </button>
+      </div>
+      <div>
+        <button nbButton ghost size="small" status="primary" (click)="resendActivation(value)">
+          resend activation
+        </button>
+      </div>
+      
+    </ng-template>
+  </ngx-datatable-column>
+
+</ngx-datatable>
