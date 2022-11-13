@@ -36,7 +36,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   userMenu = [ { title: 'Profile',  id: 'profile' }, { title: 'Log out', id: 'logout' } ];
   langItems = [{ title: 'Profile' , id: 'ar' }, { title: 'Log out', id: 'en'}];
-  notificationExists = true;
+  notificationExists = false;
   notifications = [];
   messages = [];
   token;
