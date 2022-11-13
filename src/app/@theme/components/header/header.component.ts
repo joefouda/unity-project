@@ -85,9 +85,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.currentTheme = this.themeService.currentTheme;
     this.token = localStorage.getItem('token');
     this.api.protectedGet("notifications-count", this.token).subscribe((data: any) => {
-      if(data.notifications + data.messages > 0 )
-      console.log(data.notifications + data.messages)
+      if(data.notifications + data.messages > 0 ){
         this.notificationExists = true
+      }
     })
     this.menuService.onItemClick()
       .pipe(
