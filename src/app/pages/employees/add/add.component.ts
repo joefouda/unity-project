@@ -17,8 +17,6 @@ export class AddComponent implements OnInit {
   @ViewChild('stepper') stepper: NbStepperComponent;
 
   public myForm: FormGroup;
-<<<<<<< HEAD
-=======
   iqamaImageSource:any;
   nationalIdImageSource:any;
   contractImageSource:any;
@@ -27,7 +25,6 @@ export class AddComponent implements OnInit {
     iqama_file:'',
     id_file:''
   };
->>>>>>> 30799142f3327aa0c73ea81058137699399a27bd
   picture: File
   messages
   employee = {
@@ -164,8 +161,6 @@ export class AddComponent implements OnInit {
     });
   }
 
-<<<<<<< HEAD
-=======
   changeSource(newsrc, photo){
     if(photo === 'nationalId'){
       if(!this.nationalIdImageSource){
@@ -189,7 +184,6 @@ export class AddComponent implements OnInit {
     document.getElementById(preview).style.display = "none";
   }
 
->>>>>>> 30799142f3327aa0c73ea81058137699399a27bd
 
   nextOne(){
     if (this.myForm.controls['name'].valid && this.myForm.controls['identifier'].valid && this.myForm.controls['mobile'].valid && this.myForm.controls['email'].valid && this.myForm.controls['nationalIdPhoto'].valid, this.myForm.controls['iqamaPhoto'].valid, this.myForm.controls['contractPhoto'].valid, this.myForm.controls['nationalIdExDate'].valid, this.myForm.controls['iqamaExDate'].valid, this.myForm.controls['contractExDate'].valid) {
@@ -226,17 +220,10 @@ export class AddComponent implements OnInit {
 
     var reader = new FileReader();
     this.imagePath = files;
-<<<<<<< HEAD
-    reader.readAsDataURL(files[0]);
-    reader.onload = (_event) => {
-      this.imgURL = reader.result;
-    }
-=======
     reader.onload = (_event) => {
       this.imgURL = reader.result;
     }
     reader.readAsDataURL(files[0]);
->>>>>>> 30799142f3327aa0c73ea81058137699399a27bd
   }
 
   loadItem() {
@@ -247,10 +234,7 @@ export class AddComponent implements OnInit {
         iqamaExDate: data.files[0]?.iqama_expire_date,
         contractExDate: data.files[0]?.contract_expire_date,
       })
-<<<<<<< HEAD
-=======
       this.files = data.files[0]
->>>>>>> 30799142f3327aa0c73ea81058137699399a27bd
       this.employee = data;
       this.employee.name = data.full_name;
       this.employee.name_ar = data.full_name_ar;
@@ -270,10 +254,6 @@ export class AddComponent implements OnInit {
           });
         }, 2000);
       }
-<<<<<<< HEAD
-      console.log(this.employee.allowances);
-=======
->>>>>>> 30799142f3327aa0c73ea81058137699399a27bd
       this.employee.current = data.balance.current;
       this.employee.urgent = data.balance.urgent;
       this.employee.yearly_total = data.balance.yearly_total;
@@ -291,8 +271,6 @@ export class AddComponent implements OnInit {
 
   onFileChange(photoField,event: any) {
     const file = event.target.files[0]
-<<<<<<< HEAD
-=======
     var reader = new FileReader();
     reader.onload = (_event) => {
       if(photoField === 'nationalIdPhoto'){
@@ -304,7 +282,6 @@ export class AddComponent implements OnInit {
       }
     }
     reader.readAsDataURL(file);
->>>>>>> 30799142f3327aa0c73ea81058137699399a27bd
     this.myForm.get(photoField)?.setValue(file)
   }
 
@@ -323,11 +300,7 @@ export class AddComponent implements OnInit {
 
     this.employee.mobile = "+966" + this.employee.mobile;
     this.api.protectedPost('employees', this.employee, this.token).subscribe((data: any) => {
-<<<<<<< HEAD
-      
-=======
       console.log(data)
->>>>>>> 30799142f3327aa0c73ea81058137699399a27bd
       if(this.myForm.get('nationalIdPhoto')?.value){
         uploadFiles.append('id_file', this.myForm.get('nationalIdPhoto')?.value);
         uploadFiles.append('id_expire_date', this.myForm.get('nationalIdExDate')?.value);
@@ -342,12 +315,8 @@ export class AddComponent implements OnInit {
       }
 
       // post documents photos and expiration dates
-<<<<<<< HEAD
-      this.api.protectedPost('employees/' + data.id + '/uploadFiles', uploadFiles, this.token).subscribe(() => {
-=======
       this.api.protectedPost('employees/' + data.id + '/uploadFiles', uploadFiles, this.token).subscribe((res) => {
         console.log(res)
->>>>>>> 30799142f3327aa0c73ea81058137699399a27bd
         this.loading = false
         this.showSuccessMsgAndReturn();
       }, err => {

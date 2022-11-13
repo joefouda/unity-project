@@ -1,5 +1,4 @@
 :host ::ng-deep nb-stepper .step-content button {
-<<<<<<< HEAD
     text-align: center;
   
     button {
@@ -12,68 +11,3 @@
       padding: 0px 40px !important;
   }
   
-=======
-  text-align: center;
-
-  button {
-    cursor: pointer;
-    margin: 0.5rem;
-  }
-}
-
-:host ::ng-deep nb-stepper .header{
-    padding: 0px 40px !important;
-}
-
-#iqamaImagePreview {
-  display: none;
-}
-
-#nationalIdImagePreview {
-  display: none;
-}
-
-#contractImagepreview {
-  display: none;
-}
-
-.imagePreview {
-  flex-direction: column;
-  justify-content: space-between;
-  display: none;
-  background-color: white;
-  padding: 20px;
-  height: 60vh;
-  width: 30vw;
-  box-shadow: 1px 0 5px 2px;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  /* bring your own prefixes */
-  transform: translate(-50%, -50%);
-}
-
-@media screen and (max-width: 1000px) {
-  .imagePreview {
-    width: 40vw;
-  }
-}
-
-@media screen and (max-width: 900px) {
-  .imagePreview {
-    width: 50vw;
-  }
-}
-
-@media screen and (max-width: 700px) {
-  .imagePreview {
-    width: 60vw;
-  }
-}
-
-@media screen and (max-width: 500px) {
-  .imagePreview {
-    width: 80vw;
-  }
-}
->>>>>>> 30799142f3327aa0c73ea81058137699399a27bd

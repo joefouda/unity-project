@@ -6,8 +6,6 @@
     {{ 'EMPLOYEE' | translate }}
   </nb-card-header>
 
-<<<<<<< HEAD
-=======
   <div id="iqamaImagePreview" class="imagePreview">
     <img [src]="iqamaImageSource" height="80%" *ngIf="iqamaImageSource">
     <img src="assets/images/male-picture.png" height="80%" *ngIf="!iqamaImageSource">
@@ -26,7 +24,6 @@
     <button nbButton (click)="hidepreview('contractImagepreview')">OK</button>
   </div>
 
->>>>>>> 30799142f3327aa0c73ea81058137699399a27bd
   <nb-card-body>
     <form (ngSubmit)="save()" #form="ngForm">
       <nb-stepper #stepper orientation="horizontal" linear="false" disableStepNavigation>
@@ -120,15 +117,9 @@
                 <div class="input-group" style="direction: ltr !important;">
                   <input type="file" nbInput style="width: 70%;" [formControl]="myForm.controls['nationalIdPhoto']"
                     id="nationalIdPhoto"
-<<<<<<< HEAD
-                    [status]="submitted ? (myForm.controls.nationalIdPhoto.invalid  ? 'danger' : 'success') : 'basic'"
-                    placeholder="National ID file"
-                    (change)="onFileChange('nationalIdPhoto',$event)">
-=======
                     placeholder="National ID file"
                     (change)="onFileChange('nationalIdPhoto',$event)">
                     <nb-action (click)="changeSource(files?.id_file, 'nationalId')" icon="eye-outline"></nb-action>
->>>>>>> 30799142f3327aa0c73ea81058137699399a27bd
                 </div>
               </div>
             </div>
@@ -140,15 +131,9 @@
                 <div class="input-group" style="direction: ltr !important;">
                   <input type="file" nbInput style="width: 70%;" [formControl]="myForm.controls['iqamaPhoto']"
                     id="iqamaPhoto"
-<<<<<<< HEAD
-                    [status]="submitted ? (myForm.controls.iqamaPhoto.invalid  ? 'danger' : 'success') : 'basic'"
-                    placeholder="Iqama file"
-                    (change)="onFileChange('iqamaPhoto',$event)">
-=======
                     placeholder="Iqama file"
                     (change)="onFileChange('iqamaPhoto',$event)">
                     <nb-action data-toggle="modal" data-target="#exampleModal" (click)="changeSource(files?.iqama_file, 'iqama')" icon="eye-outline"></nb-action>
->>>>>>> 30799142f3327aa0c73ea81058137699399a27bd
                 </div>
               </div>
             </div>
@@ -160,15 +145,9 @@
                 <div class="input-group" style="direction: ltr !important;">
                   <input type="file" nbInput style="width: 70%;" [formControl]="myForm.controls['contractPhoto']"
                     id="contractPhoto"
-<<<<<<< HEAD
-                    [status]="submitted ? (myForm.controls.contractPhoto.invalid  ? 'danger' : 'success') : 'basic'"
-                    placeholder="Contract file"
-                    (change)="onFileChange('contractPhoto',$event)">
-=======
                     placeholder="Contract file"
                     (change)="onFileChange('contractPhoto',$event)">
                     <nb-action data-toggle="modal" data-target="#exampleModal" (click)="changeSource(files?.contract_file, 'contract')" icon="eye-outline"></nb-action>
->>>>>>> 30799142f3327aa0c73ea81058137699399a27bd
                 </div>
               </div>
             </div>
@@ -457,21 +436,12 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="exampleInputEmail1" class="label">{{ 'URGENT_VACATION_BALANCE' | translate }}</label>
-<<<<<<< HEAD
-                <input type="number" nbInput fullWidth [formControl]="myForm.controls['urgent_total']"
-                  [status]="submitted ? (myForm.controls.urgent_total.invalid  ? 'danger' : 'success') : 'basic'"
-                  [(ngModel)]="employee.urgent_total" maxlength="2" [max]="employee.urgent_total"
-                  placeholder="{{ 'URGENT_VACATION_BALANCE' | translate }}">
-              </div>
-              <ng-container *ngIf="myForm.controls.urgent_total.errors?.required && submitted">
-=======
                 <input type="number" nbInput fullWidth [formControl]="myForm.controls['urgent']"
                   [status]="submitted ? (myForm.controls.urgent.invalid  ? 'danger' : 'success') : 'basic'"
                   [(ngModel)]="employee.urgent" maxlength="2" [max]="companyProfile.urgent_vacation_balance"
                   placeholder="{{ 'URGENT_VACATION_BALANCE' | translate }}">
               </div>
               <ng-container *ngIf="myForm.controls.urgent.errors?.required && submitted">
->>>>>>> 30799142f3327aa0c73ea81058137699399a27bd
                 <p class="caption status-danger">
                   {{ 'REQUIRED_FEILD' | translate }}
                 </p>
@@ -480,15 +450,6 @@
 
             <div class="col-md-3">
               <div class="form-group">
-<<<<<<< HEAD
-                <label for="exampleInputEmail1" class="label">{{ 'URGENT_CURRENT_VACATION_BALANCE' | translate }}</label>
-                <input type="number" nbInput fullWidth [formControl]="myForm.controls['urgent']"
-                  [status]="submitted ? (myForm.controls.urgent.invalid  ? 'danger' : 'success') : 'basic'"
-                  [(ngModel)]="employee.urgent" maxlength="2" [max]="employee.urgent"
-                  placeholder="{{ 'URGENT_CURRENT_VACATION_BALANCE' | translate }}">
-              </div>
-              <ng-container *ngIf="myForm.controls.urgent.errors?.required && submitted">
-=======
                 <label for="exampleInputEmail1" class="label">{{ 'URGENT_CURRENT_VACATION_BALANCE' | translate
                   }}</label>
                 <input type="number" nbInput fullWidth [formControl]="myForm.controls['urgent_total']"
@@ -497,7 +458,6 @@
                   placeholder="{{ 'URGENT_CURRENT_VACATION_BALANCE' | translate }}">
               </div>
               <ng-container *ngIf="myForm.controls.urgent_total.errors?.required && submitted">
->>>>>>> 30799142f3327aa0c73ea81058137699399a27bd
                 <p class="caption status-danger">
                   {{ 'REQUIRED_FEILD' | translate }}
                 </p>
