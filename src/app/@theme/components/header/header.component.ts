@@ -36,11 +36,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   userMenu = [ { title: 'Profile',  id: 'profile' }, { title: 'Log out', id: 'logout' } ];
   langItems = [{ title: 'Profile' , id: 'ar' }, { title: 'Log out', id: 'en'}];
-<<<<<<< HEAD
   notificationExists = true;
-=======
-  notificationsCount;
->>>>>>> 30799142f3327aa0c73ea81058137699399a27bd
   notifications = [];
   messages = [];
   token;
@@ -90,13 +86,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.token = localStorage.getItem('token');
     this.api.protectedGet("notifications-count", this.token).subscribe((data: any) => {
       if(data.notifications + data.messages > 0 )
-<<<<<<< HEAD
       console.log(data.notifications + data.messages)
         this.notificationExists = true
-=======
-        this.notificationsCount = data.notifications + data.messages;
-      
->>>>>>> 30799142f3327aa0c73ea81058137699399a27bd
     })
     this.menuService.onItemClick()
       .pipe(
@@ -130,22 +121,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if(!this.loaded){
       this.api.protectedGet("notifications-unseen", this.token).subscribe((data: any) => {
         setTimeout(() => {
-<<<<<<< HEAD
           this.loaded = true;
           this.notifications = data.notifications;
           this.messages = data.messages;
           this.notificationExists = false;
         }, 300);
-=======
-          console.log(data)
-          this.loaded = true;
-          this.notifications = data.notifications;
-          this.messages = data.messages;
-        }, 300);
-        setTimeout(() => {
-          this.notificationsCount = "";
-        }, 2000);
->>>>>>> 30799142f3327aa0c73ea81058137699399a27bd
       });
     }
   }
