@@ -166,7 +166,7 @@ export class ChatComponent implements OnInit {
         files: [
           {
             url:data.message.message,
-            type:this.file.type,
+            type:this.file?.type,
             icon: 'file-text-outline'
           }
         ],

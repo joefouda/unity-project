@@ -65,13 +65,14 @@ export class IndexComponent implements OnInit {
 
 
   cancel(item){
+    console.log(item)
     this.translate.get('TOAST_MESSAGES')
     .subscribe((data) => {
       this.messages = data;
       this.dialogService.open(DeleteComponent, {
         context: {
-          title: this.messages.DELETE_ITEM + " " + item.type.name + " FROM " + item.from + " To " + item.to,
-          content: this.messages.ARE_YOU_SURE_DELETE + " " + item.type.name + " FROM " + item.from + " To " + item.to,
+          title: this.messages.DELETE_ITEM + " " + item.name + " FROM " + item.from + " To " + item.to,
+          content: this.messages.ARE_YOU_SURE_DELETE + " " + item.name + " FROM " + item.from + " To " + item.to,
         },
       }).onClose.subscribe((data) => {
         if (data) {
