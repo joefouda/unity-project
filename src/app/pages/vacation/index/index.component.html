@@ -1,0 +1,74 @@
+<div class="row">
+  <div class="col-md-8">
+    <h2>{{ 'MENU_ITEMS.VACATIONS' | translate }}</h2>
+  </div>
+  <div class="col-md-4 " style="padding: 0px !important;">
+    <button class="float-right" nbButton outline status="primary" size="small" [routerLink]="'/pages/vacations/add'">
+      <nb-icon icon="plus-outline"></nb-icon>{{ 'GENERIC.ADD' | translate }} {{ 'VACATION' | translate }}
+    </button>
+  </div>
+</div>
+
+<br />
+<nb-accordion>
+  <nb-accordion-item #item>
+    <nb-accordion-item-header>
+      {{ 'SEARCH' | translate }}
+    </nb-accordion-item-header>
+    <nb-accordion-item-body>
+      <form class="form-inline">
+        <input type="text" nbInput fullWidth placeholder="{{ 'NAME' | translate }}" [(ngModel)]="query.name"
+          [ngModelOptions]="{standalone: true}">
+        <nb-select fullWidth placeholder="{{ 'STATUS_TEXT' | translate }}" [(ngModel)]="query.is_active"
+          [ngModelOptions]="{standalone: true}">
+          <nb-option value="1"> {{ 'STATUS.ACTIVE' | translate }}</nb-option>
+          <nb-option value="0"> {{ 'STATUS.DEACTIVE' | translate }}</nb-option>
+        </nb-select>
+        <button type="submit" nbButton status="primary" (click)="search()">{{ 'SEARCH' | translate }}</button>
+      </form>
+    </nb-accordion-item-body>
+  </nb-accordion-item>
+</nb-accordion>
+<br />
+
+<ngx-datatable class="material striped" [virtualization]="false" [loadingIndicator]="loadingIndicator" [rows]="data"
+  [columnMode]="ColumnMode.force" [scrollbarH]="true" [headerHeight]="50" [footerHeight]="50" rowHeight="auto"
+  [externalPaging]="true" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+  (page)="getResult($event)">
+
+  <ngx-datatable-column name="#" [width]="20">
+    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
+      {{(rowIndex+1) + (page.pageNumber * page.size) }}
+    </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column name="{{ 'NAME' | translate }}" prop="name"></ngx-datatable-column>
+  <ngx-datatable-column name="{{ 'NAME_AR' | translate }}" prop="name_ar"></ngx-datatable-column>
+  <ngx-datatable-column name="{{ 'FROM' | translate }}" prop="from"></ngx-datatable-column>
+  <ngx-datatable-column name="{{ 'TO' | translate }}" prop="to"></ngx-datatable-column>
+
+  <ngx-datatable-column name="{{ 'STATUS_TEXT' | translate }}" prop="is_active">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <ng-container *ngIf="!value">
+        <div class="span-status span-status-red">
+          <span>{{ 'STATUS.DEACTIVE' | translate }}</span>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="value">
+        <div class="span-status span-status-green">
+          <span>{{ 'STATUS.ACTIVE' | translate }}</span>
+        </div>
+      </ng-container>
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column name="{{ 'ACTIONS' | translate }}" sortable="false" prop="id">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <button nbButton ghost size="small" status="primary" (click)="edit(value)">
+        <nb-icon icon="edit-2-outline"></nb-icon>
+      </button>
+      <button nbButton ghost size="small" status="danger" (click)="cancel(row)">
+        <nb-icon icon="trash-outline"></nb-icon>
+      </button>
+    </ng-template>
+  </ngx-datatable-column>
+</ngx-datatable>

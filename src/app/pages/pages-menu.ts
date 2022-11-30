@@ -97,6 +97,11 @@ export const MENU_ITEMS_FOR_MANAGER: NbMenuItem[] = [
     link: '/pages/holidays',
   },
   {
+    title: 'VACATIONS',
+    icon: 'heart-outline',
+    link: '/pages/vacations',
+  },
+  {
     title: 'NOTIFICATIONS',
     icon: 'log-out-outline',
     link: '/pages/notifications',

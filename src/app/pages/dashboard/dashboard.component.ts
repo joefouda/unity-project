@@ -107,6 +107,7 @@ export class DashboardComponent implements OnInit {
       });
       this.api.protectedGet("attendance-sheets-last-days", this.token).subscribe((data: any) => {
         this.attendances = data;
+        console.log(data)
         if (this.attendances.length > 0) {
           
           let todayDate = new Date();
@@ -173,6 +174,7 @@ export class DashboardComponent implements OnInit {
             this.todaysOn = new Date();
             this.todaysId = data.id;
             this.loadingAttendance = false;
+            this.inCard.title = this.loggedIn;
             this.refreshData();
             this.toastrService.success(this.messages.SUCCESS_INFO, this.messages.SUCCESS, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
           }, err => {
@@ -199,6 +201,7 @@ export class DashboardComponent implements OnInit {
             this.todaysOff = new Date();
             this.todaysId = data.id;
             this.loadingAttendance = false;
+            this.outCard.title = this.loggedOut;
             this.refreshData();
             this.toastrService.success(this.messages.SUCCESS_INFO, this.messages.SUCCESS, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
           }, err => {
@@ -227,7 +230,7 @@ export class DashboardComponent implements OnInit {
       window.open(data.link, "_blank");
 
 
-      clearInterval()
+      // clearInterval()
       let interval = setInterval(() => {
         let foodicsData = localStorage.getItem('got_data_foodics');
         if(foodicsData != null){

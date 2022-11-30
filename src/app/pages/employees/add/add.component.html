@@ -288,7 +288,6 @@
               <div class="form-group">
                 <label for="exampleInputEmail1" class="label">{{ 'JOINED_DATE' | translate }}</label>
                 <input nbInput fullWidth [formControl]="myForm.controls['joined_at']" autocomplete="off"
-                  [status]="submitted ? (myForm.controls.joined_at.invalid  ? 'danger' : 'success') : 'basic'"
                   [(ngModel)]="employee.joined_at" placeholder="{{ 'JOINED_DATE' | translate }}"
                   [nbDatepicker]="joindedPicker" name="joined_at">
                 <nb-datepicker #joindedPicker></nb-datepicker>
@@ -301,34 +300,22 @@
               <div class="form-group">
                 <label for="exampleInputEmail1" class="label">{{ 'GENDER' | translate }}</label>
                 <nb-select fullWidth [formControl]="myForm.controls['gender']"
-                  [status]="submitted ? (myForm.controls.gender.invalid  ? 'danger' : 'success') : 'basic'"
                   [(ngModel)]="employee.gender" placeholder="{{ 'GENDER' | translate }}">
                   <nb-option value="1">{{ 'MALE' | translate }}</nb-option>
                   <nb-option value="2">{{ 'FEMALE' | translate }}</nb-option>
                 </nb-select>
               </div>
-              <ng-container *ngIf="myForm.controls.gender.errors?.required && submitted">
-                <p class="caption status-danger">
-                  {{ 'REQUIRED_FEILD' | translate }}
-                </p>
-              </ng-container>
             </div>
 
             <div class="col-md-4">
               <div class="form-group">
                 <label for="exampleInputEmail1" class="label">{{ 'PREFERRED_LANG' | translate }}</label>
                 <nb-select fullWidth [formControl]="myForm.controls['preferred_lang']"
-                  [status]="submitted ? (myForm.controls.preferred_lang.invalid  ? 'danger' : 'success') : 'basic'"
                   [(ngModel)]="employee.preferred_lang" placeholder="{{ 'PREFERRED_LANG' | translate }}">
                   <nb-option value="en">{{ 'ENGLISH' | translate }}</nb-option>
                   <nb-option value="ar">{{ 'ARABIC' | translate }}</nb-option>
                 </nb-select>
               </div>
-              <ng-container *ngIf="myForm.controls.preferred_lang.errors?.required && submitted">
-                <p class="caption status-danger">
-                  {{ 'REQUIRED_FEILD' | translate }}
-                </p>
-              </ng-container>
             </div>
           </div>
 
@@ -408,7 +395,7 @@
                 <label for="exampleInputEmail1" class="label">{{ 'YEARLY_VACATION_BALANCE' | translate }}</label>
                 <input type="number" nbInput fullWidth [formControl]="myForm.controls['yearly_total']"
                   [status]="submitted ? (myForm.controls.yearly_total.invalid  ? 'danger' : 'success') : 'basic'"
-                  [(ngModel)]="employee.yearly_total" maxlength="2" [max]="companyProfile.yearly_vacation_balance"
+                  [(ngModel)]="employee.yearly_total" maxlength="2"
                   placeholder="{{ 'YEARLY_VACATION_BALANCE' | translate }}">
               </div>
               <ng-container *ngIf="myForm.controls.yearly_total.errors?.required && submitted">
@@ -423,7 +410,7 @@
                 <label for="exampleInputEmail1" class="label">{{ 'CURRENT_VACATION_BALANCE' | translate }}</label>
                 <input type="number" nbInput fullWidth [formControl]="myForm.controls['current']"
                   [status]="submitted ? (myForm.controls.current.invalid  ? 'danger' : 'success') : 'basic'"
-                  [(ngModel)]="employee.current" maxlength="2" [max]="employee.yearly_total"
+                  [(ngModel)]="employee.current"
                   placeholder="{{ 'CURRENT_VACATION_BALANCE' | translate }}">
               </div>
               <ng-container *ngIf="myForm.controls.current.errors?.required && submitted">
@@ -436,9 +423,24 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="exampleInputEmail1" class="label">{{ 'URGENT_VACATION_BALANCE' | translate }}</label>
+                <input type="number" nbInput fullWidth [formControl]="myForm.controls['urgent_total']"
+                  [status]="submitted ? (myForm.controls.urgent_total.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="employee.urgent_total" maxlength="2"
+                  placeholder="{{ 'URGENT_CURRENT_VACATION_BALANCE' | translate }}">
+              </div>
+              <ng-container *ngIf="myForm.controls.urgent_total.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'URGENT_CURRENT_VACATION_BALANCE' | translate }}</label>
                 <input type="number" nbInput fullWidth [formControl]="myForm.controls['urgent']"
                   [status]="submitted ? (myForm.controls.urgent.invalid  ? 'danger' : 'success') : 'basic'"
-                  [(ngModel)]="employee.urgent" maxlength="2" [max]="companyProfile.urgent_vacation_balance"
+                  [(ngModel)]="employee.urgent" maxlength="2"
                   placeholder="{{ 'URGENT_VACATION_BALANCE' | translate }}">
               </div>
               <ng-container *ngIf="myForm.controls.urgent.errors?.required && submitted">
@@ -448,21 +450,7 @@
               </ng-container>
             </div>
 
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="exampleInputEmail1" class="label">{{ 'URGENT_CURRENT_VACATION_BALANCE' | translate
-                  }}</label>
-                <input type="number" nbInput fullWidth [formControl]="myForm.controls['urgent_total']"
-                  [status]="submitted ? (myForm.controls.urgent_total.invalid  ? 'danger' : 'success') : 'basic'"
-                  [(ngModel)]="employee.urgent_total" maxlength="2" [max]="employee.urgent"
-                  placeholder="{{ 'URGENT_CURRENT_VACATION_BALANCE' | translate }}">
-              </div>
-              <ng-container *ngIf="myForm.controls.urgent_total.errors?.required && submitted">
-                <p class="caption status-danger">
-                  {{ 'REQUIRED_FEILD' | translate }}
-                </p>
-              </ng-container>
-            </div>
+           
           </div>
 
 

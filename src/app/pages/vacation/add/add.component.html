@@ -1,0 +1,91 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+      <nb-card-header>
+        <ng-container *ngIf="!isEdit; else editDiv">{{ 'GENERIC.ADD' | translate }}</ng-container>
+        <ng-template #editDiv>{{ 'GENERIC.EDIT' | translate }}</ng-template>
+        {{ 'VACATION' | translate }}
+      </nb-card-header>
+      <nb-card-body>
+        <form (ngSubmit)="save()" #form="ngForm">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'NAME' | translate }}*</label>
+                <input type="text" nbInput fullWidth
+                  [status]="submitted ? (myForm.controls.name.invalid  ? 'danger' : 'success') : 'basic'"
+                  [formControl]="myForm.controls['name']" [(ngModel)]="vacation.name"
+                  placeholder="{{ 'NAME' | translate }}">
+              </div>
+
+              <ng-container *ngIf="myForm.controls.name.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="label">{{ 'NAME_AR' | translate }}</label>
+                <input type="text" nbInput fullWidth [formControl]="myForm.controls['name_ar']"
+                  [status]="submitted ? (myForm.controls.name_ar.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="vacation.name_ar" placeholder="{{ 'NAME_AR' | translate }}">
+              </div>
+              <ng-container *ngIf="myForm.controls.name_ar.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+          </div>
+
+          <div class="row">
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'vacation_type' | translate }}</label>
+                <nb-select fullWidth [formControl]="myForm.controls['type']"
+                  [status]="submitted ? (myForm.controls.type.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="vacation.type" placeholder="{{ 'vacation_type' | translate }}">
+                  <nb-option value="0">{{ 'yearly' | translate }}</nb-option>
+                  <nb-option value="1">{{ 'urgent' | translate }}</nb-option>
+                </nb-select>
+              </div>
+              <ng-container *ngIf="myForm.controls.type.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="label">{{ 'percentage_for_deduction' | translate }}</label>
+                <input type="text" nbInput fullWidth [formControl]="myForm.controls['percentage_for_deduction']"
+                  [(ngModel)]="vacation.percentage_for_deduction" placeholder="{{ 'percentage_for_deduction' | translate }}"
+                  [status]="submitted ? (myForm.controls.percentage_for_deduction.invalid  ? 'danger' : 'success') : 'basic'">
+              </div>
+              <ng-container *ngIf="myForm.controls.percentage_for_deduction.errors?.max && submitted">
+                <p class="caption status-danger">
+                  {{ 'allowed_percentage' | translate }}
+                </p>
+              </ng-container>
+            </div>
+
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <div class="form-group">
+                <nb-toggle labelPosition="end" [(checked)]="paid_vacation" [(ngModel)]="paid_vacation" [ngModelOptions]="{standalone: true}">{{
+                  'paid_vacation' | translate }}</nb-toggle>
+              </div>
+            </div>
+          </div>
+          <button nbButton type="submit" status="primary" size="medium">
+            {{ 'SAVE' | translate }}
+          </button>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
