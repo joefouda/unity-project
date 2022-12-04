@@ -18,7 +18,8 @@ export class AddComponent implements OnInit {
     id: '',
     name: '',
     name_ar: '',
-    number_of_hours: 10,
+    number_of_hours: [''],
+    break_hours:'',
     type: '1',
     shift: {
       type: null,

@@ -134,6 +134,7 @@ export class IndexComponent implements OnInit {
     this.page.pageNumber = pageInfo.offset;
     this.backendPage = this.page.pageNumber + 1;
     this.api.protectedGet("leaves?page=" + this.backendPage + this.q, this.token).subscribe((data: any) => {
+      console.log(data)
       this.data = data.data;
       this.page.totalElements = data.total;
       this.loadingIndicator = false;
@@ -160,14 +161,15 @@ export class IndexComponent implements OnInit {
 
 
   accept(item){
+    console.log(item)
     this.translate.get('TOAST_MESSAGES')
     .subscribe((data) => {
       this.messages = data;
       this.dialogService.open(DeleteComponent, {
         context: {
-          title: this.messages.ACCEPT_ITEM_LEAVE + " " + item.type.name + " " + 
+          title: this.messages.ACCEPT_ITEM_LEAVE + " " + item.company_vacation.name + " " + 
           this.messages.FROM + " " + item.from + " " + this.messages.TO + " " + item.to,
-          content: this.messages.ARE_YOU_SURE_ACCEPT + " " + item.type.name + " FROM " + item.from + " To " + item.to,
+          content: this.messages.ARE_YOU_SURE_ACCEPT + " " + item.company_vacation.name + " FROM " + item.from + " To " + item.to,
         },
       }).onClose.subscribe((data) => {
         if (data) {
@@ -191,8 +193,8 @@ export class IndexComponent implements OnInit {
       this.messages = data;
       this.dialogService.open(DeleteComponent, {
         context: {
-          title: this.messages.REJECT_ITEM_LEAVE + " " + item.type.name + " FROM " + item.from + " To " + item.to,
-          content: this.messages.ARE_YOU_SURE_REJECT + " " + item.type.name + " FROM " + item.from + " To " + item.to,
+          title: this.messages.REJECT_ITEM_LEAVE + " " + item.company_vacation.name + " FROM " + item.from + " To " + item.to,
+          content: this.messages.ARE_YOU_SURE_REJECT + " " + item.company_vacation.name + " FROM " + item.from + " To " + item.to,
         },
       }).onClose.subscribe((data) => {
         if (data) {
@@ -215,12 +217,13 @@ export class IndexComponent implements OnInit {
       this.messages = data;
       this.dialogService.open(DeleteComponent, {
         context: {
-          title: this.messages.DELETE_ITEM + " " + item.type.name + " FROM " + item.from + " To " + item.to,
-          content: this.messages.ARE_YOU_SURE_DELETE + " " + item.type.name + " FROM " + item.from + " To " + item.to,
+          title: this.messages.DELETE_ITEM + " " + item.company_vacation.name + " FROM " + item.from + " To " + item.to,
+          content: this.messages.ARE_YOU_SURE_DELETE + " " + item.company_vacation.name + " FROM " + item.from + " To " + item.to,
         },
       }).onClose.subscribe((data) => {
         if (data) {
           this.api.protectedDelete('leaves/' + item.id, this.token).subscribe((data) => {
+            console.log(data)
             let temp = [...this.data];
             let index = temp.indexOf(item, 0);
             temp.splice(index, 1);
@@ -228,10 +231,10 @@ export class IndexComponent implements OnInit {
             this.page.totalElements--;
             this.toastrService.success(this.messages.SUCCESS_INFO, this.messages.SUCCESS, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
           }, err => {
+            console.log(err)
             this.toastrService.danger(this.messages.ERROR_INFO, this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
           })
         }
-        console.log(data);
       });
     });
   }

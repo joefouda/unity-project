@@ -317,6 +317,16 @@
                 </nb-select>
               </div>
             </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="label">{{ 'national_or_expat' | translate }}</label>
+                <nb-select fullWidth [formControl]="myForm.controls['national_or_expat']"
+                  [(ngModel)]="employee.national_or_expat" placeholder="{{ 'national_or_expat' | translate }}">
+                  <nb-option value="national">{{ 'national' | translate }}</nb-option>
+                  <nb-option value="national">{{ 'expat' | translate }}</nb-option>
+                </nb-select>
+              </div>
+            </div>
           </div>
 
           <button nbButton nbStepperPrevious>{{ 'PREVIOUS' | translate }}</button>
@@ -394,15 +404,9 @@
               <div class="form-group">
                 <label for="exampleInputEmail1" class="label">{{ 'YEARLY_VACATION_BALANCE' | translate }}</label>
                 <input type="number" nbInput fullWidth [formControl]="myForm.controls['yearly_total']"
-                  [status]="submitted ? (myForm.controls.yearly_total.invalid  ? 'danger' : 'success') : 'basic'"
-                  [(ngModel)]="employee.yearly_total" maxlength="2"
+                  [(ngModel)]="employee.yearly_total" 
                   placeholder="{{ 'YEARLY_VACATION_BALANCE' | translate }}">
               </div>
-              <ng-container *ngIf="myForm.controls.yearly_total.errors?.required && submitted">
-                <p class="caption status-danger">
-                  {{ 'REQUIRED_FEILD' | translate }}
-                </p>
-              </ng-container>
             </div>
 
             <div class="col-md-3">
@@ -424,15 +428,9 @@
               <div class="form-group">
                 <label for="exampleInputEmail1" class="label">{{ 'URGENT_VACATION_BALANCE' | translate }}</label>
                 <input type="number" nbInput fullWidth [formControl]="myForm.controls['urgent_total']"
-                  [status]="submitted ? (myForm.controls.urgent_total.invalid  ? 'danger' : 'success') : 'basic'"
-                  [(ngModel)]="employee.urgent_total" maxlength="2"
+                  [(ngModel)]="employee.urgent_total"
                   placeholder="{{ 'URGENT_CURRENT_VACATION_BALANCE' | translate }}">
               </div>
-              <ng-container *ngIf="myForm.controls.urgent_total.errors?.required && submitted">
-                <p class="caption status-danger">
-                  {{ 'REQUIRED_FEILD' | translate }}
-                </p>
-              </ng-container>
             </div>
 
             <div class="col-md-3">
@@ -440,7 +438,7 @@
                 <label for="exampleInputEmail1" class="label">{{ 'URGENT_CURRENT_VACATION_BALANCE' | translate }}</label>
                 <input type="number" nbInput fullWidth [formControl]="myForm.controls['urgent']"
                   [status]="submitted ? (myForm.controls.urgent.invalid  ? 'danger' : 'success') : 'basic'"
-                  [(ngModel)]="employee.urgent" maxlength="2"
+                  [(ngModel)]="employee.urgent"
                   placeholder="{{ 'URGENT_VACATION_BALANCE' | translate }}">
               </div>
               <ng-container *ngIf="myForm.controls.urgent.errors?.required && submitted">
@@ -451,6 +449,34 @@
             </div>
 
            
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-3">
+                <label class="label">{{ 'HOURLY_WAGE' | translate }}</label>
+                <input type="text" nbInput fullWidth readonly
+                  [(ngModel)]="employee.hourly_wage"
+                  placeholder="{{ 'HOURLY_WAGE' | translate }}">
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'contract_start_date' | translate }}</label>
+                <input nbInput fullWidth [formControl]="myForm.controls['contract_start_date']" autocomplete="off"
+                  [(ngModel)]="employee.contract_start_date" placeholder="{{ 'contract_start_date' | translate }}"
+                  [nbDatepicker]="contract_picker" name="dob">
+                <nb-datepicker #contract_picker></nb-datepicker>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'end_of_probation' | translate }}</label>
+                <input nbInput fullWidth [formControl]="myForm.controls['end_of_probation']" autocomplete="off"
+                  [(ngModel)]="employee.end_of_probation" placeholder="{{ 'end_of_probation' | translate }}"
+                  [nbDatepicker]="probation_picker" name="dob">
+                <nb-datepicker #probation_picker></nb-datepicker>
+              </div>
+            </div>
           </div>
 
 

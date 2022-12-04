@@ -32,12 +32,11 @@ export class AddComponent implements OnInit {
   messages
   leave = {
     id: '',
-    vacation_type_id: null,
+    company_vacations_id: null,
     date: {
-      start: new Date(),
-      end: new Date()
+      start: '',
+      end: ''
     },
-    type: '1',
   };
   submitted = false;
   loading = false;
@@ -52,9 +51,9 @@ export class AddComponent implements OnInit {
 
     this.myForm = this.fb.group({
       date: [''],
-      vacation_type_id: [null, [Validators.required]],
-      type: ['1'],
-      hijri_date: [''],
+      company_vacations_id: [null, [Validators.required]],
+      // type: ['1'],
+      // hijri_date: [''],
     });
 
     this.translate.get('TOAST_MESSAGES')
@@ -66,7 +65,7 @@ export class AddComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.api.protectedGet("leave-types", this.token).subscribe((data: any) => {
+    this.api.protectedGet("leave-company-types", this.token).subscribe((data: any) => {
       this.leaveTypes = data;
     });
     this.route.paramMap.subscribe((data: any) => {
@@ -83,48 +82,45 @@ export class AddComponent implements OnInit {
   loadItem() {
     this.api.protectedGet('leaves/' + this.leave.id, this.token).subscribe((data:any) => {
       this.leave = data;
-      this.leave.vacation_type_id = "" + this.leave.vacation_type_id + "";
-      this.leave.type = '1';
+      this.leave.company_vacations_id = "" + this.leave.company_vacations_id + "";
       if(data.from != null){
-        var fromSplitted = data.from.split('-');
-        var toSplitted = data.to.split('-');
         var tep = {
-          start: new Date(fromSplitted[0],fromSplitted[1], fromSplitted[2]),
-          end: new Date(toSplitted[0], toSplitted[1], toSplitted[2])
+          start: data.from,
+          end: data.to
         }
         this.date = tep;
         this.leave.date = tep;
-        console.log(this.date);
       }
     });
   }
 
   save() {
-    this.loading = true;
+    // this.loading = true;
     if (!this.myForm.valid) {
       this.loading = false;
       this.submitted = true;
       return;
     }
-    if(this.leave.type == '2'){
-      if(this.fromDate == null || this.toDate == null){
-        let errMessages = this.messages.MAKE_SURE_DATE_IS_VALID;
-        this.toastrService.danger(errMessages, this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-      }
-      this.leave.date.start = moment(this.fromDate.year + '/' + this.fromDate.month + 1 + "/" + this.fromDate.day, 'iYYYY/iM/iD HH:mm').format('YYYY-M-DTHH:mm:ss');
-      this.leave.date.end = moment(this.toDate.year + '/' + this.toDate.month + 1 + "/" + this.toDate.day, 'iYYYY/iM/iD HH:mm').format('YYYY-M-DTHH:mm:ss');
-    } else {
-      if(this.date == null || this.date.start == null || this.date.end == null){
-        let errMessages = this.messages.MAKE_SURE_DATE_IS_VALID;
-        this.toastrService.danger(errMessages, this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-      }
-      this.leave.date = this.date
-    }
-    console.log(this.leave);
-    this.leave.date.end.setDate(this.leave.date.end.getDate() + 1);
-    this.leave.date.start.setDate(this.leave.date.start.getDate() + 1);
-    console.log(this.leave);
-    this.api.protectedPost('leaves', this.leave, this.token).subscribe((data: any) => {
+    // if(this.leave.type == '2'){
+    //   if(this.fromDate == null || this.toDate == null){
+    //     let errMessages = this.messages.MAKE_SURE_DATE_IS_VALID;
+    //     this.toastrService.danger(errMessages, this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+    //   }
+    //   
+    // } else {
+    //   if(this.date == null || this.date.start == null || this.date.end == null){
+    //     let errMessages = this.messages.MAKE_SURE_DATE_IS_VALID;
+    //     this.toastrService.danger(errMessages, this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+    //   }
+    //   this.leave.date = this.date
+    // }
+    // this.leave.date.start = moment(this.fromDate.year + '/' + this.fromDate.month + 1 + "/" + this.fromDate.day, 'iYYYY/iM/iD HH:mm').format('YYYY-M-DTHH:mm:ss');
+    // this.leave.date.end = moment(this.toDate.year + '/' + this.toDate.month + 1 + "/" + this.toDate.day, 'iYYYY/iM/iD HH:mm').format('YYYY-M-DTHH:mm:ss');
+    // this.leave.date.end.setDate(this.leave.date.end.getDate() + 1);
+    // this.leave.date.start.setDate(this.leave.date.start.getDate() + 1);
+    this.leave.date.start = new Date(this.myForm.controls['date'].value.start).toLocaleDateString("fr-CA")
+    this.leave.date.end = new Date(this.myForm.controls['date'].value.end).toLocaleDateString("fr-CA")
+    this.api.protectedPost('submitNewLeave', this.leave, this.token).subscribe((data: any) => {
       if(data.success){
         this.showSuccessMsgAndReturn();
       } else {
@@ -132,6 +128,7 @@ export class AddComponent implements OnInit {
         this.loading = false;
       }
     }, err => {
+      console.log(err)
       let errMessages = this.messages.ERROR_INFO;
       if(err.error.errors != null){
         Object.keys(err.error.errors).forEach( async (key) => {
@@ -149,16 +146,16 @@ export class AddComponent implements OnInit {
     this.location.back()
   }
 
-  onDateSelection(date: NgbDate) {
-    if (!this.fromDate && !this.toDate) {
-      this.fromDate = date;
-    } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
-      this.toDate = date;
-    } else {
-      this.toDate = null;
-      this.fromDate = date;
-    }
-  }
+  // onDateSelection(date: NgbDate) {
+  //   if (!this.fromDate && !this.toDate) {
+  //     this.fromDate = date;
+  //   } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
+  //     this.toDate = date;
+  //   } else {
+  //     this.toDate = null;
+  //     this.fromDate = date;
+  //   }
+  // }
 
   isHovered(date: NgbDate) {
     return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);

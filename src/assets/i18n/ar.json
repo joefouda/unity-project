@@ -1,4 +1,13 @@
 {
+    "national_or_expat":"مواطن أم وافد",
+    "national":"مواطن",
+    "expat":"وافد",
+    "paid":"مدفوعة",
+    "not_paid":"غير مدفوعة",
+    "end_of_probation":"نهاية الفتره التجريبية",
+    "contract_start_date":"تاريخ بداية العقد",
+    "HOURLY_WAGE":"الأجر بالساعة",
+    "BREAK_HOURS":"ساعات الراحة",
     "COMPANY": "الشركة",
     "PACKAGE": "الباقة",
     "EMPLOYEE": "الموظف",

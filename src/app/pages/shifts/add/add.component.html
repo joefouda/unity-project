@@ -54,6 +54,16 @@
             </div>
           </div>
           <br />
+          <div class="row" *ngIf="shift.type == '1'">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="label">{{ 'BREAK_HOURS' | translate }}</label>
+                <input type="number" nbInput fullWidth [formControl]="myForm.controls['break_hours']"
+                  [(ngModel)]="shift.break_hours"
+                  placeholder="{{ 'BREAK_HOURS' | translate }}">
+              </div>
+            </div>
+          </div>
           <div class="row" *ngIf="shift.type == '2'">
             <div class="col-md-12">
               <div class="form-group">

@@ -40,6 +40,10 @@ export class AddComponent implements OnInit {
     preferred_lang: '',
     contract_duration: '',
     contract_duration_type: 'YEARLY',
+    national_or_expat:'',
+    hourly_wage:'',
+    contract_start_date:'',
+    end_of_probation:'',
     current: 32,
     yearly_total: 32,
     urgent: 3,
@@ -81,9 +85,12 @@ export class AddComponent implements OnInit {
       preferred_lang: [''],
       email: ['', [Validators.required, Validators.email]],
       nationalIdPhoto: [''],
+      national_or_expat:['', Validators.required],
       iqamaPhoto: [''],
       contractPhoto: [''],
       nationalIdExDate: [''],
+      contract_start_date:'',
+      end_of_probation:'',
       iqamaExDate: [''],
       contractExDate: [''],
       date_of_birth: [''],
@@ -287,6 +294,7 @@ export class AddComponent implements OnInit {
 
   save() {
     this.loading = true;
+    console.log(this.employee)
     // form data for profile picture
     const uploadData = new FormData();
     

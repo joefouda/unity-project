@@ -58,7 +58,7 @@
               </ng-container>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-6" *ngIf="paid_vacation">
               <div class="form-group">
                 <label class="label">{{ 'percentage_for_deduction' | translate }}</label>
                 <input type="text" nbInput fullWidth [formControl]="myForm.controls['percentage_for_deduction']"

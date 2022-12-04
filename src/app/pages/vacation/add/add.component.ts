@@ -74,16 +74,17 @@ export class AddComponent implements OnInit {
   }
 
   loadItem() {
-    this.api.protectedGet('getCompanyVacation/' + this.vacation.id, this.token).subscribe((data:any) => {
+    this.api.protectedGet('getCompanyVacation?id=' + this.vacation.id, this.token).subscribe((data:any) => {
       this.vacation = data;
-      if(data.vacation.paid_type === "0"){
+      this.vacation.type = '' + data.type + ''
+      if(data.paid_type === 0){
         this.paid_vacation = true
       }
     });
   }
 
   save() {
-    this.loading = true;
+    // this.loading = true;
     if (!this.myForm.valid) {
       this.loading = false;
       this.submitted = true;

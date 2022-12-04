@@ -110,11 +110,29 @@
   </ngx-datatable-column>
   <ngx-datatable-column name="{{ 'FROM' | translate }}" prop="from"></ngx-datatable-column>
   <ngx-datatable-column name="{{ 'TO' | translate }}" prop="to"></ngx-datatable-column>
-  <ngx-datatable-column name="{{ 'TYPE' | translate }}" prop="type">
+  <ngx-datatable-column name="{{ 'NAME' | translate }}" prop="company_vacation.name"></ngx-datatable-column>
+  <ngx-datatable-column name="{{ 'NAME_AR' | translate }}" prop="company_vacation.name_ar"></ngx-datatable-column>
+  <ngx-datatable-column name="{{ 'vacation_type' | translate }}" prop="company_vacation.type">
     <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-      <span>{{value.name}}</span>
+      <ng-container *ngIf="value === 0">
+          <span>{{ 'yearly' | translate }}</span>
+      </ng-container>
+      <ng-container *ngIf="value === 1">
+          <span>{{ 'urgent' | translate }}</span>
+      </ng-container>
     </ng-template>
   </ngx-datatable-column>
+  <ngx-datatable-column name="{{ 'paid_vacation' | translate }}" prop="company_vacation.paid_type">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <ng-container *ngIf="value === 0">
+        <span><nb-icon icon="checkmark-circle" status="success"></nb-icon></span>
+      </ng-container>
+      <ng-container *ngIf="value === 1">
+        <span><nb-icon icon="close-circle" status="danger"></nb-icon></span>
+      </ng-container>
+    </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column name="{{ 'percentage_for_deduction' | translate }}" prop="company_vacation.percentage_for_deduction"></ngx-datatable-column>
   <ngx-datatable-column name="{{ 'STATUS_TEXT' | translate }}" prop="status">
     <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
       <div class="span-status class{{value.id}}">

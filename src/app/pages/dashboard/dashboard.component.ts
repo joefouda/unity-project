@@ -137,7 +137,6 @@ export class DashboardComponent implements OnInit {
   public scanSuccessHandler($event: any) {
     this.scannerEnabled = false;
     this.key = $event;
-    console.log($event);
     let depCut = this.key.split("-");
     if(depCut.length > 1){
       this.depId = depCut[1];
@@ -170,9 +169,10 @@ export class DashboardComponent implements OnInit {
         navigator.geolocation.getCurrentPosition((position) => {
           const longitude = position.coords.longitude;
           const latitude = position.coords.latitude;
-          this.api.protectedPost("attendance-sheet/log-in", { longitude: longitude, latitude: latitude, key: this.key, depId: this.depId }, this.token).subscribe((data: any) => {
-            this.todaysOn = new Date();
+          let inDate = new Date();
+          this.api.protectedPost("attendance-sheet/log-in", { indate:inDate.toLocaleString(), longitude: longitude, latitude: latitude, key: this.key, depId: this.depId }, this.token).subscribe((data: any) => {
             this.todaysId = data.id;
+            this.todaysOn = inDate
             this.loadingAttendance = false;
             this.inCard.title = this.loggedIn;
             this.refreshData();
@@ -197,8 +197,9 @@ export class DashboardComponent implements OnInit {
         navigator.geolocation.getCurrentPosition((position) => {
           const longitude = position.coords.longitude;
           const latitude = position.coords.latitude;
-          this.api.protectedPost("attendance-sheet/log-off", { id: this.todaysId, longitude: longitude, latitude: latitude, key: this.key }, this.token).subscribe((data: any) => {
-            this.todaysOff = new Date();
+          let outDate = new Date();
+          this.api.protectedPost("attendance-sheet/log-off", { id: this.todaysId, outdate:outDate.toLocaleString(), longitude: longitude, latitude: latitude, key: this.key }, this.token).subscribe((data: any) => {
+            this.todaysOff = outDate;
             this.todaysId = data.id;
             this.loadingAttendance = false;
             this.outCard.title = this.loggedOut;

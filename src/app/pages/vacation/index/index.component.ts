@@ -53,9 +53,11 @@ export class IndexComponent implements OnInit {
 
 
   getResult(pageInfo) {
+    let companyId = JSON.parse(localStorage.getItem('user')).company_id
     this.page.pageNumber = pageInfo.offset;
     this.backendPage = this.page.pageNumber + 1;
-    this.api.protectedGet("holidays?page=" + this.backendPage, this.token).subscribe((data: any) => {
+    this.api.protectedGet("getAllCompanyVacations?company_id=" + companyId, this.token).subscribe((data: any) => {
+      console.log(data)
       this.data = data.data;
       this.page.totalElements = data.total;
       this.loadingIndicator = false;
@@ -71,12 +73,12 @@ export class IndexComponent implements OnInit {
       this.messages = data;
       this.dialogService.open(DeleteComponent, {
         context: {
-          title: this.messages.DELETE_ITEM + " " + item.name + " FROM " + item.from + " To " + item.to,
-          content: this.messages.ARE_YOU_SURE_DELETE + " " + item.name + " FROM " + item.from + " To " + item.to,
+          title: this.messages.DELETE_ITEM + " " + item.name,
+          content: this.messages.ARE_YOU_SURE_DELETE + " " + item.name ,
         },
       }).onClose.subscribe((data) => {
         if (data) {
-          this.api.protectedDelete('holidays/' + item.id, this.token).subscribe((data) => {
+          this.api.protectedPost('destroyCompanyVacation',{id:item.id}, this.token).subscribe((data) => {
             let temp = [...this.data];
             let index = temp.indexOf(item, 0);
             temp.splice(index, 1);
@@ -104,11 +106,11 @@ export class IndexComponent implements OnInit {
 
 
   create() {
-    this.router.navigate(['/pages/holidays/add/']);
+    this.router.navigate(['/pages/vacations/add/']);
   }
 
   edit(id) {
-    this.router.navigate(['/pages/holidays/edit/' + id]);
+    this.router.navigate(['/pages/vacations/edit/' + id]);
   }
 
 }

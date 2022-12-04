@@ -1,4 +1,13 @@
 {
+    "national_or_expat":"National or Expat",
+    "national":"national",
+    "expat":"expat",
+    "paid":"Paid",
+    "not_paid":"Not Paid",
+    "end_of_probation":"End of Probation",
+    "contract_start_date":"Contract Start Date",
+    "HOURLY_WAGE":"Hourly Wage",
+    "BREAK_HOURS":"Break Hours",
     "COMPANY": "Company",
     "PACKAGE": "Package",
     "EMPLOYEE": "Employee",
