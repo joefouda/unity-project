@@ -1,0 +1,30 @@
+.stepper-buttons-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.generate-button {
+    color: white !important;
+    background-color: #0ece18 !important;
+}
+
+.checkboxes-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.employee-cards-container {
+    padding: 3vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 2vw;
+}
+
+.employee-card {
+    padding: 2vh;
+    border-radius: 10px;
+    background-color: #EDF1F7;
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+}

@@ -74,6 +74,11 @@ const routes: Routes = [{
         .then(m => m.VacationModule),
     },
     {
+      path: 'payroll',
+      loadChildren: () => import('./payroll/payroll.module')
+        .then(m => m.PayrollModule),
+    },
+    {
       path: 'extra',
       loadChildren: () => import('./extra-components/extra-components.module')
         .then(m => m.ExtraComponentsModule),

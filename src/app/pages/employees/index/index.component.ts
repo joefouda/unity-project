@@ -202,7 +202,6 @@ export class IndexComponent implements OnInit {
     this.api.protectedGet("foodics", this.token).subscribe((data: any) => {
       this.connecting = true;
       window.open(data.link, "_blank");
-      clearInterval()
       let interval = setInterval(() => {
         let foodicsData = localStorage.getItem('got_data_foodics');
         if (foodicsData != null) {
