@@ -1,0 +1,62 @@
+<nb-card class="min-width:30vw">
+  <nb-card-header>{{title}}</nb-card-header>
+  <nb-card-body>
+    <!-- <ngx-datatable class="material striped" [virtualization]="false" [loadingIndicator]="loadingIndicator"
+      [rows]="data?.data" [columnMode]="ColumnMode.force" [scrollbarH]="true" [headerHeight]="50" [footerHeight]="50"
+      rowHeight="auto" [externalPaging]="true" [count]="data?.data?.length" [offset]="0" [limit]="10">
+
+      <ngx-datatable-column name="{{ 'NAME' | translate }}" prop="name"></ngx-datatable-column>
+      <ngx-datatable-column name="{{ 'NAME_AR' | translate }}" prop="name_ar"></ngx-datatable-column>
+      <ngx-datatable-column name="{{ 'TYPE' | translate }}" prop="type"></ngx-datatable-column>
+      <ngx-datatable-column name="{{ 'allow_or_ded_amount' | translate }}" prop="amount"></ngx-datatable-column>
+
+    </ngx-datatable> -->
+
+    <button nbButton *ngIf="!addMode" status="primary" size="medium" (click)="toggleAddMode()">
+      {{ 'ADD_NEW_ALLOWANCE' | translate }}
+    </button>
+
+    <div *ngIf="addMode" class="add-allowance-form-container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="label">{{ 'NAME' | translate }}</label>
+            <input name="name" type="text" nbInput fullWidth [(ngModel)]="allowanceData.name"
+              placeholder="{{ 'NAME' | translate }}">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="label">{{ 'NAME_AR' | translate }}</label>
+            <input name="name_ar" type="text" nbInput fullWidth [(ngModel)]="allowanceData.name_ar"
+              placeholder="{{ 'NAME_AR' | translate }}">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="label">{{ 'TYPE' | translate }}</label>
+            <nb-select name="type" fullWidth [(ngModel)]="allowanceData.type" placeholder="{{ 'TYPE' | translate }}">
+              <nb-option *ngFor="let type of types" [value]="type">{{ type }}</nb-option>
+            </nb-select>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="label">{{ 'allow_or_ded_amount' | translate }}</label>
+            <input name="amount" type="number" nbInput fullWidth [(ngModel)]="allowanceData.amount"
+              placeholder="{{ 'allow_or_ded_amount' | translate }}">
+          </div>
+        </div>
+      </div>
+      <button nbButton status="primary" size="medium" (click)="addOtherAllowance()">
+        {{ 'SAVE' | translate }}
+      </button>
+      <button nbButton status="primary" size="medium" (click)="cancelAddition()">
+        {{ 'CANCEL' | translate }}
+      </button>
+    </div>
+  </nb-card-body>
+  <nb-card-footer>
+    <button nbButton status="primary" (click)="yes()">{{ 'DIALOG.OK' | translate }}</button>
+  </nb-card-footer>
+</nb-card>

@@ -1,4 +1,5 @@
 {
+    "ADD_NEW_ALLOWANCE":"Add New Allowance/Deduction",
     "month":"Month",
     "payslip_day":"Payslip Day",
     "national_or_expat":"National or Expat",
@@ -216,6 +217,7 @@
     "K_USERS": "Kindly select the users you wish to import to UniSync",
     "CREATED_BY": "Created with ♥ by",
     "AMOUNT": "Total Amount",
+    "allow_or_ded_amount":"Amount",
     "PAY": "Pay",
     "PAY_BILL": "Pay Bill",
     "USAGE": "Usage",
@@ -337,6 +339,7 @@
     },
     "DIALOG": {
         "CONFIRM": "Confirm",
-        "CANCEL": "Cancel"
+        "CANCEL": "Cancel",
+        "OK":"OK"
     }
 }

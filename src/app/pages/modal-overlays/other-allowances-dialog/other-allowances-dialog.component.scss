@@ -1,0 +1,13 @@
+@import '../../../@theme/styles/themes';
+
+@include nb-install-component() {
+
+  .cancel {
+    margin-right: 1rem;
+    margin-left: 1rem;
+  }
+
+  .nb-card-footer{
+      text-align: right;
+  }
+}

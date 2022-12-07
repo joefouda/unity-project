@@ -5,6 +5,7 @@ import { NbDialogService } from '@nebular/theme';
 import { NbToastrService, NbLayoutScrollService } from '@nebular/theme';
 import { ExportAsService } from 'ngx-export-as';
 import { DeleteComponent } from '../../modal-overlays/delete/delete.component'
+import { OtherAllowanceComponent } from '../../modal-overlays/other-allowances-dialog/other-allowances-dialog.component'
 
 @Component({
   selector: 'ngx-index',
@@ -22,7 +23,7 @@ export class IndexComponent implements OnInit {
     { key: "allowances", displayName: "Allownces", value: "0" },
     { key: "unpaid_leaves", displayName: "Unpaid Leaves", value: "0" },
     { key: "GOSI", displayName: "GOSI", value: "0" },
-    { key: "other_allowances_or_deductions", displayName: "Other Allowences/Deductions", value: "0" },
+    { key: "other_allowances_or_deductions", displayName: "View/Edit Other Allowences/Deductions", value: "0" },
   ]
   payslipData = {
     employee_id: "",
@@ -30,7 +31,7 @@ export class IndexComponent implements OnInit {
     allowances: "0",
     key: "0",
     GOSI: "0",
-    other_allowances_or_deductions: "0",
+    other_allowances_or_deductions: "1",
     month: "",
     save: "0"
   }
@@ -151,7 +152,7 @@ export class IndexComponent implements OnInit {
         this.dialogService.open(DeleteComponent, {
           context: {
             title: 'Generate Payslip Confirmation',
-            content: `Generating Payslip will override month : ${this.payslipData.month} payslip record`,
+            content: `Generating This Payslip will override month : ${this.payslipData.month} payslip record`,
           },
         }).onClose.subscribe((data) => {
           if(data){
@@ -172,6 +173,23 @@ export class IndexComponent implements OnInit {
           }
         });
       });
+  }
 
+  viewOtherAllowance(){
+    this.api.protectedGet(`getAllOtherAllowances?month=${this.payslipData.month}&employee=${this.wantedEmployee.id}`, this.token).subscribe((allowances: any) => {
+      console.log(allowances)
+      this.translate.get('TOAST_MESSAGES')
+      .subscribe((data) => {
+        this.dialogService.open(OtherAllowanceComponent, {
+          context: {
+            title: 'Other Allowances/Deductions',
+            data: {data:allowances, month:this.payslipData.month, employee_id:this.wantedEmployee.id},
+          },
+        }).onClose.subscribe((data) => {
+          //
+        });
+      });
+    });
+  }
 
-  }}
+}

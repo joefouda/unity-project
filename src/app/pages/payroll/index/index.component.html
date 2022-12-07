@@ -55,7 +55,8 @@
               <div class="payslip-column" *ngFor="let key of keys">
                 <div class="payslip-key">{{ key.displayName }}</div>
                 <div class="payslip-value">
-                  <input type="checkbox" [disabled]="payslipData.month === ''" (change)="calculateNetSalary(key.key, $event)"/>
+                  <input *ngIf="key.key !== 'other_allowances_or_deductions'" type="checkbox" [disabled]="payslipData.month === ''" (change)="calculateNetSalary(key.key, $event)"/>
+                  <button *ngIf="key.key === 'other_allowances_or_deductions'" (click)="viewOtherAllowance()" [disabled]="payslipData.month === ''" nbButton status="success"><nb-icon icon="eye"></nb-icon></button>
                 </div>
               </div>
             </div>

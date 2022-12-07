@@ -32,8 +32,10 @@ import {
 } from './popovers/popover-examples.component';
 import { TooltipComponent } from './tooltip/tooltip.component';
 import { DeleteComponent } from './delete/delete.component';
+import { OtherAllowanceComponent } from './other-allowances-dialog/other-allowances-dialog.component';
 import { SelectUserComponent } from './select-user/select-user.component';
 import { SharedModule } from '../../shared/shared.module';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 
 const COMPONENTS = [
@@ -50,6 +52,7 @@ const COMPONENTS = [
   TooltipComponent,
   DeleteComponent,
   SelectUserComponent,
+  OtherAllowanceComponent,
 ];
 
 const ENTRY_COMPONENTS = [
@@ -60,6 +63,7 @@ const ENTRY_COMPONENTS = [
   NgxPopoverTabsComponent,
   DeleteComponent,
   SelectUserComponent,
+  OtherAllowanceComponent
 ];
 
 const MODULES = [
@@ -78,6 +82,7 @@ const MODULES = [
   NbSelectModule,
   NbTooltipModule,
   SharedModule,
+  NgxDatatableModule
 ];
 
 const SERVICES = [
