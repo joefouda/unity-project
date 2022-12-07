@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../providers/api.service'
 import { TranslateService } from '@ngx-translate/core';
 import { NbDialogService } from '@nebular/theme';
-import { NbToastrService, NbGlobalPhysicalPosition, NbLayoutScrollService } from '@nebular/theme';
-import { ExportAsService, ExportAsConfig } from 'ngx-export-as';
+import { NbToastrService, NbLayoutScrollService } from '@nebular/theme';
+import { ExportAsService } from 'ngx-export-as';
+import { DeleteComponent } from '../../modal-overlays/delete/delete.component'
 
 @Component({
   selector: 'ngx-index',
@@ -13,12 +14,32 @@ import { ExportAsService, ExportAsConfig } from 'ngx-export-as';
 export class IndexComponent implements OnInit {
   altsrc = "assets/images/male-picture.png"
   imageUrl = "https://api.unisync.app/storage/employees/";
-  token:any;
-  departments:[];
-  searchDepartments:any
-  employees:[];
-  selectedEmployees:any;
-  wantedEmployee:[]
+  queryParams = ""
+  months = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11","12"]
+  netSalary = "0"
+  keys = [
+    { key: "basic", displayName: "Basic", value: "0" },
+    { key: "allowances", displayName: "Allownces", value: "0" },
+    { key: "unpaid_leaves", displayName: "Unpaid Leaves", value: "0" },
+    { key: "GOSI", displayName: "GOSI", value: "0" },
+    { key: "other_allowances_or_deductions", displayName: "Other Allowences/Deductions", value: "0" },
+  ]
+  payslipData = {
+    employee_id: "",
+    basic: "0",
+    allowances: "0",
+    key: "0",
+    GOSI: "0",
+    other_allowances_or_deductions: "0",
+    month: "",
+    save: "0"
+  }
+  token: any;
+  departments: [];
+  searchDepartments: any
+  employees: [];
+  selectedEmployees: any;
+  wantedEmployee = { id: '', full_name:'' }
 
   constructor(
     private api: ApiService,
@@ -29,6 +50,7 @@ export class IndexComponent implements OnInit {
     private exportAsService: ExportAsService,
   ) {
   }
+
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
@@ -44,48 +66,112 @@ export class IndexComponent implements OnInit {
     });
   }
 
-  getDepartmentsEmployees(event:any){
-    if(event.target.checked){
+  getDepartmentsEmployees(event: any) {
+    if (event.target.checked) {
       this.searchDepartments.push(event.target.value)
     }
-    else{
-      this.searchDepartments = this.searchDepartments.filter(department=>{
+    else {
+      this.searchDepartments = this.searchDepartments.filter(department => {
         return department !== event.target.value
       })
     }
-    let urlParams = this.searchDepartments.reduce((departments:any,dn:any, index:any)=>{
-      if(index !== this.searchDepartments.length - 1){
+    let urlParams = this.searchDepartments.reduce((departments: any, dn: any, index: any) => {
+      if (index !== this.searchDepartments.length - 1) {
         return departments + "departments[" + index + "]=" + dn + "&"
       }
-      return departments + "departments[" + index + "]=" + dn 
-      
-    },'')
+      return departments + "departments[" + index + "]=" + dn
+
+    }, '')
     this.api.protectedGet("getAllEmployeeDepartment?" + urlParams, this.token).subscribe((data: any) => {
       this.employees = data
       this.selectedEmployees = []
-      this.wantedEmployee = []
+      this.wantedEmployee = { id: '', full_name:'' }
     });
   }
 
-  addToSelectedEmployees(event){
-    if(event.target.checked){
-      this.selectedEmployees = [...this.selectedEmployees, ...this.employees.filter((employee:any)=>{
+  addToSelectedEmployees(event) {
+    if (event.target.checked) {
+      this.selectedEmployees = [...this.selectedEmployees, ...this.employees.filter((employee: any) => {
         return employee.id == event.target.value
       })]
     }
-    else{
-      this.selectedEmployees = this.selectedEmployees.filter((employee:any)=> {
+    else {
+      this.selectedEmployees = this.selectedEmployees.filter((employee: any) => {
         return employee.id != event.target.value
       })
     }
-    console.log(this.selectedEmployees)
   }
 
   selectEmployee(event) {
-    console.log(event)
-    this.wantedEmployee = this.selectedEmployees.find(employee=>employee.id === event.target.value)
-    console.log(this.wantedEmployee)
+    this.wantedEmployee = this.selectedEmployees.find(employee => employee.id == event.target.value)
+    this.payslipData.employee_id = this.wantedEmployee.id
   }
 
+  calculateNetSalary(key: any, event: any) {
+    if (event.target.checked) {
+      this.payslipData[key] = "1"
+    } else {
+      this.payslipData[key] = "0"
+    }
+    let values = Object.values(this.payslipData)
+    let keys = Object.keys(this.payslipData)
+    this.queryParams = keys.reduce((params: any, kn: any, index: any) => {
+      if (index !== keys.length - 1) {
+        return params + kn + "=" + values[index] + "&"
+      }
+      return params + kn + "=" + values[index]
+
+    }, '')
+    this.api.protectedGet("generatePayslip?" + this.queryParams, this.token).subscribe((data: any) => {
+      this.netSalary = data.total
+    });
+  }
+
+  // generatePayslip() {
+  //   this.payslipData['save'] = "1"
+  //   let values = Object.values(this.payslipData)
+  //   let keys = Object.keys(this.payslipData)
+  //   this.queryParams = keys.reduce((params: any, kn: any, index: any) => {
+  //     if (index !== keys.length - 1) {
+  //       return params + kn + "=" + values[index] + "&"
+  //     }
+  //     return params + kn + "=" + values[index]
+
+  //   }, '')
+  //   this.api.protectedGet("generatePayslip?" + this.queryParams, this.token).subscribe((data: any) => {
+  //     this.netSalary = data.total
+  //   });
+  // }
+
+
+  generatePayslip() {
+    this.translate.get('TOAST_MESSAGES')
+      .subscribe((data) => {
+        console.log(data)
+        this.dialogService.open(DeleteComponent, {
+          context: {
+            title: 'Generate Payslip Confirmation',
+            content: `Generating Payslip will override month : ${this.payslipData.month} payslip record`,
+          },
+        }).onClose.subscribe((data) => {
+          if(data){
+            this.payslipData['save'] = "1"
+            let values = Object.values(this.payslipData)
+            let keys = Object.keys(this.payslipData)
+            this.queryParams = keys.reduce((params: any, kn: any, index: any) => {
+              if (index !== keys.length - 1) {
+                return params + kn + "=" + values[index] + "&"
+              }
+              return params + kn + "=" + values[index]
   
-}
+            }, '')
+  
+            this.api.protectedGet("generatePayslip?" + this.queryParams, this.token).subscribe((data: any) => {
+              this.netSalary = data.total
+            });
+          }
+        });
+      });
+
+
+  }}

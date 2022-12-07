@@ -13,7 +13,7 @@
           </div>
           <div class="stepper-buttons-container">
             <button class="prev-button" nbButton disabled nbStepperNext>back</button>
-            <button class="next-button" nbButton status="primary" nbStepperNext>next</button>
+            <button class="next-button" nbButton status="primary" [disabled]="searchDepartments.length === 0" nbStepperNext>next</button>
           </div>
         </nb-step>
         <nb-step>
@@ -27,7 +27,7 @@
           </div>
           <div class="stepper-buttons-container">
             <button class="prev-button" nbButton nbStepperPrevious>back</button>
-            <button class="next-button" nbButton status="primary" nbStepperNext>next</button>
+            <button class="next-button" nbButton status="primary" [disabled]="selectedEmployees.length === 0" nbStepperNext>next</button>
           </div>
         </nb-step>
         <nb-step>
@@ -43,20 +43,35 @@
           </div>
           <div class="stepper-buttons-container">
             <button class="prev-button" nbButton nbStepperPrevious>back</button>
-            <button class="next-button" nbButton status="primary" nbStepperNext>next</button>
+            <button class="next-button" nbButton status="primary" [disabled]="wantedEmployee.id === ''" nbStepperNext>next</button>
           </div>
         </nb-step>
         <nb-step>
           <h4>Choose the Needed Elements to Calculate and Generate the Pay-slip</h4>
+          <h5 class="employee-name">Employee : {{ wantedEmployee?.full_name }}</h5>
           <hr>
-          <p class="lorem">
-            Lorizzle ipsum dolizzle stuff fizzle, consectetuer adipiscing break it down.
-            Nullizzle sapien velizzle, my shizz pimpin', shizzle my nizzle crocodizzle shut the shizzle up,
-            gravida vizzle, dang.
-          </p>
-          <div class="stepper-buttons-container">
-            <button class="prev-button" nbButton nbStepperPrevious>back</button>
-            <button class="generate-button" nbButton nbStepperNext>Generate Pay-slip</button>
+          <div class="payslip-container">
+            <div class="payslip-table-container">
+              <div class="payslip-column" *ngFor="let key of keys">
+                <div class="payslip-key">{{ key.displayName }}</div>
+                <div class="payslip-value">
+                  <input type="checkbox" [disabled]="payslipData.month === ''" (change)="calculateNetSalary(key.key, $event)"/>
+                </div>
+              </div>
+            </div>
+            <div class="other-payslip-data">
+                <nb-select name="month" [(ngModel)]="payslipData.month"  placeholder="{{ 'month' | translate }}">
+                  <nb-option *ngFor="let month of months" [value]="month">{{ month }}</nb-option>
+                </nb-select>
+              <div class="net-salary-container">
+                <h3>Net Salary</h3>
+                <h3>{{netSalary}} SAR</h3>
+              </div>
+            </div>
+            <div class="stepper-buttons-container">
+              <button class="prev-button" nbButton nbStepperPrevious>back</button>
+              <button class="generate-button" [disabled]="payslipData.month === ''" nbButton nbStepperNext (click)="generatePayslip()">Generate Pay-slip</button>
+            </div>
           </div>
         </nb-step>
       </nb-stepper>

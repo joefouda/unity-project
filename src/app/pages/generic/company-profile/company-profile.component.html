@@ -110,6 +110,14 @@
                 placeholder="{{ 'VACATION_TO_NEXT_YEAR' | translate }}">
             </div>
           </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="label">{{ 'payslip_day' | translate }}</label>
+              <nb-select name="payslip_day" fullWidth [(ngModel)]="companyprofile.payslip_day"  placeholder="{{ 'payslip_day' | translate }}">
+                <nb-option *ngFor="let day of days" [value]="day">{{ day }}</nb-option>
+              </nb-select>
+            </div>
+          </div>
         </div>
         <button nbButton type="submit" status="primary" size="medium">
           {{ 'UPDATE' | translate }}
