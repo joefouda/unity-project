@@ -16,7 +16,7 @@ export class IndexComponent implements OnInit {
   altsrc = "assets/images/male-picture.png"
   imageUrl = "https://api.unisync.app/storage/employees/";
   queryParams = ""
-  months = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11","12"]
+  months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11","12"]
   netSalary = "0"
   keys = [
     { key: "basic", displayName: "Basic", value: "0" },
@@ -31,7 +31,7 @@ export class IndexComponent implements OnInit {
     allowances: "0",
     key: "0",
     GOSI: "0",
-    other_allowances_or_deductions: "1",
+    other_allowances_or_deductions: "0",
     month: "",
     save: "0"
   }
@@ -128,22 +128,24 @@ export class IndexComponent implements OnInit {
     });
   }
 
-  // generatePayslip() {
-  //   this.payslipData['save'] = "1"
-  //   let values = Object.values(this.payslipData)
-  //   let keys = Object.keys(this.payslipData)
-  //   this.queryParams = keys.reduce((params: any, kn: any, index: any) => {
-  //     if (index !== keys.length - 1) {
-  //       return params + kn + "=" + values[index] + "&"
-  //     }
-  //     return params + kn + "=" + values[index]
+  calculateNetSalaryOnMonthChange() {
+    console.log('changed')
+    let values = Object.values(this.payslipData)
+    let keys = Object.keys(this.payslipData)
+    this.queryParams = keys.reduce((params: any, kn: any, index: any) => {
+      if (index !== keys.length - 1) {
+        return params + kn + "=" + values[index] + "&"
+      }
+      return params + kn + "=" + values[index]
 
-  //   }, '')
-  //   this.api.protectedGet("generatePayslip?" + this.queryParams, this.token).subscribe((data: any) => {
-  //     this.netSalary = data.total
-  //   });
-  // }
+    }, '')
+    this.api.protectedGet("generatePayslip?" + this.queryParams, this.token).subscribe((data: any) => {
+      this.netSalary = data.total
+      console.log(data)
+    });
+  }
 
+  
 
   generatePayslip() {
     this.translate.get('TOAST_MESSAGES')
@@ -176,14 +178,16 @@ export class IndexComponent implements OnInit {
   }
 
   viewOtherAllowance(){
-    this.api.protectedGet(`getAllOtherAllowances?month=${this.payslipData.month}&employee=${this.wantedEmployee.id}`, this.token).subscribe((allowances: any) => {
+    this.api.protectedGet(`getAllOtherAllowances?month=${this.payslipData.month}&employee_id=${this.wantedEmployee.id}`, this.token).subscribe((allowances: any) => {
       console.log(allowances)
       this.translate.get('TOAST_MESSAGES')
       .subscribe((data) => {
         this.dialogService.open(OtherAllowanceComponent, {
           context: {
             title: 'Other Allowances/Deductions',
-            data: {data:allowances, month:this.payslipData.month, employee_id:this.wantedEmployee.id},
+            allowances,
+            month:this.payslipData.month,
+            employee_id:this.wantedEmployee.id
           },
         }).onClose.subscribe((data) => {
           //

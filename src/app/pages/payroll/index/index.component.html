@@ -55,13 +55,13 @@
               <div class="payslip-column" *ngFor="let key of keys">
                 <div class="payslip-key">{{ key.displayName }}</div>
                 <div class="payslip-value">
-                  <input *ngIf="key.key !== 'other_allowances_or_deductions'" type="checkbox" [disabled]="payslipData.month === ''" (change)="calculateNetSalary(key.key, $event)"/>
-                  <button *ngIf="key.key === 'other_allowances_or_deductions'" (click)="viewOtherAllowance()" [disabled]="payslipData.month === ''" nbButton status="success"><nb-icon icon="eye"></nb-icon></button>
+                  <input type="checkbox" [disabled]="payslipData.month === ''" (change)="calculateNetSalary(key.key, $event)"/>
+                  <button style="margin-left: 1vh;" *ngIf="key.key === 'other_allowances_or_deductions'" (click)="viewOtherAllowance()" [disabled]="payslipData.month === ''" nbButton status="success"><nb-icon icon="eye"></nb-icon></button>
                 </div>
               </div>
             </div>
             <div class="other-payslip-data">
-                <nb-select name="month" [(ngModel)]="payslipData.month"  placeholder="{{ 'month' | translate }}">
+                <nb-select name="month" [(ngModel)]="payslipData.month" (selectedChange)="calculateNetSalaryOnMonthChange()"  placeholder="{{ 'month' | translate }}">
                   <nb-option *ngFor="let month of months" [value]="month">{{ month }}</nb-option>
                 </nb-select>
               <div class="net-salary-container">

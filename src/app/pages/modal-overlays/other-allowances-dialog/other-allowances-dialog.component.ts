@@ -15,8 +15,10 @@ export class OtherAllowanceComponent {
 
   types = ['allowance', 'deduction']
 
-  @Input() data: any;
+  @Input() allowances:any
   @Input() title: string;
+  @Input() month: string;
+  @Input() employee_id: string;
   token = localStorage.getItem('token');
   allowanceData = {
     name:'',
@@ -42,10 +44,14 @@ export class OtherAllowanceComponent {
   }
 
   addOtherAllowance(){
-    this.allowanceData.month = this.data.month
-    this.allowanceData.employee_id = this.data.employee_id
+    this.allowanceData.month = this.month
+    this.allowanceData.employee_id = this.employee_id
     this.api.protectedPost('addOtherAllowances',this.allowanceData, this.token).subscribe((data) => {
       console.log(data)
+      this.api.protectedGet(`getAllOtherAllowances?month=${this.allowanceData.month}&employee_id=${this.allowanceData.employee_id}`, this.token).subscribe((allowances: any) => {
+        this.allowances = allowances
+        console.log(allowances)
+      })
       this.toggleAddMode()
       this.clearFields()
     }, err => {

@@ -1,16 +1,22 @@
-<nb-card class="min-width:30vw">
+<nb-card>
   <nb-card-header>{{title}}</nb-card-header>
-  <nb-card-body>
-    <!-- <ngx-datatable class="material striped" [virtualization]="false" [loadingIndicator]="loadingIndicator"
-      [rows]="data?.data" [columnMode]="ColumnMode.force" [scrollbarH]="true" [headerHeight]="50" [footerHeight]="50"
-      rowHeight="auto" [externalPaging]="true" [count]="data?.data?.length" [offset]="0" [limit]="10">
-
-      <ngx-datatable-column name="{{ 'NAME' | translate }}" prop="name"></ngx-datatable-column>
-      <ngx-datatable-column name="{{ 'NAME_AR' | translate }}" prop="name_ar"></ngx-datatable-column>
-      <ngx-datatable-column name="{{ 'TYPE' | translate }}" prop="type"></ngx-datatable-column>
-      <ngx-datatable-column name="{{ 'allow_or_ded_amount' | translate }}" prop="amount"></ngx-datatable-column>
-
-    </ngx-datatable> -->
+  <nb-card-body style="min-width:80vw">
+    <div *ngIf="allowances.length !== 0" class="table-container">
+      <table id="customers">
+        <tr>
+          <th>name</th>
+          <th>arabic name</th>
+          <th>type</th>
+          <th>amount</th>
+        </tr>
+        <tr *ngFor="let allowance of allowances">
+          <td>{{allowance.name}}</td>
+          <td>{{allowance.name_ar}}</td>
+          <td>{{allowance.type}}</td>
+          <td>{{allowance.amount}}</td>
+        </tr>
+      </table>
+    </div>
 
     <button nbButton *ngIf="!addMode" status="primary" size="medium" (click)="toggleAddMode()">
       {{ 'ADD_NEW_ALLOWANCE' | translate }}
