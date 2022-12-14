@@ -74,6 +74,8 @@ export class IndexComponent implements OnInit {
     this.selectedEmployees = []
     if(!this.employee){
       this.load();
+    }else {
+      this.payslipData.employee_id = localStorage.getItem('employeeId')
     }
   }
 
@@ -183,7 +185,6 @@ export class IndexComponent implements OnInit {
   
       }, '')
       this.api.protectedGet("generatePayslip?" + this.queryParams, this.token).subscribe((data: any) => {
-        console.log(data)
         this.netSalary = data.total
         this.toastrService.success( 'Payslip Generated Successfully', this.messages.SUCCESS_INFO, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
         this.loading = false;
@@ -197,7 +198,6 @@ export class IndexComponent implements OnInit {
   ArchivePayslip() {
     this.translate.get('TOAST_MESSAGES')
       .subscribe((data) => {
-        console.log(data)
         this.dialogService.open(DeleteComponent, {
           context: {
             title: 'Archiving Payslip Confirmation',

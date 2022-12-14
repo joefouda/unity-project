@@ -73,14 +73,13 @@ export class PagesComponent {
         this.menu[7].title = data.allowances;
         this.menu[8].title = data.POSITIONS;
         this.menu[9].title = data.HOLIDAYS;
-        this.menu[10].title = data.VACATIONS;
-        this.menu[11].title = data.NOTIFICATIONS;
-        this.menu[12].title = data.CHAT;
-        this.menu[13].title = data.CALENDAR;
-        this.menu[14].title = data.COMPANY_SETTINGS;
-        this.menu[15].title = data.HIERARCHY;
-        this.menu[16].title = data.BRANCHES;
-        this.menu[17].title = data.BILLING;
+        this.menu[10].title = data.NOTIFICATIONS;
+        this.menu[11].title = data.CHAT;
+        this.menu[12].title = data.CALENDAR;
+        this.menu[13].title = data.COMPANY_SETTINGS;
+        this.menu[14].title = data.HIERARCHY;
+        this.menu[15].title = data.BRANCHES;
+        this.menu[16].title = data.BILLING;
 
       });
   }

@@ -97,11 +97,6 @@ export const MENU_ITEMS_FOR_MANAGER: NbMenuItem[] = [
     link: '/pages/holidays',
   },
   {
-    title: 'VACATIONS',
-    icon: 'sun',
-    link: '/pages/vacations',
-  },
-  {
     title: 'NOTIFICATIONS',
     icon: 'log-out-outline',
     link: '/pages/notifications',
@@ -118,8 +113,20 @@ export const MENU_ITEMS_FOR_MANAGER: NbMenuItem[] = [
   },
   {
     title: 'Company',
+    expanded:true,
+    children:[
+      {
+        title:'Main Settings',
+        icon: 'settings-2-outline',
+        link: '/pages/g/company-profile',
+      },
+      {
+        title: 'VACATIONS',
+        icon: 'sun',
+        link: '/pages/vacations',
+      }
+    ],
     icon: 'settings-2-outline',
-    link: '/pages/g/company-profile',
   },
   {
     title: 'hierarchy',

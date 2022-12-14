@@ -11,10 +11,6 @@
               <div class="payslip-value">
                 <input type="checkbox" [disabled]="payslipData.month === ''"
                   (change)="addToSelectedKeys(key.key, $event)" />
-                <button style="margin-left: 1vh;" *ngIf="key.key === 'other_allowances_or_deductions'"
-                  (click)="viewOtherAllowance()" [disabled]="payslipData.month === ''" nbButton status="success">
-                  <nb-icon icon="eye"></nb-icon>
-                </button>
               </div>
             </div>
           </div>
@@ -31,6 +27,8 @@
           <div class="stepper-buttons-container">
             <button class="generate-button" [disabled]="payslipData.month === ''" nbButton
               (click)="generatePayslip()">Generate Pay-slip</button>
+            <button class="generate-button" [disabled]="payslipData.month === ''" nbButton
+              (click)="ArchivePayslip()">Archive Pay-slip</button>
           </div>
         </div>
       </div>
