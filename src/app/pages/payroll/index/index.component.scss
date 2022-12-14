@@ -35,13 +35,23 @@
     gap: 7vh;
 }
 
-.payslip-table-container {
+.employee-payslip-table-container {
     border-radius: 5px;
     display:grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, [col] 1fr);
     min-height: 20vh;
     border: 2px solid #EDF1F7;
 }
+
+.payslip-table-container {
+    border-radius: 5px;
+    display:grid;
+    grid-template-columns: repeat(5, [col] 1fr);
+    min-height: 20vh;
+    border: 2px solid #EDF1F7;
+}
+
+
 
 .payslip-column {
     min-width: 8vw;

@@ -95,6 +95,7 @@ export class PagesComponent {
         this.menu[4].title = data.CHAT;
         this.menu[5].title = data.CALENDAR;
         this.menu[6].title = data.HIERARCHY;
+        this.menu[7].title = data.PAYROLL;
       });
   }
 }

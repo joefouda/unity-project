@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../providers/api.service'
 import { TranslateService } from '@ngx-translate/core';
 import { NbDialogService } from '@nebular/theme';
-import { NbToastrService, NbLayoutScrollService } from '@nebular/theme';
+import { NbToastrService, NbLayoutScrollService, NbGlobalPhysicalPosition } from '@nebular/theme';
 import { ExportAsService } from 'ngx-export-as';
 import { DeleteComponent } from '../../modal-overlays/delete/delete.component'
 import { OtherAllowanceComponent } from '../../modal-overlays/other-allowances-dialog/other-allowances-dialog.component'
@@ -13,17 +13,27 @@ import { OtherAllowanceComponent } from '../../modal-overlays/other-allowances-d
   styleUrls: ['index.component.scss'],
 })
 export class IndexComponent implements OnInit {
+  messages
+  loading = false
   altsrc = "assets/images/male-picture.png"
   imageUrl = "https://api.unisync.app/storage/employees/";
   queryParams = ""
+  employee = false
   months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11","12"]
   netSalary = "0"
   keys = [
+    { key: "basic", displayName: "Basic", value: "0", employee:"1" },
+    { key: "allowances", displayName: "Allownces", value: "0", employee:"1" },
+    { key: "unpaid_leaves", displayName: "Unpaid Leaves", value: "0" },
+    { key: "GOSI", displayName: "GOSI", value: "0", employee:"!" },
+    { key: "other_allowances_or_deductions", displayName: "View/Edit Other Allowences/Deductions", value: "0", employee:"0" },
+  ]
+
+  employeeKeys = [
     { key: "basic", displayName: "Basic", value: "0" },
     { key: "allowances", displayName: "Allownces", value: "0" },
-    { key: "unpaid_leaves", displayName: "Unpaid Leaves", value: "0" },
-    { key: "GOSI", displayName: "GOSI", value: "0" },
-    { key: "other_allowances_or_deductions", displayName: "View/Edit Other Allowences/Deductions", value: "0" },
+    { key: "unpaid_leaves", displayName: "Unpaid Leaves", value: "0"},
+    { key: "GOSI", displayName: "GOSI", value: "0" }
   ]
   payslipData = {
     employee_id: "",
@@ -50,14 +60,21 @@ export class IndexComponent implements OnInit {
     private scrollService: NbLayoutScrollService,
     private exportAsService: ExportAsService,
   ) {
+    this.translate.get('TOAST_MESSAGES')
+      .subscribe((data) => {
+        this.messages = data;
+      });
   }
 
 
   ngOnInit(): void {
+    this.employee = localStorage.getItem('roleId') != '2' ? true : false;
     this.token = localStorage.getItem('token');
     this.searchDepartments = []
     this.selectedEmployees = []
-    this.load();
+    if(!this.employee){
+      this.load();
+    }
   }
 
   load() {
@@ -108,56 +125,87 @@ export class IndexComponent implements OnInit {
     this.payslipData.employee_id = this.wantedEmployee.id
   }
 
-  calculateNetSalary(key: any, event: any) {
+  // calculateNetSalary(key: any, event: any) {
+  //   if (event.target.checked) {
+  //     this.payslipData[key] = "1"
+  //   } else {
+  //     this.payslipData[key] = "0"
+  //   }
+  //   let values = Object.values(this.payslipData)
+  //   let keys = Object.keys(this.payslipData)
+  //   this.queryParams = keys.reduce((params: any, kn: any, index: any) => {
+  //     if (index !== keys.length - 1) {
+  //       return params + kn + "=" + values[index] + "&"
+  //     }
+  //     return params + kn + "=" + values[index]
+
+  //   }, '')
+  //   this.api.protectedGet("generatePayslip?" + this.queryParams, this.token).subscribe((data: any) => {
+  //     this.netSalary = data.total
+  //   });
+  // }
+
+  addToSelectedKeys(key: any, event: any){
     if (event.target.checked) {
       this.payslipData[key] = "1"
     } else {
       this.payslipData[key] = "0"
     }
-    let values = Object.values(this.payslipData)
-    let keys = Object.keys(this.payslipData)
-    this.queryParams = keys.reduce((params: any, kn: any, index: any) => {
-      if (index !== keys.length - 1) {
-        return params + kn + "=" + values[index] + "&"
-      }
-      return params + kn + "=" + values[index]
-
-    }, '')
-    this.api.protectedGet("generatePayslip?" + this.queryParams, this.token).subscribe((data: any) => {
-      this.netSalary = data.total
-    });
   }
 
   calculateNetSalaryOnMonthChange() {
-    console.log('changed')
-    let values = Object.values(this.payslipData)
-    let keys = Object.keys(this.payslipData)
-    this.queryParams = keys.reduce((params: any, kn: any, index: any) => {
-      if (index !== keys.length - 1) {
-        return params + kn + "=" + values[index] + "&"
-      }
-      return params + kn + "=" + values[index]
+    // console.log('changed')
+    // let values = Object.values(this.payslipData)
+    // let keys = Object.keys(this.payslipData)
+    // this.queryParams = keys.reduce((params: any, kn: any, index: any) => {
+    //   if (index !== keys.length - 1) {
+    //     return params + kn + "=" + values[index] + "&"
+    //   }
+    //   return params + kn + "=" + values[index]
 
-    }, '')
-    this.api.protectedGet("generatePayslip?" + this.queryParams, this.token).subscribe((data: any) => {
-      this.netSalary = data.total
-      console.log(data)
-    });
+    // }, '')
+    // this.api.protectedGet("generatePayslip?" + this.queryParams, this.token).subscribe((data: any) => {
+    //   this.netSalary = data.total
+    //   console.log(data)
+    // });
   }
 
+  generatePayslip(){
+    this.loading = true;
+    let values = Object.values(this.payslipData)
+    let keys = Object.keys(this.payslipData)
+    if(values.some((value,index)=>value === '1' && (keys[index] !== 'employee_id' || keys[index] !== 'month'))){
+      this.queryParams = keys.reduce((params: any, kn: any, index: any) => {
+        if (index !== keys.length - 1) {
+          return params + kn + "=" + values[index] + "&"
+        }
+        return params + kn + "=" + values[index]
   
+      }, '')
+      this.api.protectedGet("generatePayslip?" + this.queryParams, this.token).subscribe((data: any) => {
+        console.log(data)
+        this.netSalary = data.total
+        this.toastrService.success( 'Payslip Generated Successfully', this.messages.SUCCESS_INFO, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+        this.loading = false;
+      });
+    } else {
+      this.toastrService.danger('you must select one calculation atleast', this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+      this.loading = false;
+    }
+  }
 
-  generatePayslip() {
+  ArchivePayslip() {
     this.translate.get('TOAST_MESSAGES')
       .subscribe((data) => {
         console.log(data)
         this.dialogService.open(DeleteComponent, {
           context: {
-            title: 'Generate Payslip Confirmation',
-            content: `Generating This Payslip will override month : ${this.payslipData.month} payslip record`,
+            title: 'Archiving Payslip Confirmation',
+            content: `Archiving This Payslip will override month : ${this.payslipData.month} payslip Archived record`,
           },
         }).onClose.subscribe((data) => {
           if(data){
+            this.loading = true
             this.payslipData['save'] = "1"
             let values = Object.values(this.payslipData)
             let keys = Object.keys(this.payslipData)
@@ -171,6 +219,8 @@ export class IndexComponent implements OnInit {
   
             this.api.protectedGet("generatePayslip?" + this.queryParams, this.token).subscribe((data: any) => {
               this.netSalary = data.total
+              this.toastrService.success('Payslip Archived Successfully', this.messages.SUCCESS_INFO, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+              this.loading = false
             });
           }
         });

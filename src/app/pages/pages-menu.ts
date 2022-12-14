@@ -175,4 +175,9 @@ export const MENU_ITEMS_FOR_EMPLOYEE: NbMenuItem[] = [
     icon: 'list-outline',
     link: '/pages/extra/hierarchy',
   },
+  {
+    title: 'PAYROLL',
+    icon: 'shopping-bag-outline',
+    link: '/pages/payroll',
+  },
 ];
