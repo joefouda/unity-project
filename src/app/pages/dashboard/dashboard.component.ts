@@ -137,15 +137,16 @@ export class DashboardComponent implements OnInit {
   public scanSuccessHandler($event: any) {
     this.scannerEnabled = false;
     this.key = $event;
+    console.log($event)
     let depCut = this.key.split("-");
-    if(depCut.length > 1){
-      this.depId = depCut[1];
-    }
-    if (this.typeOfScan == 1) {
-      this.actualLogin();
-    } else {
-      this.actualLogout();
-    }
+    // if(depCut.length > 1){
+    //   this.depId = depCut[1];
+    // }
+    // if (this.typeOfScan == 1) {
+    //   this.actualLogin();
+    // } else {
+    //   this.actualLogout();
+    // }
   }
 
   logIn() {

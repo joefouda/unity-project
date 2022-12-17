@@ -4,7 +4,7 @@
 
       <img (error)="onImgError($event)" src="{{imageUrl}}/companies/{{company.picture}}" style="max-height: 200px;" />
       <h1> {{company.name}} - {{company.name_ar}} </h1>
-      <h3 *ngIf="department != null"> {{department.name}} - {{department.name_ar}} </h3>
+      <h3 *ngIf="department.id != null"> {{department.name}} - {{department.name_ar}} </h3>
       
       <br />
       <div *ngIf="qrdata != null">
