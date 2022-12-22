@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { API_ENDPOINT, DOMAIN_NAME } from './providers';
+import { BehaviorSubject, Subject } from "rxjs";
 import 'rxjs/add/operator/map';
 
 

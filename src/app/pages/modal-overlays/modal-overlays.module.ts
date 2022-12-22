@@ -33,6 +33,7 @@ import {
 import { TooltipComponent } from './tooltip/tooltip.component';
 import { DeleteComponent } from './delete/delete.component';
 import { OtherAllowanceComponent } from './other-allowances-dialog/other-allowances-dialog.component';
+import { PaySlipComponent } from './payslip-table-dialog/payslip-table-dialog.component';
 import { SelectUserComponent } from './select-user/select-user.component';
 import { SharedModule } from '../../shared/shared.module';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
@@ -53,6 +54,7 @@ const COMPONENTS = [
   DeleteComponent,
   SelectUserComponent,
   OtherAllowanceComponent,
+  PaySlipComponent
 ];
 
 const ENTRY_COMPONENTS = [
@@ -63,7 +65,8 @@ const ENTRY_COMPONENTS = [
   NgxPopoverTabsComponent,
   DeleteComponent,
   SelectUserComponent,
-  OtherAllowanceComponent
+  OtherAllowanceComponent,
+  PaySlipComponent
 ];
 
 const MODULES = [

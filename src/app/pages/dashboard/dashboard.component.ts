@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { ApiService } from '../../providers/api.service'
 import { NbToastrService, NbGlobalPhysicalPosition } from '@nebular/theme';
 import { Router } from '@angular/router';
@@ -67,6 +67,7 @@ export class DashboardComponent implements OnInit {
   loggedOut = '';
   gotFoodics = false;
   connecting = false;
+  companyId:String
   constructor(
     private api: ApiService,
     private toastrService: NbToastrService,
@@ -79,6 +80,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
     this.role = localStorage.getItem('roleId');
+    this.companyId = localStorage.getItem('userId');
     this.employee = this.role == '3' || this.role == '4'
     this.api.protectedGet("stats", this.token).subscribe((data: any) => {
       this.stats = data;
@@ -134,33 +136,42 @@ export class DashboardComponent implements OnInit {
 
   }
 
-  public scanSuccessHandler($event: any) {
-    this.scannerEnabled = false;
-    this.key = $event;
-    console.log($event)
-    let depCut = this.key.split("-");
-    // if(depCut.length > 1){
-    //   this.depId = depCut[1];
-    // }
-    // if (this.typeOfScan == 1) {
-    //   this.actualLogin();
-    // } else {
-    //   this.actualLogout();
-    // }
-  }
-
+  
   logIn() {
     if (this.todaysOn == null) {
       this.typeOfScan = 1;
       this.scannerEnabled = !this.scannerEnabled;
     }
   }
-
+  
   logout() {
     if (this.todaysOff == null) {
       this.typeOfScan = 2;
       this.scannerEnabled = !this.scannerEnabled;
     }
+  }
+  
+  public scanSuccessHandler($event: any) {
+    this.scannerEnabled = false;
+    this.key = $event;
+    let depCut = this.key.split("-");
+    if(depCut.length > 1){
+      this.depId = depCut[1];
+    }
+    this.api.protectedGet(`getLastGeneratedQr?company_id=${this.companyId}`, this.token).subscribe((data:any)=> {
+      let currDate:any = new Date()
+      const oneday = 60 * 60 * 24 * 1000 
+      let expired = (currDate - data.generated_time) > oneday ? true:false
+      if(data.auto_expiry === '1' && expired){
+        this.toastrService.danger("Expired barcode", "Kindly Scan a newer barcode", { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+      }else {
+        if (this.typeOfScan == 1) {
+          this.actualLogin();
+        } else {
+          this.actualLogout();
+        }
+      }
+    })
   }
 
   actualLogin() {

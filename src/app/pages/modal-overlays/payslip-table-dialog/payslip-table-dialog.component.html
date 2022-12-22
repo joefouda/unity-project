@@ -1,0 +1,22 @@
+<nb-card>
+  <nb-card-header>{{title}}</nb-card-header>
+  <nb-card-body style="min-width:80vw">
+    <div class="table-container">
+      <table id="customers">
+        <tr>
+          <th>name</th>
+          <th>arabic name</th>
+          <th>value</th>
+        </tr>
+        <tr *ngFor="let key of payslipKeys">
+          <td *ngIf="key.value || key.value === 0">{{key.displayKey}}</td>
+          <td *ngIf="key.value || key.value === 0">{{key.arabicKey}}</td>
+          <td *ngIf="key.value || key.value === 0">{{key.value}}</td>
+        </tr>
+      </table>
+    </div>
+  </nb-card-body>
+  <nb-card-footer>
+    <button nbButton status="primary" (click)="yes()">{{ 'DIALOG.OK' | translate }}</button>
+  </nb-card-footer>
+</nb-card>

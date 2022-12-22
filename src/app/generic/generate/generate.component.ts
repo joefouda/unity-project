@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { NbSpinnerService } from '@nebular/theme';
 import { ApiService } from '../../providers/api.service'
 import { IMAGE_URL } from '../../providers/providers';
@@ -9,9 +9,10 @@ import { IMAGE_URL } from '../../providers/providers';
   styleUrls: ['generate.component.scss'],
 })
 export class GenerateComponent implements OnInit {
-
+  autoExpiry= false
   imageUrl = IMAGE_URL;
   token;
+  companyId:String
 
   department = {
     id: null,
@@ -40,16 +41,15 @@ export class GenerateComponent implements OnInit {
     this.manager =  this.roleId == '4' ? true : false;
 
     this.api.protectedGet("get-my-company", this.token).subscribe((data: any) => {
-      this.company = data.company;
-      if(data.department != null){
-        this.department = data.department;
-        this.qrdata = this.company.key + "-" + data.department.id;
-      } else {
-        this.qrdata = this.company.key;
-      }
-
-    });
-
+        this.company = data.company;
+        if(data.department != null){
+          this.department = data.department;
+          this.qrdata = this.company.key + "-" + data.department.id;
+        } else {
+          this.qrdata = this.company.key;
+        }
+  
+      });
     setInterval(() => {
     this.api.protectedGet("refresh-company", this.token).subscribe((data: any) => {
       this.company = data;

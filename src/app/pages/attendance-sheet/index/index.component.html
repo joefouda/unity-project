@@ -9,19 +9,22 @@
   <div class="col-md-8">
     <h2>{{ 'MENU_ITEMS.ATTENDANCE_HISTORY' | translate }}</h2>
   </div>
-  <div class="col-md-4 " style="padding: 0px !important;">
-    <button class="float-right" nbButton outline status="primary" *ngIf="!employee" size="small" (click)="generate()">
-      <nb-icon icon="plus-outline"></nb-icon>{{ 'GENERATE_ATTENDENCE_QR' | translate }}
-    </button>
-    <button class="float-right" nbButton outline status="primary" *ngIf="roleId == 3" size="small"
-      [routerLink]="'/pages/attendance-sheet/add'">
-      <nb-icon icon="plus-outline"></nb-icon>{{ 'GENERIC.ADD' | translate }} {{ 'ATTENDANCE_REQUEST' | translate }}
-    </button>
-
-    <button [nbSpinner]="exporting" nbSpinnerSize="small" class="float-right" nbButton outline status="dark"
+  <div class="col-md-4" style="padding: 0px !important;">
+    <div class="float-right">
+      <button class="action-button"  nbButton outline status="primary" *ngIf="!employee" size="small" (click)="generate()">
+        <nb-icon icon="plus-outline"></nb-icon>{{ 'GENERATE_ATTENDENCE_QR' | translate }}
+      </button>
+      <button class="action-button"  nbButton outline status="primary" *ngIf="roleId == 3" size="small"
+        [routerLink]="'/pages/attendance-sheet/add'">
+        <nb-icon icon="plus-outline"></nb-icon>{{ 'GENERIC.ADD' | translate }} {{ 'ATTENDANCE_REQUEST' | translate }}
+      </button>
+  
+      <button class="action-button" [nbSpinner]="exporting" nbSpinnerSize="small" nbButton outline status="dark"
       size="small" (click)="export()">
       {{ 'EXPORT' | translate }}
     </button>
+  </div>
+  <nb-toggle labelPosition="end" [(checked)]="autoExpiry" [(ngModel)]="autoExpiry" [ngModelOptions]="{standalone: true}">Auto Expiry</nb-toggle>
   </div>
 </div>
 

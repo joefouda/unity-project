@@ -38,11 +38,14 @@ export class IndexComponent implements OnInit {
     event: CalendarEvent;
   };
 
+  companyId = localStorage.getItem('userId');
+
 
   exportAsConfig: ExportAsConfig = {
-    type: 'xlsx', 
-    elementIdOrContent: 'myTableElementId', 
+    type: 'xlsx',
+    elementIdOrContent: 'myTableElementId',
   }
+  autoExpiry = false
   map: google.maps.Map;
   allData = [];
   token;
@@ -108,7 +111,7 @@ export class IndexComponent implements OnInit {
     console.log(this.LoggedInUserInfo)
     this.token = localStorage.getItem('token');
     this.roleId = localStorage.getItem('roleId');
-    this.employee =  this.roleId == '3' ? true : false;
+    this.employee = this.roleId == '3' ? true : false;
     if (!this.employee) {
       this.api.protectedGet('attendance-sheets-stats', this.token).subscribe((data: any) => {
         this.stats = data;
@@ -120,7 +123,8 @@ export class IndexComponent implements OnInit {
     this.getResult({ offset: 0 });
   }
 
-  loadChangeRequest(pageInfo){
+
+  loadChangeRequest(pageInfo) {
     this.page2.pageNumber = pageInfo.offset;
     this.backendPage2 = this.page2.pageNumber + 1;
     this.api.protectedGet("attendance-sheets-requests?page=" + this.backendPage2, this.token).subscribe((data: any) => {
@@ -130,34 +134,33 @@ export class IndexComponent implements OnInit {
     });
   }
 
-  loadRequests(){
+  loadRequests() {
     this.loadChangeRequest({ offset: 0 });
   }
 
+  searchE(q) {
+    this.peopleLoading = true;
+    this.api.protectedGet('employees-search?q=' + q.term, this.token).subscribe((data: any) => {
+      this.employees = data;
+      this.peopleLoading = false;
+      this.employees = this.employees.slice(0);
+    })
+  }
 
-searchE(q){
-  this.peopleLoading = true;
-  this.api.protectedGet('employees-search?q=' + q.term, this.token).subscribe((data: any) => {
-    this.employees = data;
-    this.peopleLoading = false;
-    this.employees = this.employees.slice(0);
-  }) 
-}
-
-export() {
-  this.exporting = true;
-  this.api.protectedGet("attendance-sheets-all", this.token).subscribe((data: any) => {
-    console.log(data)
-    this.allData = data;
-    setTimeout(() => {
-      this.exportAsService.save(this.exportAsConfig, 'Attendance sheets').subscribe(() => {
-        setTimeout(() => {
-          this.exporting = false;
-        }, 200);
-      });
-    }, 100);
-  });
-}
+  export() {
+    this.exporting = true;
+    this.api.protectedGet("attendance-sheets-all", this.token).subscribe((data: any) => {
+      console.log(data)
+      this.allData = data;
+      setTimeout(() => {
+        this.exportAsService.save(this.exportAsConfig, 'Attendance sheets').subscribe(() => {
+          setTimeout(() => {
+            this.exporting = false;
+          }, 200);
+        });
+      }, 100);
+    });
+  }
 
 
   getResult(pageInfo) {
@@ -174,14 +177,14 @@ export() {
   getSearchResult(pageInfo) {
     this.page.pageNumber = pageInfo.offset;
     this.backendPage = this.page.pageNumber + 1;
-    this.api.protectedGet("attendance-sheets-search?page=" + this.backendPage + 
-    "&from=" + new Date(this.range.start).toISOString().slice(0, 10) + 
-    "&to=" + new Date(this.range.end).toISOString().slice(0, 10) + 
-    "&employee_ids=" + this.employeeIds.toString(), this.token).subscribe((data: any) => {
-      this.data = data.data;
-      this.page.totalElements = data.total;
-      this.loadingIndicator = false;
-    });
+    this.api.protectedGet("attendance-sheets-search?page=" + this.backendPage +
+      "&from=" + new Date(this.range.start).toISOString().slice(0, 10) +
+      "&to=" + new Date(this.range.end).toISOString().slice(0, 10) +
+      "&employee_ids=" + this.employeeIds.toString(), this.token).subscribe((data: any) => {
+        this.data = data.data;
+        this.page.totalElements = data.total;
+        this.loadingIndicator = false;
+      });
   }
 
   onDeleteConfirm(event) {
@@ -217,62 +220,62 @@ export() {
   }
 
 
-  accept(item){
+  accept(item) {
     this.translate.get('TOAST_MESSAGES')
-    .subscribe((data) => {
-      this.messages = data;
-      this.dialogService.open(DeleteComponent, {
-        context: {
-          title: this.messages.ACCEPT_ITEM,
-          content: this.messages.ARE_YOU_SURE_ACCEPT,
-        },
-      }).onClose.subscribe((data) => {
-        if (data) {
-          this.api.protectedGet('attendance-sheets-accept/' + item.id, this.token).subscribe((data: any) => {
-            let index = this.data2.indexOf(item, 0);
-            this.data2[index].status = 2;
-            this.toastrService.success(this.messages.SUCCESS_INFO, this.messages.SUCCESS, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-          }, err => {
-            this.toastrService.danger(this.messages.ERROR_INFO, this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-          })
-        }
-        console.log(data);
+      .subscribe((data) => {
+        this.messages = data;
+        this.dialogService.open(DeleteComponent, {
+          context: {
+            title: this.messages.ACCEPT_ITEM,
+            content: this.messages.ARE_YOU_SURE_ACCEPT,
+          },
+        }).onClose.subscribe((data) => {
+          if (data) {
+            this.api.protectedGet('attendance-sheets-accept/' + item.id, this.token).subscribe((data: any) => {
+              let index = this.data2.indexOf(item, 0);
+              this.data2[index].status = 2;
+              this.toastrService.success(this.messages.SUCCESS_INFO, this.messages.SUCCESS, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+            }, err => {
+              this.toastrService.danger(this.messages.ERROR_INFO, this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+            })
+          }
+          console.log(data);
+        });
       });
-    });
   }
 
-  reject(item){
+  reject(item) {
     this.translate.get('TOAST_MESSAGES')
-    .subscribe((data) => {
-      this.messages = data;
-      this.dialogService.open(DeleteComponent, {
-        context: {
-          title: this.messages.REJECT_ITEM,
-          content: this.messages.ARE_YOU_SURE_REJECT,
-        },
-      }).onClose.subscribe((data) => {
-        if (data) {
-          this.api.protectedGet('attendance-sheets-reject/' + item.id, this.token).subscribe((data) => {
-            let index = this.data.indexOf(item, 0);
-            this.data2[index].status = 3;
-            this.toastrService.success(this.messages.SUCCESS_INFO, this.messages.SUCCESS, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-          }, err => {
-            this.toastrService.danger(this.messages.ERROR_INFO, this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-          })
-        }
-        console.log(data);
+      .subscribe((data) => {
+        this.messages = data;
+        this.dialogService.open(DeleteComponent, {
+          context: {
+            title: this.messages.REJECT_ITEM,
+            content: this.messages.ARE_YOU_SURE_REJECT,
+          },
+        }).onClose.subscribe((data) => {
+          if (data) {
+            this.api.protectedGet('attendance-sheets-reject/' + item.id, this.token).subscribe((data) => {
+              let index = this.data.indexOf(item, 0);
+              this.data2[index].status = 3;
+              this.toastrService.success(this.messages.SUCCESS_INFO, this.messages.SUCCESS, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+            }, err => {
+              this.toastrService.danger(this.messages.ERROR_INFO, this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+            })
+          }
+          console.log(data);
+        });
       });
-    });
   }
 
-  viewIn(row){
+  viewIn(row) {
     this.latitude = row.latitude;
     this.longitude = row.longitude;
     this.ip = row.ip;
     this.modal.open(this.modalContent, { size: 'lg' });
   }
 
-  viewOut(row){
+  viewOut(row) {
     this.latitude = row.out_latitude;
     this.longitude = row.out_longitude;
     this.ip = row.out_ip;
@@ -280,7 +283,16 @@ export() {
   }
 
   generate() {
-    window.open('/g/generate', "_blank");
+    let generationDate = new Date()
+    let newQR = {
+      company_id:this.companyId,
+      generated_time:generationDate.toLocaleString(),
+      auto_expiry:this.autoExpiry?'1':'0'
+    }
+    this.api.protectedPost('storeGeneratedQr', newQR, this.token).subscribe((data:any)=> {
+      console.log(data)
+      window.open('/g/generate', "_blank");
+    })
   }
 
   cancel(item) {
@@ -289,7 +301,7 @@ export() {
         this.messages = data;
         this.dialogService.open(DeleteComponent, {
           context: {
-            title: this.messages.DELETE_ITEM ,
+            title: this.messages.DELETE_ITEM,
             content: this.messages.ARE_YOU_SURE_DELETE,
           },
         }).onClose.subscribe((data) => {

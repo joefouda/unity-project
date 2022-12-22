@@ -34,6 +34,7 @@ import { CommonModule } from '@angular/common';
 import { AuthInterceptor } from './providers/auth.interceptor';
 import { Router } from '@angular/router';
 import { AnalyticsService, LayoutService, SeoService } from './@core/utils';
+import { ApiService } from './providers/api.service';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
