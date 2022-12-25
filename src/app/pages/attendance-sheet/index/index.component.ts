@@ -38,7 +38,7 @@ export class IndexComponent implements OnInit {
     event: CalendarEvent;
   };
 
-  companyId = localStorage.getItem('userId');
+  user = JSON.parse(localStorage.getItem('user'))
 
 
   exportAsConfig: ExportAsConfig = {
@@ -285,7 +285,7 @@ export class IndexComponent implements OnInit {
   generate() {
     let generationDate = new Date()
     let newQR = {
-      company_id:this.companyId,
+      company_id:this.user.company_id,
       generated_time:generationDate.toLocaleString(),
       auto_expiry:this.autoExpiry?'1':'0'
     }

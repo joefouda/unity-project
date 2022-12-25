@@ -3,6 +3,7 @@ import { ApiService } from '../../providers/api.service'
 import { NbToastrService, NbGlobalPhysicalPosition } from '@nebular/theme';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { JsonPipe } from '@angular/common';
 
 interface CardSettings {
   title: string;
@@ -17,6 +18,7 @@ interface CardSettings {
   styleUrls: ['dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
+  user = JSON.parse(localStorage.getItem('user')) 
   role;
   loading = true;
   loadingAttendance = true;
@@ -80,7 +82,6 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
     this.role = localStorage.getItem('roleId');
-    this.companyId = localStorage.getItem('userId');
     this.employee = this.role == '3' || this.role == '4'
     this.api.protectedGet("stats", this.token).subscribe((data: any) => {
       this.stats = data;
@@ -109,7 +110,6 @@ export class DashboardComponent implements OnInit {
       });
       this.api.protectedGet("attendance-sheets-last-days", this.token).subscribe((data: any) => {
         this.attendances = data;
-        console.log(data)
         if (this.attendances.length > 0) {
           
           let todayDate = new Date();
@@ -158,17 +158,23 @@ export class DashboardComponent implements OnInit {
     if(depCut.length > 1){
       this.depId = depCut[1];
     }
-    this.api.protectedGet(`getLastGeneratedQr?company_id=${this.companyId}`, this.token).subscribe((data:any)=> {
-      let currDate:any = new Date()
-      const oneday = 60 * 60 * 24 * 1000 
-      let expired = (currDate - data.generated_time) > oneday ? true:false
-      if(data.auto_expiry === '1' && expired){
-        this.toastrService.danger("Expired barcode", "Kindly Scan a newer barcode", { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-      }else {
-        if (this.typeOfScan == 1) {
-          this.actualLogin();
-        } else {
-          this.actualLogout();
+    this.api.protectedGet(`getLastGeneratedQr?company_id=${this.user.company_id}`, this.token).subscribe((data:any)=> {
+      if(!data){
+        this.toastrService.danger("Expired QR Code", "Kindly Scan a newer QR Code", { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+      } else {
+        let currDate = new Date()
+        let thenDate = new Date(data.generated_time)
+        const msBetweenDates = Math.abs(thenDate.getTime() - currDate.getTime());
+        const hoursBetweenDates = msBetweenDates / (60 * 60 * 1000);
+  
+        if(data.auto_expiry && hoursBetweenDates > 24){
+          this.toastrService.danger("Expired QR Code", "Kindly Scan a newer QR Code", { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+        }else {
+          if (this.typeOfScan == 1) {
+            this.actualLogin();
+          } else {
+            this.actualLogout();
+          }
         }
       }
     })
