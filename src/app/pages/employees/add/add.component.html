@@ -298,8 +298,9 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                <label for="exampleInputEmail1" class="label">{{ 'GENDER' | translate }}</label>
+                <label for="exampleInputEmail1" class="label">{{ 'GENDER' | translate }}*</label>
                 <nb-select fullWidth [formControl]="myForm.controls['gender']"
+                  [status]="submitted ? (myForm.controls.gender.invalid  ? 'danger' : 'success') : 'basic'"
                   [(ngModel)]="employee.gender" placeholder="{{ 'GENDER' | translate }}">
                   <nb-option value="1">{{ 'MALE' | translate }}</nb-option>
                   <nb-option value="2">{{ 'FEMALE' | translate }}</nb-option>
@@ -319,8 +320,9 @@
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label class="label">{{ 'national_or_expat' | translate }}</label>
+                <label class="label">{{ 'national_or_expat' | translate }}*</label>
                 <nb-select fullWidth [formControl]="myForm.controls['national_or_expat']"
+                  [status]="submitted ? (myForm.controls.national_or_expat.invalid  ? 'danger' : 'success') : 'basic'"
                   [(ngModel)]="employee.national_or_expat" placeholder="{{ 'national_or_expat' | translate }}">
                   <nb-option value="national">{{ 'national' | translate }}</nb-option>
                   <nb-option value="national">{{ 'expat' | translate }}</nb-option>

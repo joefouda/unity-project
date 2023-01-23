@@ -193,22 +193,11 @@ export class AddComponent implements OnInit {
 
 
   nextOne(){
-    if (this.myForm.controls['name'].valid && this.myForm.controls['identifier'].valid && this.myForm.controls['mobile'].valid && this.myForm.controls['email'].valid && this.myForm.controls['nationalIdPhoto'].valid, this.myForm.controls['iqamaPhoto'].valid, this.myForm.controls['contractPhoto'].valid, this.myForm.controls['nationalIdExDate'].valid, this.myForm.controls['iqamaExDate'].valid, this.myForm.controls['contractExDate'].valid) {
-      this.submitted = false;
       this.stepper.next();
-    } else {
-      this.submitted = true;
-    }
   }
 
   nextTwo(){
-    if (this.myForm.controls['gender'].valid && this.myForm.controls['preferred_lang'].valid && this.myForm.controls['position'].valid && 
-    this.myForm.controls['work_shift'].valid && this.myForm.controls['employee_id'].valid && this.myForm.controls['joined_at'].valid) {
-      this.submitted = false;
       this.stepper.next();
-    } else {
-      this.submitted = true;
-    }
   }
 
 
@@ -301,6 +290,7 @@ export class AddComponent implements OnInit {
     // form data for important documents
     const uploadFiles = new FormData();
     if (!this.myForm.valid) {
+      console.log(this.myForm.errors)
       this.loading = false;
       this.submitted = true;
       return;
@@ -373,6 +363,7 @@ export class AddComponent implements OnInit {
           errMessages = err.error.errors[key];
         });
       }
+      console.log(err)
       this.toastrService.danger(errMessages, this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
       this.loading = false;
     })

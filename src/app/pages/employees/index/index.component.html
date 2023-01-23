@@ -68,30 +68,32 @@
   </nb-accordion>
   <br />
   <div class="row">
-    <div class="col-md-3" *ngFor="let item of employees; let i = index">
-      <nb-card>
-        <nb-card-body style="padding: 0px; padding-bottom: 10px !important;">
-          <nb-badge *ngIf="item.user.is_active" text="{{ 'STATUS.ACTIVE' | translate }}" status="success"
-            position="top right"></nb-badge>
-          <nb-badge *ngIf="!item.user.is_active" text="{{ 'STATUS.DEACTIVE' | translate }}" status="danger"
-            position="top right"></nb-badge>
-
-          <div class="text-center">
-            <img (error)="onImgError($event, item.gender)" src="{{imageUrl}}/employees/{{item.picture}}"
-              style="max-height: 210px; max-width: 100%;" />
-            <h4 style="margin-top: 15px">{{item.full_name}} <br> {{item.full_name_ar}}</h4>
-            <p>{{item.user.email}}</p>
-
-            <br />
-            <nb-actions fullWidth="true" class="text-center" size="tiny">
-              <nb-action [routerLink]="['/pages/employees/edit/', item.id]" icon="edit-outline"></nb-action>
-              <nb-action (click)="delete(index, item)" icon="trash-2-outline"></nb-action>
-              <nb-action (click)="toggle(index, item)" icon="eye-off-outline"></nb-action>
-            </nb-actions>
-          </div>
-        </nb-card-body>
-      </nb-card>
-    </div>
+    <ng-container *ngFor="let item of employees; let i = index">
+      <div class="col-md-3" *ngIf="item.user?.is_active">
+        <nb-card>
+          <nb-card-body style="padding: 0px; padding-bottom: 10px !important;">
+            <nb-badge text="{{ 'STATUS.ACTIVE' | translate }}" status="success"
+              position="top right"></nb-badge>
+            <nb-badge *ngIf="!item.user.is_active" text="{{ 'STATUS.DEACTIVE' | translate }}" status="danger"
+              position="top right"></nb-badge>
+  
+            <div class="text-center">
+              <img (error)="onImgError($event, item.gender)" src="{{imageUrl}}/employees/{{item.picture}}"
+                style="max-height: 210px; max-width: 100%;" />
+              <h4 style="margin-top: 15px">{{item.full_name}} <br> {{item.full_name_ar}}</h4>
+              <p>{{item.user.email}}</p>
+  
+              <br />
+              <nb-actions fullWidth="true" class="text-center" size="tiny">
+                <nb-action [routerLink]="['/pages/employees/edit/', item.id]" icon="edit-outline"></nb-action>
+                <nb-action (click)="delete(index, item)" icon="trash-2-outline"></nb-action>
+                <nb-action (click)="toggle(index, item)" icon="eye-off-outline"></nb-action>
+              </nb-actions>
+            </div>
+          </nb-card-body>
+        </nb-card>
+      </div>
+    </ng-container>
   </div>
   <ng-container *ngIf="!loaded">
     <div class="row">

@@ -17,6 +17,7 @@ export class OtherAllowanceComponent {
 
   @Input() allowances:any
   @Input() title: string;
+  @Input() year: string;
   @Input() month: string;
   @Input() employee_id: string;
   token = localStorage.getItem('token');
@@ -26,6 +27,7 @@ export class OtherAllowanceComponent {
     type:'',
     amount:'',
     month:'',
+    year:'',
     employee_id:''
   }
 
@@ -44,11 +46,12 @@ export class OtherAllowanceComponent {
   }
 
   addOtherAllowance(){
+    this.allowanceData.year = this.year
     this.allowanceData.month = this.month
     this.allowanceData.employee_id = this.employee_id
     this.api.protectedPost('addOtherAllowances',this.allowanceData, this.token).subscribe((data) => {
       console.log(data)
-      this.api.protectedGet(`getAllOtherAllowances?month=${this.allowanceData.month}&employee_id=${this.allowanceData.employee_id}`, this.token).subscribe((allowances: any) => {
+      this.api.protectedGet(`getAllOtherAllowances?month=${this.allowanceData.month}&employee_id=${this.allowanceData.employee_id}&year=${this.allowanceData.year}`, this.token).subscribe((allowances: any) => {
         this.allowances = allowances
         console.log(allowances)
       })
@@ -69,6 +72,7 @@ export class OtherAllowanceComponent {
       name_ar:'',
       type:'',
       amount:'',
+      year:this.allowanceData.year,
       month:this.allowanceData.month,
       employee_id:this.allowanceData.employee_id
     }

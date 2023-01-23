@@ -20,6 +20,7 @@ export class IndexComponent implements OnInit {
   imageUrl = "https://api.unisync.app/storage/employees/";
   queryParams = ""
   employee = false
+  years = ["2022","2023"]
   months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
   netSalary = "0"
   keys = [
@@ -30,7 +31,7 @@ export class IndexComponent implements OnInit {
     { key: "other_allowances_or_deductions", displayName: "View/Edit Other Allowences/Deductions", value: "0", employee: "0" },
   ]
 
-  payslipKeys = [
+  originalPayslipKeys = [
     {
       actualKey: "date",
       arabicKey: "تاريخ الإنشاء",
@@ -97,16 +98,12 @@ export class IndexComponent implements OnInit {
       displayKey: "GOSI"
     },
     {
-      actualKey: "other_allowances",
-      arabicKey: "مكافئات أخرى",
-      displayKey: "Other Allowances"
-    },
-    {
       actualKey: "total",
       arabicKey: "الإجمالي",
       displayKey: "Total"
     },
   ]
+  payslipKeys:any
 
   employeeKeys = [
     { key: "basic", displayName: "Basic", value: "0" },
@@ -122,6 +119,7 @@ export class IndexComponent implements OnInit {
     GOSI: "0",
     other_allowances_or_deductions: "0",
     month: "",
+    year:"",
     save: "0"
   }
   token: any;
@@ -139,6 +137,7 @@ export class IndexComponent implements OnInit {
     private scrollService: NbLayoutScrollService,
     private exportAsService: ExportAsService,
   ) {
+    this.payslipKeys = [...this.originalPayslipKeys]
     this.translate.get('TOAST_MESSAGES')
       .subscribe((data) => {
         this.messages = data;
@@ -181,6 +180,7 @@ export class IndexComponent implements OnInit {
 
     }, '')
     this.api.protectedGet("getAllEmployeeDepartment?" + urlParams, this.token).subscribe((data: any) => {
+      console.log(data)
       this.employees = data
       this.selectedEmployees = []
       this.wantedEmployee = { id: '', full_name: '' }
@@ -251,10 +251,11 @@ export class IndexComponent implements OnInit {
   }
 
   generatePayslip() {
+    console.log(this.payslipData)
     this.loading = true;
     let values = Object.values(this.payslipData)
     let keys = Object.keys(this.payslipData)
-    if (values.some((value, index) => value === '1' && (keys[index] !== 'employee_id' || keys[index] !== 'month'))) {
+    if (values.some((value, index) => value === '1' && (keys[index] !== 'employee_id'))) {
       this.queryParams = keys.reduce((params: any, kn: any, index: any) => {
         if (index !== keys.length - 1) {
           return params + kn + "=" + values[index] + "&"
@@ -263,9 +264,8 @@ export class IndexComponent implements OnInit {
 
       }, '')
       this.api.protectedGet("generatePayslip?" + this.queryParams, this.token).subscribe((data: any) => {
-        console.log(data.payslip_data)
         let keys = Object.keys(data.payslip_data)
-        // let values = Object.values(data.payslip_data)
+        this.payslipKeys = [...this.originalPayslipKeys]
         this.payslipKeys = this.payslipKeys.map((key, index)=> {
           if(keys.includes(key.actualKey)){
             return {...key, value:data.payslip_data[key.actualKey]}
@@ -291,12 +291,13 @@ export class IndexComponent implements OnInit {
   }
 
   ArchivePayslip() {
+    console.log(this.payslipData)
     this.translate.get('TOAST_MESSAGES')
       .subscribe((data) => {
         this.dialogService.open(DeleteComponent, {
           context: {
             title: 'Archiving Payslip Confirmation',
-            content: `Archiving This Payslip will override month : ${this.payslipData.month} payslip Archived record`,
+            content: `Archiving This Payslip will override year : ${this.payslipData.year} ,month : ${this.payslipData.month} payslip Archived record`,
           },
         }).onClose.subscribe((data) => {
           if (data) {
@@ -315,6 +316,7 @@ export class IndexComponent implements OnInit {
             this.api.protectedGet("generatePayslip?" + this.queryParams, this.token).subscribe((data: any) => {
               this.netSalary = data.total
               this.toastrService.success('Payslip Archived Successfully', this.messages.SUCCESS_INFO, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+              this.payslipData['save'] = "0"
               this.loading = false
             });
           }
@@ -323,7 +325,7 @@ export class IndexComponent implements OnInit {
   }
 
   viewOtherAllowance() {
-    this.api.protectedGet(`getAllOtherAllowances?month=${this.payslipData.month}&employee_id=${this.wantedEmployee.id}`, this.token).subscribe((allowances: any) => {
+    this.api.protectedGet(`getAllOtherAllowances?month=${this.payslipData.month}&employee_id=${this.wantedEmployee.id}&year=${this.payslipData.year}`, this.token).subscribe((allowances: any) => {
       this.translate.get('TOAST_MESSAGES')
         .subscribe((data) => {
           this.dialogService.open(OtherAllowanceComponent, {
@@ -331,6 +333,7 @@ export class IndexComponent implements OnInit {
               title: 'Other Allowances/Deductions',
               allowances,
               month: this.payslipData.month,
+              year: this.payslipData.year,
               employee_id: this.wantedEmployee.id
             },
           }).onClose.subscribe((data) => {
