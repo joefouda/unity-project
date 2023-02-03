@@ -6,6 +6,7 @@ import { DeleteComponent } from '../../modal-overlays/delete/delete.component'
 import { NbToastrService, NbGlobalPhysicalPosition, NbLayoutScrollService } from '@nebular/theme';
 import { IMAGE_URL } from '../../../providers/providers';
 import { ExportAsService, ExportAsConfig } from 'ngx-export-as';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'ngx-index',
@@ -25,7 +26,7 @@ export class IndexComponent implements OnInit {
   inactive;
   employees = [];
   allEmployees = [];
-
+  public myForm: FormGroup;
   loading = true;
   loaded = false;
   fakeItems: Array<any> = new Array(12);
@@ -60,7 +61,11 @@ export class IndexComponent implements OnInit {
     private toastrService: NbToastrService,
     private scrollService: NbLayoutScrollService,
     private exportAsService: ExportAsService,
+    private fb: FormBuilder
   ) {
+    this.myForm = this.fb.group({
+      importFile: ['']
+    });
   }
 
   ngOnInit(): void {
@@ -93,7 +98,6 @@ export class IndexComponent implements OnInit {
 
   load() {
     this.api.protectedGet("employees?page=" + this.page + this.q, this.token).subscribe((data: any) => {
-      console.log(data.data)
       this.employees = data.data;
       this.loaded = true;
       this.totalItems = data.total;
@@ -105,6 +109,27 @@ export class IndexComponent implements OnInit {
         behavior: 'smooth'
       });
     });
+  }
+
+  importFile(event: any) {
+    const file = event.target.files[0]
+    const uploadFile = new FormData();
+    uploadFile.append('employees', file);
+    this.translate.get('TOAST_MESSAGES')
+      .subscribe((data) => {
+        this.messages = data;
+        this.api.protectedPost("employees/import", uploadFile, this.token).subscribe((data: any) => {
+          if (data.status === false) {
+            this.toastrService.danger(data.errors[0], this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+          } else {
+            console.log(data)
+            this.toastrService.success(data.msg, this.messages.SUCCESS, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+            this.load()
+          }
+        }, err => {
+          this.toastrService.danger(this.messages.ERROR_INFO, this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+        })
+      })
   }
 
   export() {
@@ -134,9 +159,8 @@ export class IndexComponent implements OnInit {
         }).onClose.subscribe((data) => {
           if (data) {
             this.api.protectedDelete('employees/' + company.id, this.token).subscribe((data) => {
-              this.employees.splice(index, 1);
-              this.totalItems--;
               this.toastrService.success(this.messages.SUCCESS_INFO, this.messages.SUCCESS, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+              this.load()
             }, err => {
               this.toastrService.danger(this.messages.ERROR_INFO, this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
             })
@@ -193,7 +217,7 @@ export class IndexComponent implements OnInit {
 
 
   onImgError(event, gender) {
-    if(gender == null){
+    if (gender == null) {
       gender = 1;
     }
     event.target.src = 'assets/images/' + gender + '.png';

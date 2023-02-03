@@ -6,6 +6,7 @@ import { DeleteComponent } from '../../modal-overlays/delete/delete.component'
 import { NbToastrService, NbGlobalPhysicalPosition, NbLayoutScrollService } from '@nebular/theme';
 import { ExportAsService, ExportAsConfig } from 'ngx-export-as';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'ngx-accordion',
@@ -19,6 +20,7 @@ export class IndexComponent implements OnInit{
     type: 'xlsx',
     elementIdOrContent: 'myTableElementId',
   }
+  public myForm: FormGroup;
   token;
   departments = [];
   loaded = false;
@@ -45,7 +47,11 @@ export class IndexComponent implements OnInit{
     private toastrService: NbToastrService,
     private scrollService: NbLayoutScrollService,
     private modal: NgbModal,
-    private exportAsService: ExportAsService) {
+    private exportAsService: ExportAsService,
+    private fb: FormBuilder) {
+      this.myForm = this.fb.group({
+        importFile: ['']
+      });
   }
 
   ngOnInit(): void {
@@ -67,6 +73,27 @@ export class IndexComponent implements OnInit{
         behavior: 'smooth'
       });
     });
+  }
+
+  importFile(event: any) {
+    const file = event.target.files[0]
+    const uploadFile = new FormData();
+    uploadFile.append('departments', file);
+    this.translate.get('TOAST_MESSAGES')
+      .subscribe((data) => {
+        this.messages = data;
+        this.api.protectedPost("departments/import", uploadFile, this.token).subscribe((data: any) => {
+          if (data.status === false) {
+            this.toastrService.danger(data.errors[0], this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+          } else {
+            console.log(data)
+            this.toastrService.success(data.msg, this.messages.SUCCESS, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+            this.load()
+          }
+        }, err => {
+          this.toastrService.danger(this.messages.ERROR_INFO, this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+        })
+      })
   }
 
   setPage(pageNumber) {

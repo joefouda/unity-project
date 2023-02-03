@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { NbDialogService } from '@nebular/theme';
 import { DeleteComponent } from '../../modal-overlays/delete/delete.component'
 import { NbToastrService, NbGlobalPhysicalPosition, NbLayoutScrollService } from '@nebular/theme';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'ngx-accordion',
@@ -19,6 +20,7 @@ export class IndexComponent implements OnInit{
   page = 1;
   isDone = false;
   messages;
+  public myForm: FormGroup;
 
   query = {
     name: '',
@@ -33,7 +35,11 @@ export class IndexComponent implements OnInit{
     private dialogService: NbDialogService,
     private toastrService: NbToastrService,
     private scrollService: NbLayoutScrollService,
-    private router: Router) {
+    private router: Router,
+    private fb: FormBuilder) {
+      this.myForm = this.fb.group({
+        importFile: ['']
+      });
   }
 
   ngOnInit(): void {
@@ -52,6 +58,7 @@ export class IndexComponent implements OnInit{
 
   load(){
     this.api.protectedGet("positions?page=" + this.page + this.q, this.token).subscribe((data: any) => {
+      console.log(data)
       this.positions = data.data;
       this.loaded = true;
       this.fakeItems = [];
@@ -61,6 +68,28 @@ export class IndexComponent implements OnInit{
         this.router.navigate(['/auth/login']);
       }
     });
+  }
+
+  importFile(event: any) {
+    const file = event.target.files[0]
+    const uploadFile = new FormData();
+    uploadFile.append('positions', file);
+    this.translate.get('TOAST_MESSAGES')
+      .subscribe((data) => {
+        this.messages = data;
+        this.api.protectedPost("positions/import", uploadFile, this.token).subscribe((data: any) => {
+          if (data.status === false) {
+            console.log(data.errors[0])
+            this.toastrService.danger(data.errors[0], this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+          } else {
+            console.log(data)
+            this.toastrService.success(data.msg, this.messages.SUCCESS, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+            this.load()
+          }
+        }, err => {
+          this.toastrService.danger(this.messages.ERROR_INFO, this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+        })
+      })
   }
 
 

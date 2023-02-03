@@ -41,6 +41,14 @@
       size="small" (click)="export()">
       {{ 'EXPORT' | translate }}
     </button>
+    <label class="label">
+      <input type="file" nbInput style="width: 70%;" [formControl]="myForm.controls['importfile']"
+        id="importFile"
+        placeholder="Import"
+        (change)="importFile($event)">
+      <span>IMPORT</span>
+    </label>
+    
     <button nbButton hero size="small" shape="rectangle" status="primary" class="float-right" (click)="linkFoodics()">{{ 'SYNC_WITH_FOODICS' |
       translate }}</button>
   </div>

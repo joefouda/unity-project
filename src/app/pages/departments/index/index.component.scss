@@ -14,3 +14,36 @@
     margin-right: 10px;
   }
 }
+
+label.label #importFile {
+  position: absolute;
+  top: -1000px;
+}
+
+.label {
+  cursor: pointer;
+  border: 1px solid #000000;
+  border-radius: 5px;
+  padding: 5px 15px 8px 15px;
+  margin: 5px;
+  background: #F0F0F0;
+  display: inline-block;
+  color: #000000;
+}
+
+.label:hover {
+  color: #000000;
+}
+
+.label:active {
+  background: #9fa1a0;
+  color: #000000;
+}
+
+.label:invalid+span {
+  color: #000000;
+}
+
+.label:valid+span {
+  color: #000000;
+}
