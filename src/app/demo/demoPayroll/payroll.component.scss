@@ -1,0 +1,100 @@
+.stepper-buttons-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.generate-button {
+    color: white !important;
+    background-color: #0ece18 !important;
+}
+
+.checkboxes-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.employee-cards-container {
+    padding: 3vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 2vw;
+}
+
+.employee-card {
+    padding: 2vh;
+    border-radius: 10px;
+    background-color: #EDF1F7;
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+}
+
+.payslip-container {
+    display: flex;
+    flex-direction: column;
+    gap: 7vh;
+}
+
+.employee-payslip-table-container {
+    border-radius: 5px;
+    display:grid;
+    grid-template-columns: repeat(4, [col] 1fr);
+    min-height: 20vh;
+    border: 2px solid #EDF1F7;
+}
+
+.payslip-table-container {
+    border-radius: 5px;
+    display:grid;
+    grid-template-columns: repeat(5, [col] 1fr);
+    min-height: 20vh;
+    border: 2px solid #EDF1F7;
+}
+
+
+
+.payslip-column {
+    min-width: 8vw;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #EDF1F7;
+}
+
+.payslip-key {
+    background-color: #EDF1F7;
+    border: 1px solid #EDF1F7;
+    min-height: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.payslip-value {
+    padding: 4vh 0vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+.other-payslip-data {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.employee-name {
+    background-color: #EDF1F7;
+    padding: 1vh;
+}
+
+.net-salary-container {
+    border-radius: 5px;
+    padding: 1vh 3vw;
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+    border: 1px solid #EDF1F7;
+    box-shadow: 1px 0px 5px 5px #EDF1F7;
+}

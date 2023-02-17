@@ -1,0 +1,81 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+      <nb-card-header>
+        <ng-container *ngIf="!isEdit; else editDiv">{{ 'GENERIC.ADD' | translate }}</ng-container>
+        <ng-template #editDiv>{{ 'GENERIC.EDIT' | translate }}</ng-template>
+        {{ 'LEAVE' | translate }}
+      </nb-card-header>
+      <nb-card-body>
+        <form (ngSubmit)="save()" #form="ngForm">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'LEAVE_TYPE' | translate }}</label>
+                <nb-select fullWidth [formControl]="myForm.controls['company_vacations_id']"
+                  [status]="submitted ? (myForm.controls.company_vacations_id.invalid  ? 'danger' : 'success') : 'basic'"
+                  placeholder="{{ 'LEAVE_TYPE' | translate }}" [(ngModel)]="leave.company_vacations_id">
+                  <nb-option *ngFor="let item of leaveTypes" value="{{item.id}}">{{item.name}} - {{item.name_ar}} - {{item.type === 0?'yearly' :'urgent'}} - {{item.paid_type === 0? 'paid' :'not paid' }} {{item.paid_type === 0?'- percentage of deduction ' + item.percentage_for_deduction + '%':''}}
+                  </nb-option>
+                </nb-select>
+              </div>
+              <ng-container *ngIf="myForm.controls.company_vacations_id.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div>
+
+
+            <!-- <div class="col-md-6">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'CALENDAR_TYPE' | translate }}</label>
+                <nb-select fullWidth [formControl]="myForm.controls['type']"
+                  [status]="submitted ? (myForm.controls.type.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="leave.type" placeholder="{{ 'CALENDAR_TYPE' | translate }}">
+                  <nb-option value="1">{{ 'GEORGIAN' | translate }}</nb-option>
+                  <nb-option value="2">{{ 'HIJRI_UM' | translate }}</nb-option>
+                </nb-select>
+              </div>
+              <ng-container *ngIf="myForm.controls.type.errors?.required && submitted">
+                <p class="caption status-danger">
+                  {{ 'REQUIRED_FEILD' | translate }}
+                </p>
+              </ng-container>
+            </div> -->
+          </div>
+          <div class="row">
+            <div class="col-md-12"y>
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="label">{{ 'LEAVE_DATE' | translate }}</label>
+                <input  nbInput fullWidth [formControl]="myForm.controls['date']"
+                  [status]="submitted ? (myForm.controls.date.invalid  ? 'danger' : 'success') : 'basic'"
+                  [(ngModel)]="date" placeholder="{{ 'LEAVE_DATE' | translate }}" [nbDatepicker]="dobPicker">
+                <nb-rangepicker #dobPicker></nb-rangepicker>
+              </div>
+            </div>
+
+            <!-- <div class="col-md-12">
+              <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="1" [dayTemplate]="t" outsideDays="hidden">
+              </ngb-datepicker>
+
+              <ng-template #t let-date let-focused="focused">
+                <span class="custom-day"
+                      [class.focused]="focused"
+                      [class.range]="isRange(date)"
+                      [class.faded]="isHovered(date) || isInside(date)"
+                      (mouseenter)="hoveredDate = date"
+                      (mouseleave)="hoveredDate = null">
+                  {{ date.day }}
+                </span>
+              </ng-template>
+            </div> -->
+          </div>
+          <button nbButton type="submit" status="primary" size="medium">
+            {{ 'SAVE' | translate }}
+          </button>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

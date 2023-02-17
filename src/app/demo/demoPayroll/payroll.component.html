@@ -1,0 +1,137 @@
+<div class="row">
+  <nb-card style=" width:80vw; margin: auto;">
+    <nb-card-body>
+      <div *ngIf="employee">
+        <h4>Choose the Needed Elements to Calculate the Pay-slip</h4>
+        <hr>
+        <div class="payslip-container">
+          <div class="employee-payslip-table-container">
+            <div class="payslip-column" *ngFor="let key of employeeKeys">
+              <div class="payslip-key">{{ key.displayName }}</div>
+              <div class="payslip-value">
+                <input type="checkbox" [disabled]="payslipData.month === '' || payslipData.year === ''"
+                  (change)="addToSelectedKeys(key.key, $event)" />
+              </div>
+            </div>
+          </div>
+          <div class="other-payslip-data">
+            <div>
+              <nb-select name="year" [(ngModel)]="payslipData.year" (selectedChange)="calculateNetSalaryOnMonthChange()"
+                placeholder="{{ 'year' | translate }}">
+                <nb-option *ngFor="let year of years" [value]="year">{{ year }}</nb-option>
+              </nb-select>
+              <nb-select name="month" [(ngModel)]="payslipData.month" (selectedChange)="calculateNetSalaryOnMonthChange()"
+                placeholder="{{ 'month' | translate }}">
+                <nb-option *ngFor="let month of months" [value]="month">{{ month }}</nb-option>
+              </nb-select>
+            </div>
+            <div class="net-salary-container">
+              <h3>Net Salary</h3>
+              <h3>{{netSalary}} SAR</h3>
+            </div>
+          </div>
+          <div class="stepper-buttons-container">
+            <button class="generate-button" [disabled]="payslipData.month === '' || payslipData.year === ''" nbButton
+              (click)="generatePayslip()">Generate Pay-slip</button>
+            <button class="generate-button" [disabled]="payslipData.month === '' || payslipData.year === ''" nbButton
+              (click)="ArchivePayslip()">Archive Pay-slip</button>
+          </div>
+        </div>
+      </div>
+      <nb-stepper *ngIf="!employee" class="stepper-main-container" orientation="horizontal" disableStepNavigation>
+        <nb-step>
+          <h4>Choose Min 1 Department, up to Select all</h4>
+          <hr>
+          <div class="checkboxes-container">
+            <h5>Departments</h5>
+            <p *ngFor="let department of departments">
+              <input type="checkbox" [value]="department.id" (change)="getDepartmentsEmployees($event)" /> {{
+              department.name }}
+            </p>
+          </div>
+          <div class="stepper-buttons-container">
+            <button class="prev-button" nbButton disabled nbStepperNext>back</button>
+            <button class="next-button" nbButton status="primary" [disabled]="searchDepartments.length === 0"
+              nbStepperNext>next</button>
+          </div>
+        </nb-step>
+        <nb-step>
+          <h4>Choose Min 1 Employee, up to Select all</h4>
+          <hr>
+          <div class="checkboxes-container">
+            <h5>Employees</h5>
+            <p *ngFor="let employee of employees">
+              <input type="checkbox" [value]="employee.id" (change)="addToSelectedEmployees($event)" /> {{
+              employee.full_name }}
+            </p>
+          </div>
+          <div class="stepper-buttons-container">
+            <button class="prev-button" nbButton nbStepperPrevious>back</button>
+            <button class="next-button" nbButton status="primary" [disabled]="selectedEmployees.length === 0"
+              nbStepperNext>next</button>
+          </div>
+        </nb-step>
+        <nb-step>
+          <h4>Preview After Choosing Employees</h4>
+          <hr>
+          <div class="employee-cards-container">
+            <div class="employee-card" *ngFor="let employee of selectedEmployees">
+              <input type="radio" [value]="employee.id" name="wantedEmployee" (change)="selectEmployee($event)" />
+              <img style="max-height: 30vh;" [src]="employee.picture? imageUrl + employee.picture : altsrc" alt="">
+              <span>{{employee.full_name}}</span>
+              <span>{{employee.basic_salary}} SAR</span>
+            </div>
+          </div>
+          <div class="stepper-buttons-container">
+            <button class="prev-button" nbButton nbStepperPrevious>back</button>
+            <button class="next-button" nbButton status="primary" [disabled]="wantedEmployee.id === ''"
+              nbStepperNext>next</button>
+          </div>
+        </nb-step>
+        <nb-step>
+          <h4>Choose the Needed Elements to Calculate and Generate the Pay-slip</h4>
+          <h5 class="employee-name">Employee : {{ wantedEmployee?.full_name }}</h5>
+          <hr>
+          <div class="payslip-container">
+            <div class="payslip-table-container">
+              <div class="payslip-column" *ngFor="let key of keys">
+                <div class="payslip-key">{{ key.displayName }}</div>
+                <div class="payslip-value">
+                  <input type="checkbox" [disabled]="payslipData.month === '' || payslipData.year === ''"
+                    (change)="addToSelectedKeys(key.key, $event)" />
+                  <button style="margin-left: 1vh;" *ngIf="key.key === 'other_allowances_or_deductions'"
+                    (click)="viewOtherAllowance()" [disabled]="payslipData.month === '' || payslipData.year === ''" nbButton status="success">
+                    <nb-icon icon="eye"></nb-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="other-payslip-data">
+              <div>
+                <nb-select name="year" [(ngModel)]="payslipData.year" (selectedChange)="calculateNetSalaryOnMonthChange()"
+                  placeholder="{{ 'year' | translate }}">
+                  <nb-option *ngFor="let year of years" [value]="year">{{ year }}</nb-option>
+                </nb-select>
+                <nb-select name="month" [(ngModel)]="payslipData.month" (selectedChange)="calculateNetSalaryOnMonthChange()"
+                  placeholder="{{ 'month' | translate }}">
+                  <nb-option *ngFor="let month of months" [value]="month">{{ month }}</nb-option>
+                </nb-select>
+              </div>
+              <div class="net-salary-container">
+                <h3>Net Salary</h3>
+                <h3>{{netSalary}} SAR</h3>
+              </div>
+            </div>
+            <div class="stepper-buttons-container">
+              <button class="prev-button" nbButton nbStepperPrevious>back</button>
+              <button class="generate-button" [disabled]="payslipData.month === '' || payslipData.year === ''" nbButton
+                (click)="generatePayslip()">Generate Pay-slip</button>
+              <button class="generate-button" [disabled]="payslipData.month === '' || payslipData.year === ''" nbButton
+                (click)="ArchivePayslip()">Archive Pay-slip</button>
+            </div>
+          </div>
+        </nb-step>
+      </nb-stepper>
+    </nb-card-body>
+  </nb-card>
+</div>
