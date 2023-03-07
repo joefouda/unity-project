@@ -19,6 +19,7 @@ import {
   NbSidebarModule,
   NbToastrModule,
   NbWindowModule,
+  NbThemeModule,
 } from '@nebular/theme';
 import { QRCodeModule } from 'angularx-qrcode';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -43,6 +44,7 @@ export function createTranslateLoader(http: HttpClient) {
 @NgModule({
   declarations: [AppComponent],
   imports: [
+    NbThemeModule,
     BrowserModule,
     NgSelectModule,
     TranslateModule.forRoot({

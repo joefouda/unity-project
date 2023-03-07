@@ -3,12 +3,12 @@ import { ApiService } from '../../../providers/api.service'
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { NbDialogService } from '@nebular/theme';
-// import { DeleteComponent } from '../../modal-overlays/delete/delete.component'
+import { DeleteComponent } from '../../../pages/modal-overlays/delete/delete.component'
 import { NbToastrService, NbGlobalPhysicalPosition } from '@nebular/theme';
 import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
 import { Page } from 'app/models/page';
 import { ExportAsService, ExportAsConfig } from 'ngx-export-as';
-
+import { Location } from '@angular/common'
 @Component({
   selector: 'ngx-demo-index',
   templateUrl: 'index.component.html',
@@ -84,7 +84,8 @@ export class IndexComponent implements OnInit {
     private dialogService: NbDialogService,
     private exportAsService: ExportAsService,
     private toastrService: NbToastrService,
-    private router: Router) {
+    private router: Router,
+    private location: Location) {
       this.page.pageNumber = 0;
       this.page.size = 10;
   }
@@ -98,7 +99,7 @@ export class IndexComponent implements OnInit {
     //     this.loading = false;
     //   });
     // }
-    // this.getResult({ offset: 0 });
+    this.getResult({ offset: 0 });
     // this.api.protectedGet("leave-types", this.token).subscribe((data: any) => {
     //   this.leaveTypes = data;
     // });
@@ -131,8 +132,13 @@ export class IndexComponent implements OnInit {
 
 
   getResult(pageInfo) {
-    // this.page.pageNumber = pageInfo.offset;
-    // this.backendPage = this.page.pageNumber + 1;
+    this.page.pageNumber = pageInfo.offset;
+    this.backendPage = this.page.pageNumber + 1;
+    this.data = [JSON.parse(localStorage.getItem("leave"))]
+      this.page.totalElements = 1;
+      this.loadingIndicator = false
+
+    console.log(this.data)
     // this.api.protectedGet("leaves?page=" + this.backendPage + this.q, this.token).subscribe((data: any) => {
     //   console.log(data)
     //   this.data = data.data;
@@ -161,54 +167,44 @@ export class IndexComponent implements OnInit {
 
 
   accept(item){
-    // console.log(item)
-    // this.translate.get('TOAST_MESSAGES')
-    // .subscribe((data) => {
-    //   this.messages = data;
-    //   this.dialogService.open(DeleteComponent, {
-    //     context: {
-    //       title: this.messages.ACCEPT_ITEM_LEAVE + " " + item.company_vacation.name + " " + 
-    //       this.messages.FROM + " " + item.from + " " + this.messages.TO + " " + item.to,
-    //       content: this.messages.ARE_YOU_SURE_ACCEPT + " " + item.company_vacation.name + " FROM " + item.from + " To " + item.to,
-    //     },
-    //   }).onClose.subscribe((data) => {
-    //     if (data) {
-    //       this.api.protectedGet('leaves-accept/' + item.id, this.token).subscribe((data: any) => {
-    //         let index = this.data.indexOf(item, 0);
-    //         this.data[index].status = data;
-    //         this.data[index].vacation_status_id = data.id;
-    //         this.toastrService.success(this.messages.SUCCESS_INFO, this.messages.SUCCESS, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-    //       }, err => {
-    //         this.toastrService.danger(this.messages.ERROR_INFO, this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-    //       })
-    //     }
-    //     console.log(data);
-    //   });
-    // });
+    this.translate.get('TOAST_MESSAGES')
+    .subscribe((data) => {
+      this.messages = data;
+      this.dialogService.open(DeleteComponent, {
+        context: {
+          title: this.messages.ACCEPT_ITEM_LEAVE + " " + item.company_vacation.name + " " + 
+          this.messages.FROM + " " + item.from + " " + this.messages.TO + " " + item.to,
+          content: this.messages.ARE_YOU_SURE_ACCEPT + " " + item.company_vacation.name + " FROM " + item.from + " To " + item.to,
+        },
+      }).onClose.subscribe((data) => {
+        if (data) {
+          localStorage.clear()
+          this.data = []
+          this.location.back()
+          this.toastrService.success(this.messages.SUCCESS_INFO, this.messages.SUCCESS, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+        }
+      });
+    });
   }
 
   reject(item){
-    // this.translate.get('TOAST_MESSAGES')
-    // .subscribe((data) => {
-    //   this.messages = data;
-    //   this.dialogService.open(DeleteComponent, {
-    //     context: {
-    //       title: this.messages.REJECT_ITEM_LEAVE + " " + item.company_vacation.name + " FROM " + item.from + " To " + item.to,
-    //       content: this.messages.ARE_YOU_SURE_REJECT + " " + item.company_vacation.name + " FROM " + item.from + " To " + item.to,
-    //     },
-    //   }).onClose.subscribe((data) => {
-    //     if (data) {
-    //       this.api.protectedGet('leaves-reject/' + item.id, this.token).subscribe((data) => {
-    //         let index = this.data.indexOf(item, 0);
-    //         this.data.splice(index, 1);
-    //         this.toastrService.success(this.messages.SUCCESS_INFO, this.messages.SUCCESS, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-    //       }, err => {
-    //         this.toastrService.danger(this.messages.ERROR_INFO, this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-    //       })
-    //     }
-    //     console.log(data);
-    //   });
-    // });
+    this.translate.get('TOAST_MESSAGES')
+    .subscribe((data) => {
+      this.messages = data;
+      this.dialogService.open(DeleteComponent, {
+        context: {
+          title: this.messages.REJECT_ITEM_LEAVE + " " + item.company_vacation.name + " FROM " + item.from + " To " + item.to,
+          content: this.messages.ARE_YOU_SURE_REJECT + " " + item.company_vacation.name + " FROM " + item.from + " To " + item.to,
+        },
+      }).onClose.subscribe((data) => {
+        if (data) {
+          localStorage.clear()
+          this.data = []
+          this.location.back()
+          this.toastrService.success(this.messages.SUCCESS_INFO, this.messages.SUCCESS, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+        }
+      });
+    });
   }
 
   cancel(item){

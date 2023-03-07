@@ -5,22 +5,23 @@
 
 <!-- <nb-card-body> -->
 
-<div class="row">
-  <div class="col-md-8">
-    <h2>{{ 'MENU_ITEMS.LEAVES' | translate }}</h2>
-  </div>
-  <div class="col-md-4 " style="padding: 0px !important;">
-    <button class="float-right" nbButton outline status="primary" *ngIf="employee" size="small"
-      [routerLink]="'/pages/leaves/add'">
-      <nb-icon icon="plus-outline"></nb-icon>{{ 'GENERIC.ADD' | translate }} {{ 'LEAVE' | translate }}
-    </button>
-    <!-- <button [nbSpinner]="exporting" nbSpinnerSize="small" class="float-right" nbButton outline status="dark"
+  <div class="nb-theme-default">
+    <div>
+      <div class="col-md-8">
+        <h2>Leaves</h2>
+      </div>
+      <div class="col-md-4 " style="padding: 0px !important;">
+        <button class="float-right" nbButton outline status="primary" *ngIf="employee" size="small"
+          [routerLink]="'/pages/leaves/add'">
+          <nb-icon icon="plus-outline"></nb-icon>{{ 'GENERIC.ADD' | translate }} {{ 'LEAVE' | translate }}
+        </button>
+        <!-- <button [nbSpinner]="exporting" nbSpinnerSize="small" class="float-right" nbButton outline status="dark"
       size="small" (click)="export()">
       {{ 'EXPORT' | translate }}
     </button> -->
-  </div>
-</div>
-<!-- 
+      </div>
+    </div>
+    <!-- 
 <div class="row" *ngIf="!employee">
   <div class="col-md-3">
     <nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
@@ -57,8 +58,8 @@
 </div> -->
 
 
-<br />
-<!-- <nb-accordion>
+    <br />
+    <!-- <nb-accordion>
   <nb-accordion-item #item>
     <nb-accordion-item-header>
       {{ 'SEARCH' | translate }}
@@ -92,82 +93,87 @@
 </nb-accordion>
 <br /> -->
 
-<ngx-datatable class="material striped" [virtualization]="false" [loadingIndicator]="loadingIndicator" [rows]="data"
-  [columnMode]="ColumnMode.force" [scrollbarH]="true" [headerHeight]="50" [footerHeight]="50" rowHeight="auto"
-  [externalPaging]="true" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
-  (page)="getResult($event)">
+    <ngx-datatable class="material striped" [virtualization]="false" [loadingIndicator]="loadingIndicator" [rows]="data"
+      [columnMode]="ColumnMode.force" [scrollbarH]="true" [headerHeight]="50" [footerHeight]="50" rowHeight="auto"
+      [externalPaging]="true" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+      (page)="getResult($event)">
 
-  <ngx-datatable-column name="#" [width]="10">
-    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
-      {{(rowIndex+1) + (page.pageNumber * page.size) }}
-    </ng-template>
-  </ngx-datatable-column>
+      <ngx-datatable-column name="#" [width]="10">
+        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
+          {{(rowIndex+1) + (page.pageNumber * page.size) }}
+        </ng-template>
+      </ngx-datatable-column>
 
-  <ngx-datatable-column *ngIf="!employee" name="{{ 'NAME' | translate }}" prop="employee">
-    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-      <span>{{value.full_name}}</span>
-    </ng-template>
-  </ngx-datatable-column>
-  <ngx-datatable-column name="{{ 'FROM' | translate }}" prop="from"></ngx-datatable-column>
-  <ngx-datatable-column name="{{ 'TO' | translate }}" prop="to"></ngx-datatable-column>
-  <ngx-datatable-column name="{{ 'NAME' | translate }}" prop="company_vacation.name"></ngx-datatable-column>
-  <ngx-datatable-column name="{{ 'NAME_AR' | translate }}" prop="company_vacation.name_ar"></ngx-datatable-column>
-  <ngx-datatable-column name="{{ 'vacation_type' | translate }}" prop="company_vacation.type">
-    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-      <ng-container *ngIf="value === 0">
-          <span>{{ 'yearly' | translate }}</span>
-      </ng-container>
-      <ng-container *ngIf="value === 1">
-          <span>{{ 'urgent' | translate }}</span>
-      </ng-container>
-    </ng-template>
-  </ngx-datatable-column>
-  <ngx-datatable-column name="{{ 'paid_vacation' | translate }}" prop="company_vacation.paid_type">
-    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-      <ng-container *ngIf="value === 0">
-        <span><nb-icon icon="checkmark-circle" status="success"></nb-icon></span>
-      </ng-container>
-      <ng-container *ngIf="value === 1">
-        <span><nb-icon icon="close-circle" status="danger"></nb-icon></span>
-      </ng-container>
-    </ng-template>
-  </ngx-datatable-column>
-  <ngx-datatable-column name="{{ 'percentage_for_deduction' | translate }}" prop="company_vacation.percentage_for_deduction"></ngx-datatable-column>
-  <ngx-datatable-column name="{{ 'STATUS_TEXT' | translate }}" prop="status">
-    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-      <div class="span-status class{{value.id}}">
-        <span>{{value.name}} - {{value.name_ar}}</span>
-      </div>
-    </ng-template>
-  </ngx-datatable-column>
-  <ngx-datatable-column *ngIf="!employee" name="{{ 'ACTIONS' | translate }}" sortable="false" prop="id">
-    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-      <ng-container *ngIf="row.vacation_status_id == 1">
-        <button nbButton ghost size="small" status="primary" (click)="accept(row)">
-          <nb-icon icon="checkmark-circle-outline"></nb-icon>
-        </button>
-        <button nbButton ghost size="small" status="danger" (click)="reject(row)">
-          <nb-icon icon="close-circle-outline"></nb-icon>
-        </button>
-      </ng-container>
-    </ng-template>
-  </ngx-datatable-column>
+      <ngx-datatable-column *ngIf="!employee" name="{{ 'NAME' | translate }}" prop="employee">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <span>{{value.full_name}}</span>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="{{ 'FROM' | translate }}" prop="from"></ngx-datatable-column>
+      <ngx-datatable-column name="{{ 'TO' | translate }}" prop="to"></ngx-datatable-column>
+      <ngx-datatable-column name="{{ 'NAME' | translate }}" prop="company_vacation.name"></ngx-datatable-column>
+      <ngx-datatable-column name="{{ 'NAME_AR' | translate }}" prop="company_vacation.name_ar"></ngx-datatable-column>
+      <ngx-datatable-column name="{{ 'vacation_type' | translate }}" prop="company_vacation.type">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <ng-container *ngIf="value === 0">
+            <span>{{ 'yearly' | translate }}</span>
+          </ng-container>
+          <ng-container *ngIf="value === 1">
+            <span>{{ 'urgent' | translate }}</span>
+          </ng-container>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="{{ 'paid_vacation' | translate }}" prop="company_vacation.paid_type">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <ng-container *ngIf="value === 0">
+            <span>
+              <nb-icon icon="checkmark-circle" status="success"></nb-icon>
+            </span>
+          </ng-container>
+          <ng-container *ngIf="value === 1">
+            <span>
+              <nb-icon icon="close-circle" status="danger"></nb-icon>
+            </span>
+          </ng-container>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="{{ 'percentage_for_deduction' | translate }}"
+        prop="company_vacation.percentage_for_deduction"></ngx-datatable-column>
+      <ngx-datatable-column name="{{ 'STATUS_TEXT' | translate }}" prop="status">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <div class="span-status class{{value.id}}">
+            <span>{{value.name}} - {{value.name_ar}}</span>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="{{ 'ACTIONS' | translate }}" sortable="false" prop="id">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <ng-container>
+            <button nbButton ghost size="small" status="primary" (click)="accept(row)">
+              <nb-icon icon="checkmark-circle-outline"></nb-icon>
+            </button>
+            <button nbButton ghost size="small" status="danger" (click)="reject(row)">
+              <nb-icon icon="close-circle-outline"></nb-icon>
+            </button>
+          </ng-container>
+        </ng-template>
+      </ngx-datatable-column>
 
-  <ngx-datatable-column *ngIf="employee" name="{{ 'ACTIONS' | translate }}" sortable="false" prop="id">
-    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-      <ng-container *ngIf="row.vacation_status_id == 1">
-        <button nbButton ghost size="small" status="primary" (click)="edit(value)">
-          <nb-icon icon="edit-2-outline"></nb-icon>
-        </button>
-        <button nbButton ghost size="small" status="danger" (click)="cancel(row)">
-          <nb-icon icon="trash-outline"></nb-icon>
-        </button>
-      </ng-container>
-    </ng-template>
-  </ngx-datatable-column>
-</ngx-datatable>
+      <ngx-datatable-column *ngIf="employee" name="{{ 'ACTIONS' | translate }}" sortable="false" prop="id">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <ng-container *ngIf="row.vacation_status_id == 1">
+            <button nbButton ghost size="small" status="primary" (click)="edit(value)">
+              <nb-icon icon="edit-2-outline"></nb-icon>
+            </button>
+            <button nbButton ghost size="small" status="danger" (click)="cancel(row)">
+              <nb-icon icon="trash-outline"></nb-icon>
+            </button>
+          </ng-container>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
 
-<!-- <table class="table" #myTableElementId id="myTableElementId" *ngIf="exported" style="display: none;">
+    <!-- <table class="table" #myTableElementId id="myTableElementId" *ngIf="exported" style="display: none;">
   <thead>
     <tr>
       <th scope="col">#</th>
@@ -189,3 +195,4 @@
     </tr>
   </tbody>
 </table> -->
+  </div>

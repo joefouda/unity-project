@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { DemoRoutingModule } from './demo-routing.module';
 import { SharedModule } from '../shared/shared.module';
 import { DemoComponent } from './demo.component';
-import { ThemeModule } from '../@theme/theme.module';
 import { QRCodeModule } from 'angularx-qrcode';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NbAccordionModule, NbActionsModule, NbBadgeModule, NbButtonModule, NbCardModule, NbDatepickerModule, NbDialogModule, NbIconModule, NbInputModule, NbListModule, NbRouteTabsetModule, NbSelectModule, NbSpinnerModule, NbStepperModule, NbUserModule } from '@nebular/theme';
@@ -15,7 +14,6 @@ import { HomeComponent } from './home/home.component';
 @NgModule({
   imports: [
     CommonModule,
-    ThemeModule,
     DemoRoutingModule,
     SharedModule,
     QRCodeModule,
@@ -24,7 +22,6 @@ import { HomeComponent } from './home/home.component';
     FormsModule,
     NbInputModule,
     ReactiveFormsModule,
-    ThemeModule,
     NbRouteTabsetModule,
     NbCardModule,
     NbButtonModule,
@@ -41,7 +38,7 @@ import { HomeComponent } from './home/home.component';
     NbUserModule,
     SharedModule,
     ExportAsModule,
-  
+    
   ],
   declarations: [
     DemoComponent,

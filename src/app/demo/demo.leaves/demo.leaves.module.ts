@@ -16,13 +16,13 @@ import {
   NbDialogModule,
   NbAccordionModule,
   NbUserModule,
+  NbLayoutModule
 } from '@nebular/theme';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ExportAsModule } from 'ngx-export-as';
 
-import { ThemeModule } from '../../@theme/theme.module';
 import { DemoLeavesRoutingModule } from './demo.leaves-routing.module';
 import { IndexComponent } from './index/index.component';
 import { DemoLeavesComponent } from './demo.leaves.component';
@@ -34,7 +34,6 @@ import { SharedModule } from '../../shared/shared.module';
     FormsModule,
     NbInputModule,
     ReactiveFormsModule,
-    ThemeModule,
     NbRouteTabsetModule,
     NbCardModule,
     NbButtonModule,
@@ -55,6 +54,7 @@ import { SharedModule } from '../../shared/shared.module';
     DemoLeavesRoutingModule,
     SharedModule,
     ExportAsModule,
+    NbLayoutModule
   ],
   declarations: [
     IndexComponent,

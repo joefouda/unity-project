@@ -31,7 +31,7 @@ export class AddComponent implements OnInit {
   min: Date;
   messages
   leave = {
-    id: '',
+    id: 1,
     company_vacations_id: null,
     date: {
       start: '',
@@ -66,6 +66,7 @@ export class AddComponent implements OnInit {
 
   ngOnInit() {
     this.api.protectedGet("leave-company-types", this.token).subscribe((data: any) => {
+      console.log(data)
       this.leaveTypes = data;
     });
     this.route.paramMap.subscribe((data: any) => {

@@ -9,9 +9,12 @@ export class HomeComponent implements OnInit {
   constructor() {
 
   }
+  disabled :boolean
 
   ngOnInit() {
-   
+   this.disabled = localStorage.getItem('leave')?true:false
+   console.log(this.disabled)
   }
 
 }
+

@@ -30,13 +30,11 @@ export class AddComponent implements OnInit {
   toDate: NgbDate | null = null;
   min: Date;
   messages
-  leave = {
+  leave:any = {
     id: '',
     company_vacations_id: null,
-    date: {
-      start: '',
-      end: ''
-    },
+    from:'',
+    to:''
   };
   submitted = false;
   loading = false;
@@ -44,16 +42,32 @@ export class AddComponent implements OnInit {
   public message: string;
   isEdit = false;
   date: any;
-  leaveTypes = [];
+  leaveTypes = [{
+    id:1,
+    name:"vacation 1",
+    name_ar:"عطلة 1",
+    type:0,
+    paid_type:0,
+    percentage_for_deduction:10
+  },
+  ]; 
+
+  // {
+  //   id:2,
+  //   name:"vacation 2",
+  //   name_ar:"عطلة 2",
+  //   type:1,
+  //   paid_type:1,
+  // }
+
+  
+
   constructor(private toastrService: NbToastrService, private api: ApiService,
     private translate: TranslateService, private fb: FormBuilder,
     private route: ActivatedRoute, private location: Location) {
-
     this.myForm = this.fb.group({
       date: [''],
       company_vacations_id: [null, [Validators.required]],
-      // type: ['1'],
-      // hijri_date: [''],
     });
 
     this.translate.get('TOAST_MESSAGES')
@@ -73,12 +87,10 @@ export class AddComponent implements OnInit {
     //     this.leave.id = data.params.id;
     //     this.loadItem();
     //   }
-    // });
-    this.loadItem();
-   
+    // });   
   }
 
-  loadItem() {
+  // loadItem() {
     // this.api.protectedGet('leaves/' + this.leave.id, this.token).subscribe((data:any) => {
     //   this.leave = data;
     //   this.leave.company_vacations_id = "" + this.leave.company_vacations_id + "";
@@ -91,7 +103,7 @@ export class AddComponent implements OnInit {
     //     this.leave.date = tep;
     //   }
     // });
-  }
+  // }
 
   save() {
     // this.loading = true;
@@ -117,26 +129,35 @@ export class AddComponent implements OnInit {
     // this.leave.date.end = moment(this.toDate.year + '/' + this.toDate.month + 1 + "/" + this.toDate.day, 'iYYYY/iM/iD HH:mm').format('YYYY-M-DTHH:mm:ss');
     // this.leave.date.end.setDate(this.leave.date.end.getDate() + 1);
     // this.leave.date.start.setDate(this.leave.date.start.getDate() + 1);
-    this.leave.date.start = new Date(this.myForm.controls['date'].value.start).toLocaleDateString("fr-CA")
-    this.leave.date.end = new Date(this.myForm.controls['date'].value.end).toLocaleDateString("fr-CA")
-    this.api.protectedPost('submitNewLeave', this.leave, this.token).subscribe((data: any) => {
-      if(data.success){
-        this.showSuccessMsgAndReturn();
-      } else {
-        this.toastrService.danger("Not enough balance", this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-        this.loading = false;
-      }
-    }, err => {
-      console.log(err)
-      let errMessages = this.messages.ERROR_INFO;
-      if(err.error.errors != null){
-        Object.keys(err.error.errors).forEach( async (key) => {
-          errMessages = err.error.errors[key];
-        });
-      }
-      this.toastrService.danger(errMessages, this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-      this.loading = false;
-    })
+    this.leave.from = new Date(this.myForm.controls['date'].value.start).toLocaleDateString("fr-CA")
+    this.leave.to = new Date(this.myForm.controls['date'].value.end).toLocaleDateString("fr-CA")
+    this.leave = {
+      ...this.leave,
+      company_vacation:this.leaveTypes[0],
+      employee:{full_name:"Test Employee"},
+      status: { id: 1, name: "FILLED", name_ar: "مقدمة" }
+    }
+    localStorage.setItem("leave", JSON.stringify(this.leave))
+    console.log(localStorage.getItem('leave'))
+    this.showSuccessMsgAndReturn();
+    // this.api.protectedPost('submitNewLeave', this.leave, this.token).subscribe((data: any) => {
+    //   if(data.success){
+    //     this.showSuccessMsgAndReturn();
+    //   } else {
+    //     this.toastrService.danger("Not enough balance", this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+    //     this.loading = false;
+    //   }
+    // }, err => {
+    //   console.log(err)
+    //   let errMessages = this.messages.ERROR_INFO;
+    //   if(err.error.errors != null){
+    //     Object.keys(err.error.errors).forEach( async (key) => {
+    //       errMessages = err.error.errors[key];
+    //     });
+    //   }
+    //   this.toastrService.danger(errMessages, this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+    //   this.loading = false;
+    // })
   }
 
   showSuccessMsgAndReturn(){

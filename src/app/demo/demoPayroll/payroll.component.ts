@@ -123,9 +123,9 @@ export class PayrollComponent implements OnInit {
     save: "0"
   }
   token: any;
-  departments: [];
+  departments: any;
   searchDepartments: any
-  employees: [];
+  employees: any;
   selectedEmployees: any;
   wantedEmployee = { id: '', full_name: '' }
 
@@ -146,45 +146,39 @@ export class PayrollComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.employee = localStorage.getItem('roleId') != '2' ? true : false;
-    this.token = localStorage.getItem('token');
     this.searchDepartments = []
     this.selectedEmployees = []
-    if (!this.employee) {
-      this.load();
-    } else {
-      this.payslipData.employee_id = localStorage.getItem('employeeId')
-    }
+    this.load()
   }
 
   load() {
-    this.api.protectedGet("getAllCompanyDepartments", this.token).subscribe((data: any) => {
-      this.departments = data
-    });
+      this.departments = [{id:1,name : 'Test Department'}]
   }
 
   getDepartmentsEmployees(event: any) {
     if (event.target.checked) {
-      this.searchDepartments.push(event.target.value)
+      this.searchDepartments = [{id:1,name : 'Test Department'}]
+      this.employees = [{id:1,full_name:'Test Employee', basic_salary:2000}]
     }
     else {
-      this.searchDepartments = this.searchDepartments.filter(department => {
-        return department !== event.target.value
-      })
+      // this.searchDepartments = this.searchDepartments.filter(department => {
+      //   return department !== event.target.value
+      // })
+      this.employees = []
+      this.searchDepartments = []
     }
-    let urlParams = this.searchDepartments.reduce((departments: any, dn: any, index: any) => {
-      if (index !== this.searchDepartments.length - 1) {
-        return departments + "departments[" + index + "]=" + dn + "&"
-      }
-      return departments + "departments[" + index + "]=" + dn
+    // let urlParams = this.searchDepartments.reduce((departments: any, dn: any, index: any) => {
+    //   if (index !== this.searchDepartments.length - 1) {
+    //     return departments + "departments[" + index + "]=" + dn + "&"
+    //   }
+    //   return departments + "departments[" + index + "]=" + dn
 
-    }, '')
-    this.api.protectedGet("getAllEmployeeDepartment?" + urlParams, this.token).subscribe((data: any) => {
-      console.log(data)
-      this.employees = data
-      this.selectedEmployees = []
-      this.wantedEmployee = { id: '', full_name: '' }
-    });
+    // }, '')
+    // this.api.protectedGet("getAllEmployeeDepartment?" + urlParams, this.token).subscribe((data: any) => {
+    //   this.employees = data
+    //   this.selectedEmployees = []
+    //   this.wantedEmployee = { id: '', full_name: '' }
+    // });
   }
 
   addToSelectedEmployees(event) {

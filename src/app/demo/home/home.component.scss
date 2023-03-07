@@ -7,6 +7,11 @@
 
 }
 
+.demo-main {
+  background-color: #F8FAFC;
+  min-height: 100vh;
+}
+
 *{
   font-family: 'dinnextltw23';
 }
@@ -30,63 +35,58 @@
   }
 
   .demo-container {
-    padding: 1vw;
+    text-align: center;
+    width: 70vw;
+    margin: auto;
+    margin-top: 10vh;
   }
 
   .demo-header {
-    padding: 5vh 0;
-    margin: 0 auto;
-    width: 70vw;
-    text-align: center;
-    box-shadow: 1px 2px 5px black;
-    background-color: white;
-    opacity: 0.8;
+    background-image: url("../../../assets/images/rainbow-vortex.svg");
+    background-size: cover;
+    display: flex;
+    justify-content: end;
+    height:90vh;
+    padding: 3vw;
+    text-align: right;
+  }
+
+  .demo-header div {
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+  }
+
+  .demo-header div h1{
+    font-weight: 650;
+    font-size: 3.5em;
+  }
+
+  .demo-header div p{
+    font-weight: 200;
+    font-size: 1.5em;
   }
 
   .screenshots-section {
     display: flex;
     flex-direction: column;
-    gap: 4vh;
+    gap: 8vh;
   }
 
   .screenshots-group {
     display: flex;
     flex-direction: column;
-    gap: 3vh;
+    gap: 8vh;
   }
   .screenshots-group img {
     max-width: 100%;
   }
 
   h2 {
-    opacity: 0.8;
-    text-align: center;
-    background-color: white;
-    padding: 3vh;
-    margin: 3vh 0;
-    box-shadow: 1px 2px 5px black;
-  }
-
-  .arabic-preview h3{
-    text-align: right ;
-  }
-
-  .english-preview{
-    display: flex;
-    flex-direction: column;
-    gap: 2vh;
-    background-color: #e6e6e6 ;
-    padding: 1vh;
-    box-shadow: 1px 2px 5px black;
-  }
-
-  .arabic-preview{
-    display: flex;
-    flex-direction: column;
-    gap: 2vh;
-    background-color: #e6e6e6 ;
-    padding: 1vh;
-    box-shadow: 1px 2px 5px black;
+    font-weight: 400;
+    font-size: 3em;
+    color: #062040;
   }
 
   .row {
@@ -94,16 +94,49 @@
   }
   
   .footer-section {
+    margin: 10vh 0;
     background-color: white;
-    padding: 2vw;
-    opacity: 0.8;
   }
 
   .actions-section {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 3vw;
+    background-color: #F8FAFC;
+  }
+
+  .register-button-container {
+    width: 100%;
+    position: relative;
+  }
+
+  .register-button {
+    position: absolute;
+    right: 0;
+    width: 10vw;
+    padding: 1vw;
+    border: 0px;
+    border-radius: 5px;
+    background-color: #3CDEAB;
+    color: white;
+    font-size: 20px;
+    font-weight: 500;
+  }
+  .actions-section div {
+    min-width: 20vw;
+    min-height: 30vh;
     display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding: 3vh;
+    border-radius: 20px;
     justify-content: space-between;
   }
-  
+
+  .footer {
+    background-color: #062040;
+    height: 15vh;
+  }
   
   .button-82-pushable {
     position: relative;
@@ -312,4 +345,30 @@
   display: flex;
   justify-content: space-around;
   gap: 1vw;
+}
+
+@media screen and (max-width: 900px) {
+    .actions-section {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      justify-content: space-between;
+      background-color: #F8FAFC;
+      gap: 2vw;
+    }
+}
+
+@media screen and (max-width: 700px) {
+  .imagePreview {
+    width: 60vw;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .actions-section {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-content: space-between;
+    gap: 2vw;
+    background-color: #F8FAFC;
+  }
 }
