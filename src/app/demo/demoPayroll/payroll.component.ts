@@ -18,18 +18,34 @@ export class PayrollComponent implements OnInit {
   loading = false
   altsrc = "assets/images/male-picture.png"
   imageUrl = "https://api.unisync.app/storage/employees/";
-  queryParams = ""
+  salary = 0
   employee = false
   years = ["2022","2023"]
   months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
   netSalary = "0"
   keys = [
-    { key: "basic", displayName: "Basic", value: "0", employee: "1" },
+    { key: "basic_salary", displayName: "Basic", value: "0", employee: "1" },
     { key: "allowances", displayName: "Allownces", value: "0", employee: "1" },
-    { key: "unpaid_leaves", displayName: "Unpaid Leaves", value: "0" },
-    { key: "GOSI", displayName: "GOSI", value: "0", employee: "!" },
+    { key: "unpaid_vacation", displayName: "Unpaid Leaves", value: "0" },
+    { key: "gosi", displayName: "GOSI", value: "0", employee: "!" },
     { key: "other_allowances_or_deductions", displayName: "View/Edit Other Allowences/Deductions", value: "0", employee: "0" },
   ]
+
+  payslip_data={
+    position: "Manager",
+    department: "Sales Department",
+    joined_date: "2022-09-12",
+    employee_id: "",
+    contract_duration: 15,
+    date: "2022-12-21 02:19:10",
+    name:'',
+    basic_salary: 0,
+    unpaid_vacation: -500,
+    allowances: 1000,
+    // deductions: 1000,
+    gosi: -1100,
+    total: 0
+  }
 
   originalPayslipKeys = [
     {
@@ -106,18 +122,19 @@ export class PayrollComponent implements OnInit {
   payslipKeys:any
 
   employeeKeys = [
-    { key: "basic", displayName: "Basic", value: "0" },
+    { key: "basic_salary", displayName: "Basic", value: "0" },
     { key: "allowances", displayName: "Allownces", value: "0" },
     { key: "unpaid_leaves", displayName: "Unpaid Leaves", value: "0" },
-    { key: "GOSI", displayName: "GOSI", value: "0" }
+    { key: "gosi", displayName: "GOSI", value: "0" }
   ]
   payslipData = {
     employee_id: "",
-    basic: "0",
+    basic_salary: "0",
     allowances: "0",
     key: "0",
-    GOSI: "0",
-    other_allowances_or_deductions: "0",
+    gosi: "0",
+    unpaid_vacation:"0",
+    // other_allowances_or_deductions: "0",
     month: "",
     year:"",
     save: "0"
@@ -127,7 +144,7 @@ export class PayrollComponent implements OnInit {
   searchDepartments: any
   employees: any;
   selectedEmployees: any;
-  wantedEmployee = { id: '', full_name: '' }
+  wantedEmployee = { id: '', full_name: '', basic_salary:0 }
 
   constructor(
     private api: ApiService,
@@ -152,13 +169,17 @@ export class PayrollComponent implements OnInit {
   }
 
   load() {
-      this.departments = [{id:1,name : 'Test Department'}]
+      this.departments = [{id:1,name : 'Sales'}]
   }
 
   getDepartmentsEmployees(event: any) {
     if (event.target.checked) {
-      this.searchDepartments = [{id:1,name : 'Test Department'}]
-      this.employees = [{id:1,full_name:'Test Employee', basic_salary:2000}]
+      this.searchDepartments = [{id:1,name : 'Sales'}]
+      this.employees = [
+        {id:1,full_name:'Mohammed', basic_salary:2000},
+        {id:2,full_name:'Talal', basic_salary:3000},
+        {id:3,full_name:'Khloud', basic_salary:4000}
+      ]
     }
     else {
       // this.searchDepartments = this.searchDepartments.filter(department => {
@@ -220,6 +241,7 @@ export class PayrollComponent implements OnInit {
   // }
 
   addToSelectedKeys(key: any, event: any) {
+    console.log(key)
     if (event.target.checked) {
       this.payslipData[key] = "1"
     } else {
@@ -245,39 +267,40 @@ export class PayrollComponent implements OnInit {
   }
 
   generatePayslip() {
-    console.log(this.payslipData)
     this.loading = true;
     let values = Object.values(this.payslipData)
     let keys = Object.keys(this.payslipData)
     if (values.some((value, index) => value === '1' && (keys[index] !== 'employee_id'))) {
-      this.queryParams = keys.reduce((params: any, kn: any, index: any) => {
-        if (index !== keys.length - 1) {
-          return params + kn + "=" + values[index] + "&"
+      this.payslip_data['name'] = this.wantedEmployee.full_name
+      this.payslip_data['basic_salary'] = this.wantedEmployee.basic_salary
+      this.payslip_data['total'] = keys.reduce((total: any, kn: any) => {
+        if((kn === 'basic_salary' && this.payslipData[kn] === "1") || (kn === 'unpaid_vacation' && this.payslipData[kn] === "1") || (kn === 'gosi' && this.payslipData[kn] === "1") || (kn === 'allowances' && this.payslipData[kn] === "1")){
+          return total + this.payslip_data[kn]
         }
-        return params + kn + "=" + values[index]
-
-      }, '')
-      this.api.protectedGet("generatePayslip?" + this.queryParams, this.token).subscribe((data: any) => {
-        let keys = Object.keys(data.payslip_data)
-        this.payslipKeys = [...this.originalPayslipKeys]
-        this.payslipKeys = this.payslipKeys.map((key, index)=> {
-          if(keys.includes(key.actualKey)){
-            return {...key, value:data.payslip_data[key.actualKey]}
-          }
-          return {...key}
-        })
-        this.netSalary = data.total
-        this.dialogService.open(PaySlipComponent, {
-          context: {
-            title: 'PaySlip Information',
-            payslipKeys:this.payslipKeys,
-          },
-        }).onClose.subscribe((data) => {
-          //
-        });
-        this.loading = false;
-        this.toastrService.success('Payslip Information', this.messages.SUCCESS_INFO, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+        return total
+      }, 0)
+      let keys1 = Object.keys(this.payslip_data)
+      this.payslipKeys = [...this.originalPayslipKeys]
+      this.payslipKeys = this.payslipKeys.map((key, index)=> {
+        if(keys1.includes(key.actualKey)){
+          return {...key, value:this.payslip_data[key.actualKey]}
+        }
+        return {...key}
+      })
+      this.netSalary = String(this.payslip_data.total)
+      this.payslipKeys = this.payslipKeys.filter((key)=> {
+        return this.payslipData[key.actualKey] === "1" || !['basic_salary','unpaid_vacation','gosi','allowances'].includes(key.actualKey)
+      })
+      this.dialogService.open(PaySlipComponent, {
+        context: {
+          title: 'PaySlip Information',
+          payslipKeys:this.payslipKeys,
+        },
+      }).onClose.subscribe((data) => {
+        //
       });
+      this.loading = false;
+      this.toastrService.success('Payslip Information', this.messages.SUCCESS_INFO, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
     } else {
       this.toastrService.danger('you must select one calculation atleast', this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
       this.loading = false;

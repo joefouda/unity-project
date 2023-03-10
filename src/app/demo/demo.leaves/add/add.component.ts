@@ -44,8 +44,8 @@ export class AddComponent implements OnInit {
   date: any;
   leaveTypes = [{
     id:1,
-    name:"vacation 1",
-    name_ar:"عطلة 1",
+    name:"Sick Leave",
+    name_ar:"عطلة مرضيه",
     type:0,
     paid_type:0,
     percentage_for_deduction:10
@@ -134,7 +134,7 @@ export class AddComponent implements OnInit {
     this.leave = {
       ...this.leave,
       company_vacation:this.leaveTypes[0],
-      employee:{full_name:"Test Employee"},
+      employee:{full_name:"Mohammed"},
       status: { id: 1, name: "FILLED", name_ar: "مقدمة" }
     }
     localStorage.setItem("leave", JSON.stringify(this.leave))
