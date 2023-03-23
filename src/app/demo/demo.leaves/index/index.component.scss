@@ -27,3 +27,33 @@
   background-image: url("../../../../assets/images/subtle-prism.svg");
   min-height: 100vh;
 }
+
+.material {
+  position: relative;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  background-color: white;
+  gap: 2vh;
+  -ms-overflow-style: none;
+  /* for Internet Explorer, Edge */
+  scrollbar-width: none;
+  /* for Firefox */
+  overflow-y: scroll;
+  height: -webkit-fill-available;
+}
+
+.material::-webkit-scrollbar {
+  width: 12px;
+  /* width of the entire scrollbar */
+}
+
+.material::-webkit-scrollbar-thumb {
+  background-color: grey;
+  /* color of the scroll thumb */
+  border-radius: 20px;
+  /* roundness of the scroll thumb */
+  border: 3px solid white;
+  /* creates padding around scroll thumb */
+}

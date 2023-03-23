@@ -42,7 +42,7 @@
   }
 
   .demo-header {
-    background-image: url("../../../assets/images/rainbow-vortex.svg");
+    background-image: url("../../../assets/images/Group 73.png");
     background-size: cover;
     display: flex;
     justify-content: end;
@@ -86,7 +86,11 @@
   h2 {
     font-weight: 400;
     font-size: 3em;
-    color: #062040;
+    color: #061F3B;
+  }
+
+  h3 {
+    color: #061F3B;
   }
 
   .row {
@@ -117,7 +121,7 @@
     padding: 1vw;
     border: 0px;
     border-radius: 5px;
-    background-color: #3CDEAB;
+    background-color: #55a86d;
     color: white;
     font-size: 20px;
     font-weight: 500;
@@ -134,7 +138,7 @@
   }
 
   .footer {
-    background-color: #062040;
+    background-color: #061F3B;
     height: 15vh;
   }
   
@@ -176,10 +180,10 @@
     border-radius: 12px;
     background: linear-gradient(
       to left,
-      #3CDEAB 0%,
-      #3CDEAB 8%,
-      #3CDEAB 92%,
-      #3CDEAB 100%
+      #55a86d 0%,
+      #55a86d 8%,
+      #55a86d 92%,
+      #55a86d 100%
     );
   }
   
@@ -190,7 +194,7 @@
     border-radius: 12px;
     font-size: 1.1rem;
     color: white;
-    background: #3CDEAB;
+    background: #55a86d;
     will-change: transform;
     transform: translateY(-4px);
     transition:
@@ -248,11 +252,11 @@
   line-height: 78px;
   font-size: 20px;
   font-family: 'Bebas Neue', sans-serif;
-  background: linear-gradient(45deg, transparent 5%, #3CDEAB 5%);
+  background: linear-gradient(45deg, transparent 5%, #55a86d 5%);
   border: 0;
   color: #fff;
   letter-spacing: 3px;
-  box-shadow: 6px 0px 0px #00365A;
+  box-shadow: 6px 0px 0px #061F3B;
   outline: transparent;
   position: relative;
   user-select: none;
@@ -275,7 +279,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(45deg, transparent 3%, #00365A 3%, #00365A 5%, #3CDEAB 5%);
+  background: linear-gradient(45deg, transparent 3%, #00365A 3%, #00365A 5%, #55a86d 5%);
   text-shadow: -3px -3px 0px #F8F005, 3px 3px 0px #00365A;
   clip-path: var(--slice-0);
 }
@@ -361,6 +365,13 @@
   .imagePreview {
     width: 60vw;
   }
+
+  .register-button {
+    width: 20vw;
+    padding: 2vw;
+    font-size: 15px;
+    font-weight: 400;
+  }
 }
 
 @media screen and (max-width: 500px) {
@@ -371,4 +382,12 @@
     gap: 2vw;
     background-color: #F8FAFC;
   }
+
+  .register-button {
+    width: 30vw;
+    padding: 2vw;
+    font-size: 15px;
+    font-weight: 400;
+  }
 }
+

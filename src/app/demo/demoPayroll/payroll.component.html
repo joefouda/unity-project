@@ -42,7 +42,7 @@
               <div class="employee-cards-container">
                 <div class="employee-card" *ngFor="let employee of selectedEmployees">
                   <input type="radio" [value]="employee.id" name="wantedEmployee" (change)="selectEmployee($event)" />
-                  <img style="max-height: 30vh;" [src]="employee.picture? imageUrl + employee.picture : altsrc" alt="">
+                  <img [src]="employee.picture? imageUrl + employee.picture : altsrc" alt="">
                   <span>{{employee.full_name}}</span>
                   <span>{{employee.basic_salary}} SAR</span>
                 </div>
@@ -88,7 +88,7 @@
                     <h3>{{netSalary}} SAR</h3>
                   </div>
                 </div>
-                <div class="stepper-buttons-container">
+                <div class="final-stepper-buttons-container">
                   <button class="prev-button" nbButton nbStepperPrevious>back</button>
                   <button class="generate-button" [disabled]="payslipData.month === '' || payslipData.year === ''"
                     nbButton (click)="generatePayslip()">Generate Pay-slip</button>

@@ -3,6 +3,11 @@
     justify-content: space-between;
 }
 
+.final-stepper-buttons-container {
+    display: flex;
+    justify-content: space-between;
+}
+
 .demo-main {
     background-color: #F8FAFC;
     min-height: 100vh;
@@ -33,6 +38,10 @@
     display: flex;
     flex-direction: column;
     gap: 1vh;
+}
+
+.employee-card img{
+    height: 30vh;
 }
 
 .payslip-container {
@@ -103,4 +112,69 @@
     gap: 1vh;
     border: 1px solid #EDF1F7;
     box-shadow: 1px 0px 5px 5px #EDF1F7;
+}
+
+.employee-card {
+    padding: 2vh;
+    border-radius: 10px;
+    background-color: #EDF1F7;
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+}
+
+
+@media screen and (max-width: 900px) {
+    .employee-cards-container {
+        padding: 1vh;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 3vw;
+    }
+
+    .employee-card img{
+        height: 20vh;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .employee-cards-container {
+        padding: 1vh;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5vw;
+    }
+
+    .employee-card img{
+        height: 20vh;
+    }
+
+    .payslip-table-container {
+        display:grid;
+        grid-template-columns: repeat(3, [col] 1fr);
+    }
+
+    .final-stepper-buttons-container {
+        display: flex;
+        flex-direction: column;
+        gap: 2vh;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .employee-cards-container {
+        padding: 1vh;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 7vw;
+    }
+
+    .employee-card img{
+        height: 20vh;
+    }
+
+    .payslip-table-container {
+        display:grid;
+        grid-template-columns: repeat(2, [col] 1fr);
+    }
 }

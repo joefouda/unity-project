@@ -93,7 +93,7 @@
 </nb-accordion>
 <br /> -->
 
-    <ngx-datatable class="material striped" [virtualization]="false" [loadingIndicator]="loadingIndicator" [rows]="data"
+    <ngx-datatable class="material" [loadingIndicator]="loadingIndicator" [rows]="data"
       [columnMode]="ColumnMode.force" [scrollbarH]="true" [headerHeight]="50" [footerHeight]="50" rowHeight="auto"
       [externalPaging]="true" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
       (page)="getResult($event)">
