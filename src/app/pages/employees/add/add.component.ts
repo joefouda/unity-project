@@ -88,11 +88,11 @@ export class AddComponent implements OnInit {
       national_or_expat:['', Validators.required],
       iqamaPhoto: [''],
       contractPhoto: [''],
-      nationalIdExDate: [''],
+      nationalIdExDate: ['', [Validators.required]],
       contract_start_date:'',
       end_of_probation:'',
-      iqamaExDate: [''],
-      contractExDate: [''],
+      iqamaExDate: ['', [Validators.required]],
+      contractExDate: ['', [Validators.required]],
       date_of_birth: [''],
       basic_salary: [''],
       gender: [''],
@@ -290,7 +290,26 @@ export class AddComponent implements OnInit {
     // form data for important documents
     const uploadFiles = new FormData();
     if (!this.myForm.valid) {
-      console.log(this.myForm.errors)
+      this.toastrService.danger('please correct validation errors', this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+      this.loading = false;
+      this.submitted = true;
+      return;
+    }
+
+    if(!this.myForm.get('nationalIdPhoto')?.value){
+      this.toastrService.danger("National id photo is required", this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+      this.loading = false;
+      this.submitted = true;
+      return;
+    }
+    if(!this.myForm.get('iqamaPhoto')?.value){
+      this.toastrService.danger("Iqama photo is required", this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+      this.loading = false;
+      this.submitted = true;
+      return;
+    }
+    if(!this.myForm.get('contractPhoto')?.value){
+      this.toastrService.danger("Contract photo is required", this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
       this.loading = false;
       this.submitted = true;
       return;
@@ -302,14 +321,29 @@ export class AddComponent implements OnInit {
       if(this.myForm.get('nationalIdPhoto')?.value){
         uploadFiles.append('id_file', this.myForm.get('nationalIdPhoto')?.value);
         uploadFiles.append('id_expire_date', this.myForm.get('nationalIdExDate')?.value);
+      }else {
+        this.toastrService.danger("National id photo is required", this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+        this.loading = false;
+        this.submitted = true;
+        return;
       }
       if(this.myForm.get('iqamaPhoto')?.value){
         uploadFiles.append('iqama_file', this.myForm.get('iqamaPhoto')?.value);
         uploadFiles.append('iqama_expire_date', this.myForm.get('iqamaExDate')?.value);
+      }else {
+        this.toastrService.danger("Iqama photo is required", this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+        this.loading = false;
+        this.submitted = true;
+        return;
       }
       if(this.myForm.get('contractPhoto')?.value){
         uploadFiles.append('contract_file', this.myForm.get('contractPhoto')?.value);
         uploadFiles.append('contract_expire_date', this.myForm.get('contractExDate')?.value);
+      }else {
+        this.toastrService.danger("Contract photo is required", this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+        this.loading = false;
+        this.submitted = true;
+        return;
       }
 
       // post documents photos and expiration dates

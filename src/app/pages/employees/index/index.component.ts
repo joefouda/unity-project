@@ -98,6 +98,7 @@ export class IndexComponent implements OnInit {
 
   load() {
     this.api.protectedGet("employees?page=" + this.page + this.q, this.token).subscribe((data: any) => {
+      console.log(data)
       this.employees = data.data;
       this.loaded = true;
       this.totalItems = data.total;
