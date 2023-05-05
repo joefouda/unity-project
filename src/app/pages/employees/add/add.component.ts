@@ -78,21 +78,21 @@ export class AddComponent implements OnInit {
     this.myForm = this.fb.group({
       name: ['', [Validators.required]],
       name_ar: [''],
-      employee_id: ['', [Validators.required]],
-      identifier: ['', [Validators.required]],
+      employee_id: [''],
+      identifier: [''],
       joined_at: [''],
-      mobile: ['', [Validators.required, Validators.pattern('[0-9]+'), Validators.maxLength(9), Validators.minLength(9)]],
+      mobile: ['', [Validators.pattern('[0-9]+'), Validators.maxLength(9), Validators.minLength(9)]],
       preferred_lang: [''],
       email: ['', [Validators.required, Validators.email]],
       nationalIdPhoto: [''],
-      national_or_expat:['', Validators.required],
+      national_or_expat:[''],
       iqamaPhoto: [''],
       contractPhoto: [''],
-      nationalIdExDate: ['', [Validators.required]],
+      nationalIdExDate: [''],
       contract_start_date:'',
       end_of_probation:'',
-      iqamaExDate: ['', [Validators.required]],
-      contractExDate: ['', [Validators.required]],
+      iqamaExDate: [''],
+      contractExDate: [''],
       date_of_birth: [''],
       basic_salary: [''],
       gender: [''],
@@ -100,12 +100,12 @@ export class AddComponent implements OnInit {
       yearly_total: [''],
       urgent_total: [''],
       urgent: [''],
-      work_shift: ['', [Validators.required]],
-      contract_duration_type: ['YEARLY', [Validators.required]],
-      contract_duration_period: ['', [Validators.required]],
-      department_id: ['',  [Validators.required]],
+      work_shift: [''],
+      contract_duration_type: ['YEARLY'],
+      contract_duration_period: [''],
+      department_id: [''],
       picture: [''],
-      position: ['', [Validators.required]],
+      position: [''],
       allowances: [''],
     });
 
@@ -296,79 +296,67 @@ export class AddComponent implements OnInit {
       return;
     }
 
-    if(!this.myForm.get('nationalIdPhoto')?.value){
-      this.toastrService.danger("National id photo is required", this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-      this.loading = false;
-      this.submitted = true;
-      return;
+    if(this.myForm.get('nationalIdPhoto')?.value){
+      if(!this.myForm.get('nationalIdExDate')?.value){
+        this.toastrService.danger("national id expire date is required", this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+        this.loading = false;
+        return;
+      }
+      uploadFiles.append('id_file', this.myForm.get('nationalIdPhoto')?.value);
+      uploadFiles.append('id_expire_date', this.myForm.get('nationalIdExDate')?.value);
     }
-    if(!this.myForm.get('iqamaPhoto')?.value){
-      this.toastrService.danger("Iqama photo is required", this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-      this.loading = false;
-      this.submitted = true;
-      return;
+    if(this.myForm.get('iqamaPhoto')?.value){
+      if(!this.myForm.get('iqamaExDate')?.value){
+        this.toastrService.danger("iqama expire date is required", this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+        this.loading = false;
+        return;
+      }
+      uploadFiles.append('iqama_file', this.myForm.get('iqamaPhoto')?.value);
+      uploadFiles.append('iqama_expire_date', this.myForm.get('iqamaExDate')?.value);
     }
-    if(!this.myForm.get('contractPhoto')?.value){
-      this.toastrService.danger("Contract photo is required", this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-      this.loading = false;
-      this.submitted = true;
-      return;
+    if(this.myForm.get('contractPhoto')?.value){
+      if(!this.myForm.get('contractExDate')?.value){
+        this.toastrService.danger("contract expire date is required", this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+        this.loading = false;
+        return;
+      }
+      uploadFiles.append('contract_file', this.myForm.get('contractPhoto')?.value);
+      uploadFiles.append('contract_expire_date', this.myForm.get('contractExDate')?.value);
     }
 
     this.employee.mobile = "+966" + this.employee.mobile;
     this.api.protectedPost('employees', this.employee, this.token).subscribe((data: any) => {
       console.log(data)
-      if(this.myForm.get('nationalIdPhoto')?.value){
-        uploadFiles.append('id_file', this.myForm.get('nationalIdPhoto')?.value);
-        uploadFiles.append('id_expire_date', this.myForm.get('nationalIdExDate')?.value);
-      }else {
-        this.toastrService.danger("National id photo is required", this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-        this.loading = false;
-        this.submitted = true;
-        return;
-      }
-      if(this.myForm.get('iqamaPhoto')?.value){
-        uploadFiles.append('iqama_file', this.myForm.get('iqamaPhoto')?.value);
-        uploadFiles.append('iqama_expire_date', this.myForm.get('iqamaExDate')?.value);
-      }else {
-        this.toastrService.danger("Iqama photo is required", this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-        this.loading = false;
-        this.submitted = true;
-        return;
-      }
-      if(this.myForm.get('contractPhoto')?.value){
-        uploadFiles.append('contract_file', this.myForm.get('contractPhoto')?.value);
-        uploadFiles.append('contract_expire_date', this.myForm.get('contractExDate')?.value);
-      }else {
-        this.toastrService.danger("Contract photo is required", this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-        this.loading = false;
-        this.submitted = true;
-        return;
-      }
 
       // post documents photos and expiration dates
-      this.api.protectedPost('employees/' + data.id + '/uploadFiles', uploadFiles, this.token).subscribe((res) => {
-        console.log(res)
-        this.loading = false
+      if(this.myForm.get('nationalIdPhoto')?.value || this.myForm.get('iqamaPhoto')?.value || this.myForm.get('contractPhoto')?.value){
+        this.api.protectedPost('employees/' + data.id + '/uploadFiles', uploadFiles, this.token).subscribe((res) => {
+          console.log(res)
+          this.loading = false
+          this.showSuccessMsgAndReturn();
+        }, err => {
+          console.log(err)
+          if(err.error.errors.id_expire_date && err.error.errors.iqama_expire_date && err.error.errors.contract_expire_date && err.error.errors.id_file && err.error.errors.iqama_file && err.error.errors.contract_file){
+            this.showSuccessMsgAndReturn();
+            // this.toastrService.danger('employee files and expire dates are required', this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+            this.loading = false;
+          } else if(err.error.errors.id_expire_date){
+            this.toastrService.danger(err.error.errors.id_expire_date[0], this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+            this.loading = false;
+          } else if (err.error.errors.iqama_expire_date) {
+            this.toastrService.danger(err.error.errors.iqama_expire_date[0], this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+            this.loading = false;
+          } else if (err.error.errors.contract_expire_date) {
+            this.toastrService.danger(err.error.errors.contract_expire_date[0], this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+            this.loading = false;
+          } else {
+            this.toastrService.danger(this.messages.ERROR_INFO, this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
+            this.loading = false;
+          }
+        })
+      }else {
         this.showSuccessMsgAndReturn();
-      }, err => {
-        if(err.error.errors.id_expire_date && err.error.errors.iqama_expire_date && err.error.errors.contract_expire_date && err.error.errors.id_file && err.error.errors.iqama_file && err.error.errors.contract_file){
-          this.toastrService.danger('employee files and expire dates are required', this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-          this.loading = false;
-        } else if(err.error.errors.id_expire_date){
-          this.toastrService.danger(err.error.errors.id_expire_date[0], this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-          this.loading = false;
-        } else if (err.error.errors.iqama_expire_date) {
-          this.toastrService.danger(err.error.errors.iqama_expire_date[0], this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-          this.loading = false;
-        } else if (err.error.errors.contract_expire_date) {
-          this.toastrService.danger(err.error.errors.contract_expire_date[0], this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-          this.loading = false;
-        } else {
-          this.toastrService.danger(this.messages.ERROR_INFO, this.messages.ERROR, { position: NbGlobalPhysicalPosition.BOTTOM_LEFT });
-          this.loading = false;
-        }
-      })
+      }
       
       // post profile photo
       // if(this.picture != null){
@@ -384,6 +372,7 @@ export class AddComponent implements OnInit {
       // }
 
     }, err => {
+      console.log(err)
       let errMessages = this.messages.ERROR_INFO;
       this.employee.mobile = this.employee.mobile.substring(4);
       if(err.error.errors != null){

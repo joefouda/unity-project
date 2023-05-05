@@ -64,7 +64,7 @@
 
             <div class="col-md-4">
               <div class="form-group">
-                <label for="exampleInputEmail1" class="label">{{ 'ID' | translate }}*</label>
+                <label for="exampleInputEmail1" class="label">{{ 'ID' | translate }}</label>
                 <input type="number" nbInput fullWidth [formControl]="myForm.controls['identifier']"
                   [status]="submitted ? (myForm.controls.identifier.invalid  ? 'danger' : 'success') : 'basic'"
                   [(ngModel)]="employee.identifier" placeholder="{{ 'ID' | translate }}">
@@ -91,7 +91,7 @@
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label class="label">{{ 'MOBILE' | translate }}*</label>
+                <label class="label">{{ 'MOBILE' | translate }}</label>
                 <div class="input-group" style="direction: ltr !important;">
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">+966</span>
@@ -113,7 +113,7 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                <label class="label">National ID Photo*</label>
+                <label class="label">National ID Photo</label>
                 <div class="input-group" style="direction: ltr !important;">
                   <input type="file" nbInput style="width: 70%;" [formControl]="myForm.controls['nationalIdPhoto']"
                     id="nationalIdPhoto"
@@ -127,7 +127,7 @@
             <!-- iqama photo -->
             <div class="col-md-4">
               <div class="form-group">
-                <label class="label">Iqama Photo*</label>
+                <label class="label">Iqama Photo</label>
                 <div class="input-group" style="direction: ltr !important;">
                   <input type="file" nbInput style="width: 70%;" [formControl]="myForm.controls['iqamaPhoto']"
                     id="iqamaPhoto"
@@ -141,7 +141,7 @@
             <!-- contract photo -->
             <div class="col-md-4">
               <div class="form-group">
-                <label class="label">Contract Photo*</label>
+                <label class="label">Contract Photo</label>
                 <div class="input-group" style="direction: ltr !important;">
                   <input type="file" nbInput style="width: 70%;" [formControl]="myForm.controls['contractPhoto']"
                     id="contractPhoto"
@@ -160,7 +160,7 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                <label class="label">National ID Expire Date*</label>
+                <label class="label">National ID Expire Date</label>
                 <div class="input-group" style="direction: ltr !important;">
                   <input type="date" nbInput style="width: 70%;" [formControl]="myForm.controls['nationalIdExDate']"
                     id="nationalIdExDate"
@@ -179,7 +179,7 @@
             <!-- iqama expire date -->
             <div class="col-md-4">
               <div class="form-group">
-                <label class="label">Iqama Expire Date*</label>
+                <label class="label">Iqama Expire Date</label>
                 <div class="input-group" style="direction: ltr !important;">
                   <input type="date" nbInput style="width: 70%;" [formControl]="myForm.controls['iqamaExDate']"
                     id="iqamaExDate"
@@ -197,7 +197,7 @@
             <!-- contract expire date -->
             <div class="col-md-4">
               <div class="form-group">
-                <label class="label">Contract Expire Date*</label>
+                <label class="label">Contract Expire Date</label>
                 <div class="input-group" style="direction: ltr !important;">
                   <input type="date" nbInput style="width: 70%;" [formControl]="myForm.controls['contractExDate']"
                     id="contractExDate"
@@ -223,7 +223,7 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                <label for="exampleInputEmail1" class="label">{{ 'DEPARTMENT' | translate }}*</label>
+                <label for="exampleInputEmail1" class="label">{{ 'DEPARTMENT' | translate }}</label>
                 <nb-select fullWidth [formControl]="myForm.controls['department_id']"
                   [status]="submitted ? (myForm.controls.department_id.invalid  ? 'danger' : 'success') : 'basic'"
                   placeholder="{{ 'DEPARTMENT' | translate }}" [(ngModel)]="employee.department_id">
@@ -240,7 +240,7 @@
 
             <div class="col-md-4">
               <div class="form-group">
-                <label for="exampleInputEmail1" class="label">{{ 'POSITION' | translate }}*</label>
+                <label for="exampleInputEmail1" class="label">{{ 'POSITION' | translate }}</label>
                 <nb-select fullWidth [formControl]="myForm.controls['position']"
                   [status]="submitted ? (myForm.controls.position.invalid  ? 'danger' : 'success') : 'basic'"
                   placeholder="{{ 'POSITION' | translate }}" [(ngModel)]="employee.position">
@@ -257,7 +257,7 @@
 
             <div class="col-md-4">
               <div class="form-group">
-                <label for="exampleInputEmail1" class="label">{{ 'WORK_SHIFT' | translate }}*</label>
+                <label for="exampleInputEmail1" class="label">{{ 'WORK_SHIFT' | translate }}</label>
                 <nb-select fullWidth [formControl]="myForm.controls['work_shift']"
                   [status]="submitted ? (myForm.controls.work_shift.invalid  ? 'danger' : 'success') : 'basic'"
                   placeholder="{{ 'WORK_SHIFT' | translate }}" [(ngModel)]="employee.work_shift">
@@ -277,7 +277,7 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                <label for="exampleInputEmail1" class="label">{{ 'EMPLOYEE_ID' | translate }}*</label>
+                <label for="exampleInputEmail1" class="label">{{ 'EMPLOYEE_ID' | translate }}</label>
                 <input type="number" nbInput fullWidth [formControl]="myForm.controls['employee_id']"
                   [status]="submitted ? (myForm.controls.employee_id.invalid  ? 'danger' : 'success') : 'basic'"
                   [(ngModel)]="employee.employee_id" placeholder="{{ 'EMPLOYEE_ID' | translate }}">
@@ -334,7 +334,7 @@
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label class="label">{{ 'national_or_expat' | translate }}*</label>
+                <label class="label">{{ 'national_or_expat' | translate }}</label>
                 <nb-select fullWidth [formControl]="myForm.controls['national_or_expat']"
                   [status]="submitted ? (myForm.controls.national_or_expat.invalid  ? 'danger' : 'success') : 'basic'"
                   [(ngModel)]="employee.national_or_expat" placeholder="{{ 'national_or_expat' | translate }}">
@@ -394,7 +394,7 @@
 
             <div class="col-md-4">
               <div class="form-group">
-                <label for="exampleInputEmail1" class="label">{{ 'CONTACT_DURATION' | translate }}*</label>
+                <label for="exampleInputEmail1" class="label">{{ 'CONTACT_DURATION' | translate }}</label>
                 <div class="input-group" style="direction: ltr !important;">
                   <input type="number" nbInput fullWidth style="width: 50% !important;"
                     [formControl]="myForm.controls['contract_duration_period']"
