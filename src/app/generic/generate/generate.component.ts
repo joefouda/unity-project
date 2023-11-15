@@ -53,8 +53,9 @@ export class GenerateComponent implements OnInit {
     setInterval(() => {
     this.api.protectedGet("refresh-company", this.token).subscribe((data: any) => {
       this.company = data;
+      this.qrdata = this.company.key;
     });
-    }, 300000); 
+    }, 3000000); 
   }
 
   onImgError(event) {

@@ -27,6 +27,9 @@ import { SharedModule } from '../../shared/shared.module';
 import { CompanyProfileComponent } from './company-profile/company-profile.component';
 import { SubsDetailsComponent } from './subs-details/subs-details.component';
 import { BillingComponent } from './billing/billing.component';
+import { PolicyComponent } from './policy/policy.component';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+
 
 @NgModule({
   imports: [
@@ -51,13 +54,15 @@ import { BillingComponent } from './billing/billing.component';
     ExportAsModule,
     NbDatepickerModule,
     NgSelectModule,
+    CKEditorModule,
   ],
   declarations: [
     GenericComponent,
     SupportComponent,
     CompanyProfileComponent,
     SubsDetailsComponent,
-    BillingComponent
+    BillingComponent,
+    PolicyComponent
   ],
 })
 export class GenericModule { }

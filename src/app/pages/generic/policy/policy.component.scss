@@ -1,0 +1,35 @@
+p{
+  white-space: pre-wrap;
+}
+.stickLeft{
+  float: left;
+  border-bottom: 1px solid rgba(211, 211, 211, 0.672);
+  padding-bottom: 2px  !important;
+  margin-top:8px !important;
+}
+.stickRight{
+  float: right;
+  text-align: right;
+  border-bottom: 1px solid rgba(211, 211, 211, 0.672);
+  padding-bottom: 2px  !important;
+  margin-top:8px !important;
+}
+
+.price{
+  .label{
+    color: rgb(157, 157, 157);
+  }
+}
+
+::ng-deep .ck-editor__editable {
+  min-height: 200px !important;
+}
+
+.ckeditor {
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+}
+
+
+

@@ -1,0 +1,122 @@
+@font-face {
+  font-family: 'dinnextltw23';
+  src: url('../../../assets/fonts/DINNextLTArabic-Regular-3.ttf') format('truetype'),
+       url('../../../assets/fonts/DINNextLTArabic-Regular-3.woff') format('woff'),
+       url('../../../assets/fonts/DINNextLTArabic-Regular-3.svg') format('svg'),
+       url('../../../assets/fonts/DINNextLTArabic-Regular-3.otf') format('otf');
+
+}
+
+.ar-policy-main {
+  background-color: white;
+  min-height: 100vh;
+}
+
+*{
+  font-family: 'dinnextltw23';
+}
+
+  #ar-policy-container {
+    text-align: right;
+    margin: auto;
+    width: 70vw;
+    margin-top: 10vh;
+  }
+
+  .ar-policy-header {
+    background-image: url("../../../assets/images/Group 73.png");
+    background-size: cover;
+    display: flex;
+    justify-content: space-between;
+    height:30vh;
+    padding: 2vw 8vw;
+    direction: rtl;
+  }
+
+  .ar-policy-header div {
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+  }
+
+  .ar-policy-header div h1{
+    font-weight: 650;
+    font-size: 3.5em;
+  }
+
+  .ar-policy-header div p{
+    font-weight: 200;
+    font-size: 1.5em;
+  }
+
+  .row {
+    overflow: hidden
+  }
+  
+  .footer-section {
+    margin: 10vh 0;
+    background-color: white;
+  }
+
+  .footer {
+    background-color: #061F3B;
+    height: 15vh;
+  }
+
+  .register-button-container {
+    width: 100%;
+    position: relative;
+  }
+
+  .register-button {
+    position: absolute;
+    right: 0;
+    width: 10vw;
+    padding: 1vw;
+    border: 0px;
+    border-radius: 5px;
+    background-color: #55a86d;
+    color: white;
+    font-size: 20px;
+    font-weight: 500;
+  }
+  
+  @media screen and (max-width: 900px) {
+    .ar-policy-header img {
+      height: 25vh;
+    }
+}
+
+@media screen and (max-width: 700px) {
+  .imagePreview {
+    width: 60vw;
+  }
+
+  .register-button {
+    width: 20vw;
+    padding: 2vw;
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  .ar-policy-header img {
+    height: 20vh;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .register-button {
+    width: 30vw;
+    padding: 2vw;
+    font-size: 15px;
+    font-weight: 400;
+  }
+  .ar-policy-header img {
+    height: 20vh;
+  }
+  .ar-policy-header h1 {
+    font-size: 25px;
+    text-align: right;
+  }
+}

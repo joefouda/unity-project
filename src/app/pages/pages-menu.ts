@@ -42,6 +42,11 @@ export const MENU_ITEMS_FOR_ADMIN: NbMenuItem[] = [
     icon: 'credit-card-outline',
     link: '/pages/g/billing',
   },
+  {
+    title: 'policy',
+    icon: 'shield-outline',
+    link: '/pages/g/policy',
+  },
 ];
 
 export const MENU_ITEMS_FOR_MANAGER: NbMenuItem[] = [

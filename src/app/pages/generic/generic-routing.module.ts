@@ -6,6 +6,7 @@ import { GenericComponent } from './generic.component';
 import { CompanyProfileComponent } from './company-profile/company-profile.component';
 import { SubsDetailsComponent } from './subs-details/subs-details.component';
 import { BillingComponent } from './billing/billing.component';
+import { PolicyComponent } from './policy/policy.component';
 
 const routes: Routes = [{
   path: '',
@@ -22,6 +23,10 @@ const routes: Routes = [{
     {
       path: 'billing',
       component: BillingComponent,
+    },
+    {
+      path: 'policy',
+      component: PolicyComponent,
     },
     {
       path: 'subsciption-history',

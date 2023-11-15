@@ -21,6 +21,10 @@ export const routes: Routes = [
     path: 'demo',
     loadChildren: () => import('./demo/demo.module').then(m => m.DemoModule)
   },
+  {
+    path: 'policy',
+    loadChildren: () => import('./policy/policy.module').then(m => m.PolicyModule)
+  },
   { path: '', redirectTo: 'pages', pathMatch: 'full', canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'pages', canActivate: [AuthGuard] },
 ];

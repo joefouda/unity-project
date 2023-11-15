@@ -253,6 +253,7 @@
         "REMEMBER_ME": "Remember me"
     },
     "MENU_ITEMS": {
+        "POLICY": "Policy",
         "USERS": "Users",
         "STATS": "Stats",
         "DASHBOARD": "Dashboard",

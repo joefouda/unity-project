@@ -150,7 +150,7 @@ export class DashboardComponent implements OnInit {
       this.scannerEnabled = !this.scannerEnabled;
     }
   }
-  
+  // on scan handler
   public scanSuccessHandler($event: any) {
     this.scannerEnabled = false;
     this.key = $event;
@@ -179,7 +179,7 @@ export class DashboardComponent implements OnInit {
       }
     })
   }
-
+  // send login request to store login time
   actualLogin() {
     if (this.todaysOn == null) {
       this.loadingAttendance = true;
@@ -207,7 +207,7 @@ export class DashboardComponent implements OnInit {
       }
     }
   }
-
+  // send logout request to store logout time
   actualLogout() {
     if (this.todaysOff == null) {
       this.loadingAttendance = true;
